@@ -1,14 +1,19 @@
 package com.processexample.process.bean.DO;
 
+import com.alibaba.fastjson.JSON;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.beanutils.BeanMap;
+import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Create by  GF  in  15:56 2018/6/20
@@ -50,5 +55,19 @@ public class User {
         boolean whetherValid = patternEmail.matcher("352415401@qq.com").matches();
         System.out.println(whetherValid);
 
+        User user = User.builder()
+                .phoneNumber("15111901148")
+                .name("高峰")
+                .build();
+        Map map = new BeanMap(user);
+        System.out.println(JSON.toJSON(map));
+
+        User newUser = new User();
+        try {
+            BeanUtils.populate(newUser, map);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(JSON.toJSON(newUser));
     }
 }

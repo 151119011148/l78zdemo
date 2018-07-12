@@ -1,5 +1,6 @@
 package com.processexample.process.bean.response;
 
+import com.processexample.process.utils.ResultUtil;
 import lombok.Data;
 
 /**
@@ -8,7 +9,7 @@ import lombok.Data;
  * Modified  By:
  */
 @Data
-public class Result<T> {
+public class Result<T> extends ResultUtil {
     /**
      * 错误码
      */
