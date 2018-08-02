@@ -1,4 +1,4 @@
-package com.processexample.process.scheduledTask.spring;
+package com.processexample.process.scheduledTask.springScheduler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

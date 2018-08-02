@@ -1,4 +1,4 @@
-package com.processexample.process.scheduledTask.spring;
+package com.processexample.process.scheduledTask.springScheduler;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
