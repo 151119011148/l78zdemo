@@ -1,4 +1,4 @@
-package com.gf.io.demo.bio;
+package com.scofen.io.demo.bio;
 
 import java.io.BufferedReader;
 import java.io.IOException;

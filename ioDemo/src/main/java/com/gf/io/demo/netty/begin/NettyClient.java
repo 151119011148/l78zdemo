@@ -1,4 +1,4 @@
-package com.gf.io.demo.netty.begin;
+package com.scofen.io.demo.netty.begin;
 
 
 import io.netty.bootstrap.Bootstrap;

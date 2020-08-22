@@ -1,4 +1,4 @@
-package com.gf.io.demo.bio;
+package com.scofen.io.demo.bio;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
