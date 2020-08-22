@@ -1,6 +1,5 @@
 package com.processexample.process.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 

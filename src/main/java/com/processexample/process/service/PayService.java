@@ -24,10 +24,10 @@ public class PayService {
 
     public String pay() {
 
-        log.debug("PayService pay processExecutor.execute is start~");
+        log.info("PayService pay processExecutor.execute is start~");
         ProcessExecutorInterface processExecutorInterface = txnExecutorFactory.getProcessExecutor(null, "1");
         Param result = processExecutorInterface.execute();
-        log.debug("PayService pay processExecutor.execute is end~");
+        log.info("PayService pay processExecutor.execute is end~");
         return JSON.toJSONString(result);
 
     }

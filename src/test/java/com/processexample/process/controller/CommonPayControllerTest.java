@@ -18,7 +18,7 @@ public class CommonPayControllerTest {
     @Test
     public void commonPay() throws Exception {
         String result = payManager.pay();
-        System.out.println(result);
+        System.out.println("统一支付结果：" + result);
 
     }
 

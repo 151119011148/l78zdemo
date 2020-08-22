@@ -1,5 +1,6 @@
 package com.processexample.process.bean.DO;
 
+
 import com.alibaba.fastjson.JSON;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,11 +9,8 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.validator.constraints.Length;
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -48,6 +46,8 @@ public class User {
     @Min(value = 18,message = "未成年")
     @Max(value = 45,message = "too old")
     private Integer age;
+    @Pattern(regexp = "^(?:(?!0000)[0-9]{4}(?:(?:0[1-9]|1[0-2])(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)0229)((0[0-9])|(1[0-9])|(2[0-3]))[0-5][0-9][0-5][0-9]{1}$",message = "手机号格式不正确")
+    private String date;
 
 
     public static void main(String[] args){
@@ -69,5 +69,15 @@ public class User {
             e.printStackTrace();
         }
         System.out.println(JSON.toJSON(newUser));
+
+
+
     }
+
+
+
+
+
 }
+
+

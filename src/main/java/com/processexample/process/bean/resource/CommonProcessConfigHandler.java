@@ -40,7 +40,7 @@ public class CommonProcessConfigHandler implements ProcessConfigInterfaceHandler
         Map stepDTOMap = Maps.newHashMap();
 
         List<ProcessConfigDTO> processConfigDTOS = processDao.listProcessBySystemId(systemId);
-        processConfigDTOS.forEach(processConfigDTO ->{
+/*        processConfigDTOS.forEach(processConfigDTO ->{
             Map<Short, ProcessStepConfigDTO> processToStepConfigMap = Maps.newHashMap();
             processDTOMap.put(processConfigDTO.getProcessId(), processConfigDTO);
 
@@ -51,7 +51,20 @@ public class CommonProcessConfigHandler implements ProcessConfigInterfaceHandler
             });
             if(!processToStepConfigMap.containsKey(CommonContextEnum.START))
                 processStepsConfigDTOMap.put(processConfigDTO.getProcessId(), processToStepConfigMap);
-        });
+        });*/
+        for (ProcessConfigDTO processConfigDTO : processConfigDTOS){
+            Map<Short, ProcessStepConfigDTO> processToStepConfigMap = Maps.newHashMap();
+            processDTOMap.put(processConfigDTO.getProcessId(), processConfigDTO);
+
+            List<ProcessStepConfigDTO> processStepConfigDTOS = processDao.listProcessStepConfigByProcessId(processConfigDTO.getProcessId());
+            processStepConfigDTOS.forEach(processStepConfigDTO ->{
+                processToStepConfigMap.put(processStepConfigDTO.getStepIndex(),processStepConfigDTO);
+                stepConfigIdSet.add(Integer.parseInt(processStepConfigDTO.getStepId()));
+            });
+            if(!processToStepConfigMap.containsKey(CommonContextEnum.START))
+                processStepsConfigDTOMap.put(processConfigDTO.getProcessId(), processToStepConfigMap);
+        }
+
         stepConfigIdSet.forEach(stepId ->{
             StepInterfaceDTO stepInterfaceDTO = processDao.getStepById(stepId.toString());
             stepDTOMap.put(stepId, stepInterfaceDTO);

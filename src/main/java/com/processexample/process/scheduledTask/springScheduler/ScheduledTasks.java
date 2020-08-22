@@ -34,7 +34,7 @@ public class ScheduledTasks {
         System.out.println(MessageFormat.format("===fixedRate: 第{0}次执行方法", fixedRateCount++));
     }*/
 
-    @Scheduled(initialDelay = 1000, fixedRate = 5000)   //initialDelay = 1000表示延迟1000ms执行第一次任务
+    //@Scheduled(initialDelay = 1000, fixedRate = 5000)   //initialDelay = 1000表示延迟1000ms执行第一次任务
     public void testInitialDelay() {
         log.info("===当前线程id为:" + Thread.currentThread().getId() + "===");
         log.info(MessageFormat.format("===initialDelay: 第{0}次执行方法", initialDelayCount++));

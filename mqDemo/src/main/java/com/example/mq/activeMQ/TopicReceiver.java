@@ -1,9 +1,7 @@
-package com.processexample.process.messageQueue;
+package com.example.mq.activeMQ;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
-
 import javax.jms.*;
-
 /**
  * Create by  GF  in  16:08 2018/6/21
  * Description:
