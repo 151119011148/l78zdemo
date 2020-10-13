@@ -14,6 +14,7 @@ public class Processor {
     public static void kill(BidInfo info) {
         DB.bids.add(info);
     }
+
     public static void process() {
         BidInfo info = new BidInfo(RequestQueue.queue.poll());
         if (info != null) {

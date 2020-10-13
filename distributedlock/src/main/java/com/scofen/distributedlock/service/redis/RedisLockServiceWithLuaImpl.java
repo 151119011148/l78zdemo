@@ -73,14 +73,14 @@ public class RedisLockServiceWithLuaImpl extends AbstractDistributedLockService 
     private void init() {
         // Lock script
         lockScript = new DefaultRedisScript<>();
-        //lockScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("com/scofen/distributedlock/lock.lua")));
+        //lockScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("com.scofen/distributedlock/lock.lua")));
         lockScript.setScriptText(unlockString);
         lockScript.setResultType(Long.class);
 
         // unlock script
         unlockScript = new DefaultRedisScript<>();
         unlockScript.setScriptText(lockString);
-        //lockScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("com/scofen/distributedlock/lock.lua")));
+        //lockScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("com.scofen/distributedlock/lock.lua")));
         unlockScript.setResultType(Long.class);
     }
 

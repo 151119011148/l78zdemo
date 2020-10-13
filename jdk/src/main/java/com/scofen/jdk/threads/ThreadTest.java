@@ -79,20 +79,20 @@ public class ThreadTest extends Thread{
     }
 }
 
- class Blocked extends Thread{
+class Blocked extends Thread{
 
-    @Override
-    public void run() {
-        synchronized (Blocked.class){
-            while (true){
-                try {
-                    TimeUnit.SECONDS.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+   @Override
+   public void run() {
+       synchronized (Blocked.class){
+           while (true){
+               try {
+                   TimeUnit.SECONDS.sleep(100);
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
+           }
+       }
+   }
 }
 
 /**

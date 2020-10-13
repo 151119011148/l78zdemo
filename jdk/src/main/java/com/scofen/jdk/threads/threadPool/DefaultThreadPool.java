@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * 随着大量的任务被提交，更多的工作者线程会被唤醒
  * Modified  By:
  */
-public class DefaultThreadPool<Job extends Runnable> implements ThreadPool<Job>{
+public class DefaultThreadPool<Job extends Runnable> implements ThreadPool<Job> {
 
     private static final int MAX_WORKER_NUMBERS = 10;
 

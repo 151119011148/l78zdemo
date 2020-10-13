@@ -8,10 +8,10 @@
 		<version>2.2.0.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.scofen.dubbo-consumer</groupId>
-	<artifactId>consumer</artifactId>
+	<groupId>com.scofen</groupId>
+	<artifactId>dubbo-consumer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>consumer</name>
+	<name>dubbo-consumer</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>

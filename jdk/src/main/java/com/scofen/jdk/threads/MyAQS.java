@@ -54,7 +54,7 @@ public class MyAQS {
 
     private static CyclicBarrier barrier = new CyclicBarrier(31);
     private static int a = 0;
-    private static  MyAQS myAQS = new MyAQS();
+    private static MyAQS myAQS = new MyAQS();
 
     public static void main(String[] args) {
         //说明:我们启用30个线程，每个线程对i自加10000次，同步正常的话，最终结果应为300000；

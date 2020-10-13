@@ -12,7 +12,7 @@ import java.util.List;
  * Description:自定义协议
  * Modified  By:
  */
-public class MyProtocol implements Protocol {
+public class Myprotocol implements Protocol {
 
 
     public static void main(String[] args) {

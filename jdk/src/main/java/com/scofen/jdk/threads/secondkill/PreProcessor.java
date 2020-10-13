@@ -11,9 +11,9 @@ import com.sun.deploy.net.HttpRequest;
 public class PreProcessor {
 
 
-
     // 商品是否还有剩余
     private static boolean reminds = true;
+
     private static void forbidden() {
 
         // Do something.

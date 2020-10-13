@@ -11,42 +11,46 @@ import java.util.concurrent.locks.Lock;
  * Modified  By:
  */
 public class TwinsLock implements Lock {
-    private static final class Sync extends AbstractQueuedSynchronizer {
-        Sync(int count){
-            if (count <= 0) {
-                throw new IllegalArgumentException("count must large zere");
-            }
-            setState(count);
-        }
+    private final Sync sync = new Sync(2);
 
-        @Override
-        protected int tryAcquireShared(int reduceCount) {
-            for(;;){
-                int current = getState();
-                System.out.println(Thread.currentThread().getName()+"尝试获取锁，getState() = " + current);
-                int newCount = current - reduceCount;
-                if (newCount<0 || compareAndSetState(current,newCount)) {
-                    return newCount;
+    public static void main(String[] args) {
+        final Lock lock = new TwinsLock();
+        class Worker extends Thread {
+
+            @Override
+            public void run() {
+                while (true) {
+                    lock.lock();
+                    System.out.println(Thread.currentThread().getName() + " locked");
+                    try {
+                        SleepUtils.second(1);
+                        SleepUtils.second(1);
+
+                    } finally {
+                        lock.unlock();
+                        System.out.println(Thread.currentThread().getName() + " unlock");
+                    }
+
                 }
             }
+
+        }
+        //启动10个线程
+        for (int i = 0; i < 4; i++) {
+            Worker w = new Worker();
+            w.setDaemon(true);
+            w.start();
         }
 
-        @Override
-        protected boolean tryReleaseShared(int returnCount) {
-            for(;;){
-                int current = getState();
-                int newCount = current + returnCount;
-                if (compareAndSetState(current, newCount)) {
-                    return true;
-                }
-
-            }
+        //每隔一秒换行
+        for (int i = 0; i < 100; i++) {
+            SleepUtils.second(1);
+            System.out.println();
         }
 
 
     }
 
-    private final Sync sync = new Sync(2);
     @Override
     public void lock() {
         sync.acquireShared(1);
@@ -80,8 +84,42 @@ public class TwinsLock implements Lock {
         return false;
     }
 
+    private static final class Sync extends AbstractQueuedSynchronizer {
+        Sync(int count) {
+            if (count <= 0) {
+                throw new IllegalArgumentException("count must large zere");
+            }
+            setState(count);
+        }
 
-    public static class SleepUtils{
+        @Override
+        protected int tryAcquireShared(int reduceCount) {
+            for (; ; ) {
+                int current = getState();
+                System.out.println(Thread.currentThread().getName() + "尝试获取锁，getState() = " + current);
+                int newCount = current - reduceCount;
+                if (newCount < 0 || compareAndSetState(current, newCount)) {
+                    return newCount;
+                }
+            }
+        }
+
+        @Override
+        protected boolean tryReleaseShared(int returnCount) {
+            for (; ; ) {
+                int current = getState();
+                int newCount = current + returnCount;
+                if (compareAndSetState(current, newCount)) {
+                    return true;
+                }
+
+            }
+        }
+
+
+    }
+
+    public static class SleepUtils {
         public static final void second(long sec) {
             try {
                 TimeUnit.SECONDS.sleep(sec);
@@ -89,46 +127,6 @@ public class TwinsLock implements Lock {
                 // TODO: handle exception
             }
         }
-    }
-
-
-
-    public static void main(String[] args) {
-        final Lock lock = new TwinsLock();
-        class Worker extends Thread{
-
-            @Override
-            public void run() {
-                while(true){
-                    lock.lock();
-                    System.out.println(Thread.currentThread().getName()+ " locked" );
-                    try{
-                        SleepUtils.second(1);
-                        SleepUtils.second(1);
-
-                    }finally{
-                        lock.unlock();
-                        System.out.println(Thread.currentThread().getName()+ " unlock" );
-                    }
-
-                }
-            }
-
-        }
-        //启动10个线程
-        for (int i = 0; i < 4; i++) {
-            Worker w = new Worker();
-            w.setDaemon(true);
-            w.start();
-        }
-
-        //每隔一秒换行
-        for (int i = 0; i < 100; i++) {
-            SleepUtils.second(1);
-            System.out.println();
-        }
-
-
     }
 
 }

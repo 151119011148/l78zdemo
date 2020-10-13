@@ -1,4 +1,4 @@
-package com.scofen.mq.activemq;
+package com.scofen.mq.activeMQ;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import javax.jms.*;

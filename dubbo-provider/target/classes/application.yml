@@ -1,9 +1,0 @@
-
-dubbo:
-  application:
-    name: gf
-    owner: gf
-
-   protocol: myprotocol
-    port:20870
-

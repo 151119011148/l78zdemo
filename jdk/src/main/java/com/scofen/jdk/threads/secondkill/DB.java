@@ -9,8 +9,9 @@ import java.util.concurrent.ArrayBlockingQueue;
  * Modified  By:
  */
 public class DB {
-     private static int count = 10;
-     static ArrayBlockingQueue<BidInfo> bids = new ArrayBlockingQueue<>(10);
+    static ArrayBlockingQueue<BidInfo> bids = new ArrayBlockingQueue<>(10);
+    private static int count = 10;
+
     public static boolean checkReminds() {
 
         // TODO
