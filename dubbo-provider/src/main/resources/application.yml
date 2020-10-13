@@ -1,0 +1,9 @@
+
+dubbo:
+  application:
+    name: scofen
+    owner: scofen
+
+   protocol: myprotocol
+    port:20870
+
