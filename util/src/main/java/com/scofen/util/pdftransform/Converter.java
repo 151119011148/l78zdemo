@@ -87,7 +87,7 @@ public class Converter {
     private static void png2Log(){
         File dir = new File(pngPath);
         BufferedWriter out = null;
-        String target = logPath + ".log";
+        String target = logPath + "kafka.log";
         try {
 
             List<File> files = Lists.newArrayList(dir.listFiles());
