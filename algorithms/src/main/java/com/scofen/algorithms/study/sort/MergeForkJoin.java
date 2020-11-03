@@ -1,4 +1,4 @@
-package com.scofen.algorithms.pratise.sort;
+package com.scofen.algorithms.study.sort;
 
 import lombok.Getter;
 

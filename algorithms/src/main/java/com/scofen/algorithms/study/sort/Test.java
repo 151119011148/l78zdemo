@@ -1,9 +1,10 @@
-package com.scofen.algorithms.pratise.sort;
+package com.scofen.algorithms.study.sort;
 
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -20,7 +21,7 @@ public class Test {
 
     private static Integer[] init(){
         Set<Integer> set = Sets.newHashSet();
-        for (int i = 0; i< 100; i ++){
+        for (int i = 0; i<= 100; i ++){
             set.add((int)(Math.random()*1000));
         }
         return set.toArray(new Integer[0]);
@@ -30,7 +31,8 @@ public class Test {
     @org.junit.Test
     public void bubbleSortTest(){
         BubbleSort bubble = new BubbleSort();
-        System.out.println(Lists.newArrayList(bubble.sort(source)));
+        bubble.sort(source);
+        System.out.println(Arrays.toString(bubble.getTarget()));
         System.out.println("bubble sorting complexity is : " + bubble.getCount());
     }
 
@@ -39,13 +41,23 @@ public class Test {
         SelectionSort selection = new SelectionSort();
         System.out.println(Lists.newArrayList(selection.sort(source)));
         System.out.println("selection sorting complexity is : " + selection.getCount());
+        System.out.println(Lists.newArrayList(selection.reverse(source)));
     }
 
     @org.junit.Test
     public void insertionSortTest(){
-        InsertionSort insertion = new InsertionSort();
+        AbstractSort insertion = new InsertionSort();
         System.out.println(Lists.newArrayList(insertion.sort(source)));
         System.out.println("insertion sorting complexity is : " + insertion.getCount());
+        System.out.println(Lists.newArrayList(insertion.reverse(source)));
+    }
+
+    @org.junit.Test
+    public void shellSortTest(){
+        AbstractSort shell = new ShellSort();
+        System.out.println(Lists.newArrayList(shell.sort(source)));
+        System.out.println("insertion sorting complexity is : " + shell.getCount());
+        System.out.println(Lists.newArrayList(shell.reverse(source)));
     }
 
     @org.junit.Test

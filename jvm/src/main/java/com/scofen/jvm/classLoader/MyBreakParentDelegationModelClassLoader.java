@@ -21,17 +21,17 @@ public MyBreakParentDelegationModelClassLoader(String classPath) {
         FileInputStream fis = new FileInputStream(classPath + "/" + path
                 + ".class");
         int len = fis.available();
-        byte[] data = new byte[len];
-        fis.read(data);
+        byte[] source = new byte[len];
+        fis.read(source);
         fis.close();
-        return data;
+        return source;
 
     }
 
     protected Class<?> findClass(String name) throws ClassNotFoundException {
         try {
-            byte[] data = loadByte(name);
-            return defineClass(name, data, 0, data.length);
+            byte[] source = loadByte(name);
+            return defineClass(name, source, 0, source.length);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ClassNotFoundException();

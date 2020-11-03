@@ -1,4 +1,4 @@
-package com.scofen.algorithms.pratise.sort;
+package com.scofen.algorithms.study.sort;
 
 import java.util.Arrays;
 
@@ -16,32 +16,39 @@ import java.util.Arrays;
 
  * Modified  By:
  */
-public class MergeSort extends Sort {
+public class MergeSort extends AbstractSort {
 
 
     /**
      把长度为n的输入序列分成两个长度为n/2的子序列；
      对这两个子序列分别采用归并排序；
      将两个排序好的子序列合并成一个最终的排序序列
+     * @param source
      */
     @Override
-    public Integer[] sort(Integer[] source) {
-        if (source.length < 2)
+    public Comparable[] sort(Comparable[] source) {
+        if (source.length < 2) {
             return source;
+        }
         int middle = source.length/2;
-        Integer[] left = Arrays.copyOfRange(source, 0, middle);
-        Integer[] right = Arrays.copyOfRange(source, middle, source.length);
+        Comparable[] left = Arrays.copyOfRange(source, 0, middle);
+        Comparable[] right = Arrays.copyOfRange(source, middle, source.length);
         return merge(sort(left), sort(right));
     }
 
-    private Integer[] merge(Integer[] left, Integer[] right) {
-        Integer[] result = new Integer[left.length + right.length];
+    @Override
+    public Comparable[] sort(Comparable[] target, boolean asc) {
+        return new Comparable[0];
+    }
+
+    private Comparable[] merge(Comparable[] left, Comparable[] right) {
+        Comparable[] result = new Comparable[left.length + right.length];
         for (int index = 0, i = 0, j = 0; index < result.length; index ++){
             if (i >= left.length){
                 result[index] = right[j ++];
             }else if (j >= right.length){
                 result[index] = right[i ++];
-            }else if (left[i] > right[j]){
+            }else if (left[i].compareTo(right[j]) > 0){
                 result[index] = right[j ++];
             }else {
                 result[index] = right[i ++];

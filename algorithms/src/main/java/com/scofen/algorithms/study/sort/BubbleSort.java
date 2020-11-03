@@ -1,4 +1,4 @@
-package com.scofen.algorithms.pratise.sort;
+package com.scofen.algorithms.study.sort;
 
 /**
  * @author 高锋
@@ -10,7 +10,7 @@ package com.scofen.algorithms.pratise.sort;
  * 这个算法的名字由来是因为越小的元素会经由交换慢慢“浮”到数列的顶端。
  * @date 2019/11/716:49
  */
-public class BubbleSort extends Sort {
+public class BubbleSort extends AbstractSort {
 
     /**
      * @author 高锋
@@ -21,25 +21,15 @@ public class BubbleSort extends Sort {
      * 针对所有的元素重复以上的步骤，除了最后一个；
      * 重复步骤1~3，直到排序完成。
      * @Date 17:05 2019/11/7
-     * @Param [source]
-     * @return java.util.List<java.lang.Integer>
-     **/
+     * @param source*/
     @Override
-    public Integer[] sort(Integer[] source) {
-        if (source.length < 2)
-            return source;
-        int count = 0;
-        for (int outer = 0; outer < source.length; outer ++){
-            for (int inner = 0; inner < source.length - 1 - outer; inner ++){
-                if (source[inner] > source[inner + 1]){
-                    int tmp = source[inner + 1];
-                    source[inner + 1] = source[inner];
-                    source[inner] = tmp;
-                    count = statistical(count);
-                }
-            }
-        }
-        return source;
+    public Comparable[] sort(Comparable[] source) {
+        return null;
+    }
+
+    @Override
+    public Comparable[] sort(Comparable[] target, boolean asc) {
+        return new Comparable[0];
     }
 
     /**

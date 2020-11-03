@@ -1,4 +1,4 @@
-package com.scofen.algorithms.pratise.sort;
+package com.scofen.algorithms.study.sort;
 
 /**
  * Create by  GF  in  9:40 2019/11/10
@@ -11,7 +11,7 @@ package com.scofen.algorithms.pratise.sort;
  * 可以看出，一趟快速排序是以一个“枢轴”为中心，将序列分成两部分，枢轴的一边全是比它小
  * （或者小于等于）的，另一边全是比他大（或者大于等于）的
  */
-public class QuickSort extends Sort {
+public class QuickSort extends AbstractSort {
 
 
     /**
@@ -22,14 +22,20 @@ public class QuickSort extends Sort {
      * 后面（相同的数可以到任一边）。在这个分区退出之后，该基准就处于数列的中间位置。
      * 这个称为分区（partition）操作；
      * 递归地（recursive）把小于基准值元素的子数列和大于基准值元素的子数列排序。
+     * @param source
      */
     @Override
-    public Integer[] sort(Integer[] source) {
+    public Comparable[] sort(Comparable[] source) {
 
         return source;
     }
 
-    Integer[] sort(Integer[] source, int start, int end) {
+    @Override
+    public Comparable[] sort(Comparable[] target, boolean asc) {
+        return new Comparable[0];
+    }
+
+    Comparable[] sort(Comparable[] source, int start, int end) {
 
         int smallIndex = partition(source, start, end);    //划分数组并获得比较元素位置
 
@@ -43,17 +49,17 @@ public class QuickSort extends Sort {
         return source;
     }
 
-    private int partition(Integer[] source, int start, int end) {
+    private int partition(Comparable[] source, int start, int end) {
 
-        int pivot = source[start];    //将该数组第一个元素设置为比较元素
+        Comparable pivot = source[start];    //将该数组第一个元素设置为比较元素
         int smallIndex = start;    //指向数组头的指针
         int j = end;    //指向数组尾的指针
         while (smallIndex < j) {
-            while (smallIndex < j && source[j] >= pivot){
+            while (smallIndex < j && source[j].compareTo(pivot) >= 0){
 
                 j--;    //从右至左找到第一个小于比较元素的数
             }
-            while (smallIndex < j && source[smallIndex] <= pivot){
+            while (smallIndex < j && source[smallIndex].compareTo(pivot) <= 0){
 
                    /*需要注意的是，这里的j--与i++的顺序不可以调换！如果调换了顺序，i会走过头，
                    以至于将后面较大的元素交换到数组开头*/
@@ -61,15 +67,16 @@ public class QuickSort extends Sort {
             }
 
             //将大数与小数交换
-            if (smallIndex != j)
+            if (smallIndex != j) {
                 swap(source, smallIndex, j);
+            }
         }
         swap(source, start, smallIndex);    //将比较元素交换到期望位置
         return smallIndex;    //返回比较元素的位置
     }
 
-    private void swap(Integer[] source, int a, int b) {
-        int tmp = source[a];
+    private void swap(Comparable[] source, int a, int b) {
+        Comparable tmp = source[a];
         source[a] = source[b];
         source[b] = tmp;
         setCount(getCount() + 1);
