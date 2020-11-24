@@ -1,14 +1,18 @@
 package com.scofen.algorithms.leetcode;
 
+import com.google.common.collect.Lists;
 import com.scofen.algorithms.utils.BitUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Create by  GF  in  22:04 2020/10/14
@@ -26,8 +30,17 @@ public class Sort {
 //        String a = "art";
 //        System.out.println(sortString(a));
         //941
-        System.out.println(validMountainArray(new int[]{0,3,2,1}));
+//        System.out.println(validMountainArray(new int[]{0,3,2,1}));
+
+//        System.out.println(count(1232333, 3));
+
+        //406
+//        int[][] param = {{7,0}, {4,4}, {7,1}, {5,0}, {6,1}, {5,2}};
+//        System.out.println(reconstructQueue(param));
+
     }
+
+
 
     /**
      * 1002
@@ -341,4 +354,148 @@ public class Sort {
         return result;
     }
 
+
+    /**
+     * @author 高锋
+     * @description
+     * 我们有一个由平面上的点组成的列表 points。需要从中找出 K 个距离原点 (0, 0) 最近的点。
+     * （这里，平面上两点之间的距离是欧几里德距离。）
+     * 你可以按任何顺序返回答案。除了点坐标的顺序之外，答案确保是唯一的。
+     *
+     * 输入：points = [[1,3],[-2,2]], K = 1
+     * 输出：[[-2,2]]
+     * 解释：
+     * (1, 3) 和原点之间的距离为 sqrt(10)，
+     * (-2, 2) 和原点之间的距离为 sqrt(8)，
+     * 由于 sqrt(8) < sqrt(10)，(-2, 2) 离原点更近。
+     * 我们只需要距离原点最近的 K = 1 个点，所以答案就是 [[-2,2]]。
+     * @Date 11:22 2020/11/9
+     * @Param [points, K]
+     * @return int[][]
+     **/
+    public int[][] kClosest(int[][] points, int K) {
+        Arrays.sort(points, Comparator.comparingInt(point -> (point[0] * point[0] + point[1] * point[1])));
+        return Arrays.copyOfRange(points, 0, K);
+    }
+
+
+    /**
+     * @author 高锋
+     * @description
+    给你一个数字数组 arr 。
+    如果一个数列中，任意相邻两项的差总等于同一个常数，那么这个数列就称为 等差数列 。
+    如果可以重新排列数组形成等差数列，请返回 true ；否则，返回 false 。
+     **/
+    public boolean canMakeArithmeticProgression(int[] arr) {
+        if (arr.length < 3){
+            return false;
+        }
+       Arrays.sort(arr);
+       boolean result = false;
+        for(int i = 1; i < arr.length - 1; i ++){
+            if((arr[i] - arr[i - 1]) != (arr[i + 1] - arr[i])){
+                return false;
+            }else {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+
+
+    /**
+     * @author 高锋
+     * @description
+     * 给定一个非负整数数组 A， A 中一半整数是奇数，一半整数是偶数。
+     * 对数组进行排序，以便当 A[i] 为奇数时，i 也是奇数；当 A[i] 为偶数时， i 也是偶数。
+     * 你可以返回任何满足上述条件的数组作为答案。
+     * @Date 10:12 2020/11/12
+     * @Param [A]
+     * @return int[]
+     **/
+    public int[] sortArrayByParityII(int[] A) {
+        int[] result = new int[A.length];
+        int evenIndex = 0;  // 偶数下标
+        int oddIndex = 1;   // 奇数下标
+        for (int i = 0; i < A.length; i++) {
+            if (A[i] % 2 == 0) {
+                result[evenIndex] = A[i];
+                evenIndex += 2;
+            }
+            else {
+                result[oddIndex] = A[i];
+                oddIndex += 2;
+            }
+        }
+        return result;
+
+    }
+
+    private static  int count(int number, int counter){
+        int result = 0;
+        List<Integer> numbers = Lists.newArrayList();
+        int current = number;
+        while(current > 0){
+            numbers.add(current%10);
+            current = current/10;
+        }
+        for(int i = 0; i < numbers.size(); i ++){
+            if(numbers.get(i) == counter){
+                result  = result + 1;
+            }
+        }
+        return result;
+    }
+
+    Map<String, Long> validMap = new ConcurrentHashMap();
+    private boolean valid(String ip){
+        long now = System.currentTimeMillis();
+        if(Objects.isNull(validMap.get(ip))){
+            validMap.put(ip, now);
+        }else{
+            long oldTime = validMap.get(ip);
+            if(oldTime - now > 30 * 60 * 1000 * 1000){
+                validMap.put(ip, now);
+            }else{
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * 406. 根据身高重建队列
+     * 假设有打乱顺序的一群人站成一个队列。
+     * 每个人由一个整数对(h, k)表示，其中h是这个人的身高，
+     * k是排在这个人前面且身高大于或等于h的人数。
+     * 编写一个算法来重建这个队列。
+     *
+     *输入:
+     * [[7,0], [4,4], [7,1], [5,0], [6,1], [5,2]]
+     * 输出:
+     * [[5,0], [7,0], [5,2], [6,1], [4,4], [7,1]]
+     **/
+    public static int[][] reconstructQueue(int[][] people) {
+        if (people.length <= 1){
+            return people;
+        }
+        //身高降序，k升序
+        Arrays.sort(people, (o1, o2) -> o1[0] == o2[0] ? o1[1] - o2[1] : o2[0] - o1[0]);
+        List<int[]> result = new ArrayList<>();
+        //K值定义为 排在h前面且身高大于或等于h的人数
+        //因为从身高降序开始插入，此时所有人身高都大于等于h
+        //因此K值即为需要插入的位置
+        for (int[] i : people) {
+            int position = i[1];
+            result.add(position, i);
+        }
+        return result.toArray(new int[result.size()][]);
+    }
+
+
+
+    
+    
 }

@@ -14,11 +14,11 @@ import java.util.Arrays;
 public abstract class AbstractSort<T extends Comparable> implements Sort<T> {
 
     //时间复杂度
-    int count = 0;
+    public int count = 0;
 
-    T[] source;
+    public T[] source;
 
-    T[] target;
+    public T[] target;
 
     public void setSource(T[] source) {
         this.source = source;

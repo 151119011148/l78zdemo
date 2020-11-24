@@ -3,6 +3,8 @@ package com.scofen.algorithms.study.sort;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.scofen.algorithms.study.sort.merge.MergeSort;
+import com.scofen.algorithms.study.sort.quick.QuickSort;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,14 +21,15 @@ import java.util.concurrent.ForkJoinTask;
  */
 public class Test {
 
-    private static Integer[] init(){
+    private static Integer[] init(int number){
         Set<Integer> set = Sets.newHashSet();
-        for (int i = 0; i<= 100; i ++){
+        for (int i = 0; i<= number; i ++){
             set.add((int)(Math.random()*1000));
         }
         return set.toArray(new Integer[0]);
     }
-    private static Integer[] source = init();
+
+    private static Integer[] source = init(3);
 
     @org.junit.Test
     public void bubbleSortTest(){
@@ -60,18 +63,14 @@ public class Test {
         System.out.println(Lists.newArrayList(shell.reverse(source)));
     }
 
-    @org.junit.Test
-    public void quickSortTest(){
-        QuickSort quick = new QuickSort();
-        System.out.println(Lists.newArrayList(quick.sort(source, 0, source.length - 1)));
-        System.out.println("quick sorting complexity is : " + quick.getCount());
-    }
 
     @org.junit.Test
     public void mergeSortTest(){
         MergeSort merge = new MergeSort();
         System.out.println(Lists.newArrayList(merge.sort(source)));
         System.out.println("merge sorting complexity is : " + merge.getCount());
+        System.out.println(Lists.newArrayList(merge.reverse(merge.target)));
+        System.out.println(Lists.newArrayList(merge.sort(source, false)));
     }
 
     @org.junit.Test
@@ -86,6 +85,20 @@ public class Test {
         }
         List list = Lists.newArrayList(task.getSource());
         System.out.println(list);
+    }
+
+    @org.junit.Test
+    public void quickSortTest(){
+        QuickSort quick = new QuickSort();
+        System.out.println(Lists.newArrayList(quick.sort(source)));
+        System.out.println("quick sorting complexity is : " + quick.getCount());
+    }
+
+    @org.junit.Test
+    public void heapSortTest(){
+        HeapSort heap = new HeapSort();
+        System.out.println(Lists.newArrayList(heap.sort(source)));
+        System.out.println("heap sorting complexity is : " + heap.getCount());
     }
 
 }

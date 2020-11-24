@@ -1,4 +1,4 @@
-package com.scofen.algorithms.interview.redwar;
+package com.scofen.algorithms.interview;
 
 import org.junit.Test;
 
@@ -53,6 +53,7 @@ public class RedWars {
          result.put("1", String.valueOf(total));
         return  result;
     }
+
 
 
 
