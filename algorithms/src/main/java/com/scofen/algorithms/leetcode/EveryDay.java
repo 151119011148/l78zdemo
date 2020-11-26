@@ -5,7 +5,10 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author 高锋
@@ -33,8 +36,18 @@ public class EveryDay {
 //        shuffle(new int[]{2, 5, 1, 3, 4, 7}, 3);
 
         //452
-        findMinArrowShots(new int[][]{{10, 16}, {2, 8}, {1, 6}, {7, 12}});
+//        findMinArrowShots(new int[][]{{10, 16}, {2, 8}, {1, 6}, {7, 12}});
+
+        //164
+//        numJewelsInStones("aA", "aAAbbbb");
+
+//        arrayStringsAreEqual(new String[]{"ab", "c"}, new String[]{"a", "bc"});
+
+        dominantIndex(new int[]{0,0,0,1});
+
     }
+
+
 
     /**
      * 1030. 距离顺序排列矩阵单元格
@@ -426,13 +439,202 @@ public class EveryDay {
 
     /**
      * 222. 完全二叉树的节点个数
-     完全二叉树的定义如下：在完全二叉树中，
-     除了最底层节点可能没填满外，其余每层节点数都达到最大值，
-     并且最下面一层的节点都集中在该层最左边的若干位置。
-     若最底层为第 h 层，则该层包含 1~ 2h 个节点。
+     * 完全二叉树的定义如下：在完全二叉树中，
+     * 除了最底层节点可能没填满外，其余每层节点数都达到最大值，
+     * 并且最下面一层的节点都集中在该层最左边的若干位置。
+     * 若最底层为第 h 层，则该层包含 1~ 2h 个节点。
      */
     public int countNodes(TreeNode root) {
         return root == null ? 0 : countNodes(root.left) + countNodes(root.right) + 1;
     }
+
+    /**
+     * 剑指 Offer 24. 反转链表.
+     * 定义一个函数，输入一个链表的头节点，反转该链表并输出反转后链表的头节点。
+     */
+    public ListNode reverseList(ListNode head) {
+        //递归终止条件是当前节点为空或者下一个节点为空
+        if (head == null || head.next == null) {
+            return head;
+        }
+        //递归调用，反转每一个节点
+        ListNode currentNode = reverseList(head.next);
+        //每一个节点是怎么反转的
+        head.next.next = head;
+        //为了防止循环链表，需要将head.next设置为null
+        head.next = null;
+        return currentNode;
+
+    }
+
+    /**
+     * 剑指 Offer 24. 反转链表.
+     * 定义一个函数，输入一个链表的头节点，反转该链表并输出反转后链表的头节点。
+     */
+    public ListNode reverseList2(ListNode head) {
+/*        我们可以申请两个指针：
+        第一个指针叫 pre，最初是指向 null 的
+        第二个指针 cur 指向 head，然后不断遍历 cur
+        每次迭代到 cur，都将 cur 的 next 指向 pre，然后 pre 和 cur 前进一位。
+        都迭代完了(cur 变成 null 了)，pre 就是最后一个节点了。*/
+
+        ListNode pre = null;
+        ListNode cur = head;
+        ListNode tmp = null;
+        while (cur != null) {
+            tmp = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = tmp;
+        }
+        return pre;
+
+    }
+
+    /**
+     * 164. 最大间距
+     * 给定一个无序的数组，找出数组在排序之后，相邻元素之间最大的差值。
+     * 如果数组元素个数小于 2，则返回 0。
+     */
+    public int maximumGap(int[] nums) {
+        if (nums.length == 1) {
+            return 0;
+        }
+        Arrays.sort(nums);
+        int result = 0;
+        for (int i = 0; i < nums.length - 1; i++) {
+            int temp = nums[i + 1] - nums[i];
+            result = Math.max(result, temp);
+        }
+        return result;
+    }
+
+    /**
+     * 771. 宝石与石头
+      给定字符串J 代表石头中宝石的类型，和字符串 S代表你拥有的石头。 S 中每个字符代表了一种你拥有的石头的类型，你想知道你拥有的石头中有多少是宝石。
+     J 中的字母不重复，J 和 S中的所有字符都是字母。字母区分大小写，因此"a"和"A"是不同类型的石头。
+
+     输入: J = "aA", S = "aAAbbbb"
+     输出: 3
+     */
+    public static int numJewelsInStones(String J, String S) {
+        int jewelsCount = 0;
+        Set<Character> jewelsSet = new HashSet<>();
+        int jewelsLength = J.length(), stonesLength = S.length();
+        for (int i = 0; i < jewelsLength; i++) {
+            char jewel = J.charAt(i);
+            jewelsSet.add(jewel);
+        }
+        for (int i = 0; i < stonesLength; i++) {
+            char stone = S.charAt(i);
+            if (jewelsSet.contains(stone)) {
+                jewelsCount++;
+            }
+        }
+        return jewelsCount;
+
+    }
+
+    /**
+     * 1662. 检查两个字符串数组是否相等
+      给你两个字符串数组 word1 和 word2 。如果两个数组表示的字符串相同，返回 true ；否则，返回 false 。
+     数组表示的字符串 是由数组中的所有元素 按顺序 连接形成的字符串。
+
+     输入：word1 = ["ab", "c"], word2 = ["a", "bc"]
+     输出：true
+     解释：
+     word1 表示的字符串为 "ab" + "c" -> "abc"
+     word2 表示的字符串为 "a" + "bc" -> "abc"
+     两个字符串相同，返回 true
+     */
+    public static boolean arrayStringsAreEqual(String[] word1, String[] word2) {
+        StringBuilder sb1 = new StringBuilder();
+        StringBuilder sb2 = new StringBuilder();
+        for (String value : word1) {
+            sb1.append(value);
+        }
+        for (String value : word2) {
+            sb2.append(value);
+        }
+        return Objects.equals(sb1.toString(), sb2.toString());
+    }
+
+
+    /**
+     * 747. 至少是其他数字两倍的最大数
+     在一个给定的数组nums中，总是存在一个最大元素 。
+     查找数组中的最大元素是否至少是数组中每个其他数字的两倍。
+     如果是，则返回最大元素的索引，否则返回-1。
+
+     输入: nums = [3, 6, 1, 0]
+     输出: 1
+     解释: 6是最大的整数, 对于数组中的其他整数,
+     6大于数组中其他元素的两倍。6的索引是1, 所以我们返回1.
+     */
+    public static int dominantIndex(int[] nums) {
+        int maxIndex = 0;
+        for (int i = 0; i < nums.length; ++i) {
+            if (nums[i] > nums[maxIndex]) {
+                maxIndex = i;
+            }
+        }
+        for (int i = 0; i < nums.length; ++i) {
+            if (maxIndex != i && nums[maxIndex] < 2 * nums[i]) {
+                return -1;
+            }
+        }
+        return maxIndex;
+    }
+
+    /**
+     * 1013. 将数组分成和相等的三个部分
+     给你一个整数数组 A，只有可以将其划分为三个和相等的非空部分时才返回 true，否则返回 false。
+
+     形式上，如果可以找出索引 i+1 < j 
+     且满足 A[0] + A[1] + ... + A[i] == A[i+1] + A[i+2] + ... + A[j-1] == A[j] + A[j-1] + ... + A[A.length - 1] 
+     就可以将数组三等分。
+
+
+     输入：[0,2,1,-6,6,-7,9,1,2,0,1]
+     输出：true
+     解释：0 + 2 + 1 = -6 + 6 - 7 + 9 + 1 = 2 + 0 + 1
+     */
+    public boolean canThreePartsEqualSum(int[] A) {
+        int sum = 0;
+        for(int i : A){
+            sum += i;
+        }
+        if(sum%3 != 0){
+            // 总和不是3的倍数，直接返回false
+            return false;
+        }
+
+        // 使用双指针,从数组两头开始一起找，节约时间
+        int left = 0;
+        int leftSum = A[left];
+        int right = A.length - 1;
+        int rightSum = A[right];
+
+        // 使用left + 1 < right 的原因，防止只能将数组分成两个部分
+        // 例如：[1,-1,1,-1]，使用left < right作为判断条件就会出错
+        while(left + 1 < right){
+            if(leftSum == sum/3 && rightSum == sum/3){
+                // 左右两边都等于 sum/3 ，中间也一定等于
+                return true;
+            }
+            if(leftSum != sum/3){
+                // left = 0赋予了初值，应该先left++，在leftSum += A[left];
+                leftSum += A[++left];
+            }
+            if(rightSum != sum/3){
+                // right = A.length - 1 赋予了初值，应该先right--，在rightSum += A[right];
+                rightSum += A[--right];
+            }
+        }
+        return false;
+    }
+
+
+
 
 }
