@@ -22,4 +22,6 @@ public interface Sort<T extends Comparable> {
 
     public T[] sort(T[] target, boolean asc);
 
+    public int rank(T t);
+
 }

@@ -90,4 +90,20 @@ public abstract class AbstractSort<T extends Comparable> implements Sort<T> {
         return count;
     };
 
+    @Override
+    public int rank(T t) {
+        int lo = 0;
+        int hi = target.length - 1;
+        while (lo <= hi){
+            int mid = lo + (hi - lo)/2;
+            if (less(t, target[mid])){
+                hi = mid - 1;
+            }else if (less(target[mid], t)){
+                lo = mid + 1;
+            }else {
+                return mid;
+            }
+        }
+        return lo;
+    }
 }

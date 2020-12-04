@@ -165,7 +165,7 @@ TreeNode
 ```java
 static final class TreeNode<K,V> extends Node<K,V> {
     //树形结构的属性定义
-    TreeNode<K,V> parent;  // red-black tree links
+    TreeNode<K,V> parent;  binarytree
     TreeNode<K,V> left;
     TreeNode<K,V> right;
     TreeNode<K,V> prev;    // needed to unlink next upon deletion

@@ -3,6 +3,7 @@ package com.scofen.algorithms.study.sort;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.scofen.algorithms.study.sort.heap.HeapSort;
 import com.scofen.algorithms.study.sort.merge.MergeSort;
 import com.scofen.algorithms.study.sort.quick.QuickSort;
 

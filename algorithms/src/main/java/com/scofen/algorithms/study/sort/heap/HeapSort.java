@@ -1,4 +1,6 @@
-package com.scofen.algorithms.study.sort;
+package com.scofen.algorithms.study.sort.heap;
+
+import com.scofen.algorithms.study.sort.AbstractSort;
 
 /**
  * @author 高锋
@@ -51,11 +53,11 @@ public class HeapSort extends AbstractSort {
         Comparable father = target[i];
         //从i结点的左子结点开始，也就是2i+1处开始
         for (int k = i * 2 + 1; k < length; k = k * 2 + 1) {
-            //如果右子节点小于总长度&&左子结点小于右子结点，k指向右子结点
+            //如果右子节点小于总长度&&左子结点小于右子结点，k指向右子结点。没毛病
             if (k + 1 < length && less(target[k], target[k + 1])) {
                 k++;
             }
-            //如果子节点大于父节点，将子节点值赋给父节点（不用进行交换）
+            //如果（左|右）子节点大于父节点，将子节点值赋给父节点（不用进行交换）
             if (less(father, target[k])) {
                 target[i] = target[k];
                 i = k;

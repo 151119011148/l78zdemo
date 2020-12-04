@@ -5,14 +5,16 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 /**
  * @author 高锋
- * @className: EveryDay
+ * @className: HeapSort
  * @description: TODO
  * @date 2020/11/1714:13
  */
@@ -43,8 +45,9 @@ public class EveryDay {
 
 //        arrayStringsAreEqual(new String[]{"ab", "c"}, new String[]{"a", "bc"});
 
-        dominantIndex(new int[]{0,0,0,1});
-
+//        dominantIndex(new int[]{0,0,0,1});
+        //204
+        countPrimes1(10);
     }
 
 
@@ -634,7 +637,101 @@ public class EveryDay {
         return false;
     }
 
+    /**
+     * 454. 四数相加 II
+     给定四个包含整数的数组列表 A , B , C , D ,计算有多少个元组 (i, j, k, l) ，使得 A[i] + B[j] + C[k] + D[l] = 0。
 
+     为了使问题简单化，所有的 A, B, C, D 具有相同的长度 N，且 0 ≤ N ≤ 500 。
+     所有整数的范围在 -228 到 228 - 1 之间，最终结果不会超过 231 - 1
+
+     输入:
+     A = [ 1, 2]
+     B = [-2,-1]
+     C = [-1, 2]
+     D = [ 0, 2]
+
+     输出:
+     2
+
+     解释:
+     两个元组如下:
+     1. (0, 0, 0, 1) -> A[0] + B[0] + C[0] + D[1] = 1 + (-2) + (-1) + 2 = 0
+     2. (1, 1, 0, 0) -> A[1] + B[1] + C[0] + D[0] = 2 + (-1) + (-1) + 0 = 0
+     */
+    public int fourSumCount(int[] A, int[] B, int[] C, int[] D) {
+//        我们可以将四个数组分成两部分，AA 和 BB 为一组，CC 和 DD 为另外一组。
+//        对于 AA 和 BB，我们使用二重循环对它们进行遍历，得到所有 A[i]+B[j]A[i]+B[j] 的值
+//        并存入哈希映射中。对于哈希映射中的每个键值对，每个键表示一种 A[i]+B[j]A[i]+B[j]，
+//        对应的值为 A[i]+B[j]A[i]+B[j] 出现的次数。
+
+//        对于 CC 和 DD，我们同样使用二重循环对它们进行遍历。当遍历到 C[k]+D[l]C[k]+D[l] 时，
+//        如果 -(C[k]+D[l])−(C[k]+D[l]) 出现在哈希映射中，
+//        那么将 -(C[k]+D[l])−(C[k]+D[l]) 对应的值累加进答案中。
+//        最终即可得到满足 A[i]+B[j]+C[k]+D[l]=0A[i]+B[j]+C[k]+D[l]=0 的四元组数目。
+
+        Map<Integer, Integer> countAB = new HashMap<>();
+        for (int u : A) {
+            for (int v : B) {
+                countAB.put(u + v, countAB.getOrDefault(u + v, 0) + 1);
+            }
+        }
+        int ans = 0;
+        for (int u : C) {
+            for (int v : D) {
+                if (countAB.containsKey(-u - v)) {
+                    ans += countAB.get(-u - v);
+                }
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 204. 计数质数
+     统计所有小于非负整数 n 的质数的数量
+
+     输入：n = 10
+     输出：4
+     解释：小于 10 的质数一共有 4 个, 它们是 2, 3, 5, 7 。
+     */
+    public int countPrimes(int n) {
+        int count = 0;
+        for(int i = 2;i<n;i++){
+            if(isPrime(i)) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+    //暴力判断根号x
+    public boolean isPrime(int x){
+        for(int i = 2;i*i<=x;i++){
+            if(x%i==0) {
+                return false;
+            }
+
+        }
+        return true;
+    }
+
+    //埃氏筛
+    public static int countPrimes1(int n) {
+        int[] isPrime = new int[n];
+        Arrays.fill(isPrime, 1);
+        int ans = 0;
+        for (int i = 2; i < n; ++i) {
+            if (isPrime[i] == 1) {
+                ans += 1;
+                if ((long) i * i < n) {
+                    for (int j = i * i; j < n; j += i) {
+                        isPrime[j] = 0;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
 
 
 }
