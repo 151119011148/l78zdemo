@@ -43,7 +43,7 @@ public class EveryDay {
         //164
 //        numJewelsInStones("aA", "aAAbbbb");
 
-//        arrayStringsAreEqual(new String[]{"ab", "c"}, new String[]{"a", "bc"});
+//        arrayStringsAreEqual(new Strings[]{"ab", "c"}, new Strings[]{"a", "bc"});
 
 //        dominantIndex(new int[]{0,0,0,1});
         //204

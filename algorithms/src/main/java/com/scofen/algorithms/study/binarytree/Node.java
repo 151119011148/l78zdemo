@@ -1,9 +1,7 @@
 package com.scofen.algorithms.study.binarytree;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,15 +10,19 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TreeNode {
+public class Node {
 
     int val;
 
-    TreeNode left;
+    Node left;
 
-    TreeNode right;
+    Node right;
 
-    TreeNode(int val) {
+    Node next;
+
+    Node ans;
+
+    Node(int val) {
         this.val = val;
     }
 
