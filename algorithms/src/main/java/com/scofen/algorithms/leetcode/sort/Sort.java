@@ -1,4 +1,4 @@
-package com.scofen.algorithms.leetcode;
+package com.scofen.algorithms.leetcode.sort;
 
 import com.google.common.collect.Lists;
 import com.scofen.algorithms.utils.BitUtil;
@@ -24,11 +24,11 @@ public class Sort {
 
     public static void main(String[] args) {
         //1002
-/*        String[] param1002 = new String[]{"bella","label","roller"};
+/*        Strings[] param1002 = new Strings[]{"bella","label","roller"};
         System.out.println(commonChars(param1002));*/
 
         //1370
-//        String a = "art";
+//        Strings a = "art";
 //        System.out.println(sortString(a));
         //941
 //        System.out.println(validMountainArray(new int[]{0,3,2,1}));
@@ -39,6 +39,8 @@ public class Sort {
 //        int[][] param = {{7,0}, {4,4}, {7,1}, {5,0}, {6,1}, {5,2}};
 //        System.out.println(reconstructQueue(param));
 
+
+        merge(new int[]{1,2,3,0,0,0}, 3, new int[]{2,5,6}, 3);
 
     }
 
@@ -328,29 +330,7 @@ public class Sort {
     }
 
 
-    /**
-     * 122. 买卖股票的最佳时机 II
-     * 给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。
-     * 设计一个算法来计算你所能获取的最大利润。你可以尽可能地完成更多的交易（多次买卖一支股票）。
-     * 注意：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
-     * <p>
-     * 输入: [7,1,5,3,6,4]
-     * 输出: 7
-     * 解释: 在第 2 天（股票价格 = 1）的时候买入，在第 3 天（股票价格 = 5）的时候卖出, 这笔交易所能获得利润 = 5-1 = 4 。
-     *      随后，在第 4 天（股票价格 = 3）的时候买入，在第 5 天（股票价格 = 6）的时候卖出, 这笔交易所能获得利润 = 6-3 = 3 。
-     *
-     * @param prices
-     * @return
-     */
-    public int maxProfit(int[] prices) {
-        int result = 0;
-        for (int i = 1; i <= prices.length - 1; i++) {
-            if (prices[i] > prices[i - 1]) {
-                result = result + prices[i] - prices[i - 1];
-            }
-        }
-        return result;
-    }
+
 
 
     /**
@@ -546,5 +526,31 @@ public class Sort {
         return ans;
     }
 
+    /**
+     *88. 合并两个有序数组
+     * "https://leetcode-cn.com/problems/merge-sorted-array"
+     * @param nums1
+     * @param m
+     * @param nums2
+     * @param n
+     */
+    public static void merge(int[] nums1, int m, int[] nums2, int n) {
+//        双指针 / 从后往前
+        // two get pointers for nums1 and nums2
+        int p1 = m - 1;
+        int p2 = n - 1;
+        // set pointer for nums1
+        int p = m + n - 1;
+
+        // while there are still elements to compare
+        while ((p1 >= 0) && (p2 >= 0))
+            // compare two elements from nums1 and nums2
+            // and add the largest one in nums1
+            nums1[p--] = (nums1[p1] < nums2[p2]) ? nums2[p2--] : nums1[p1--];
+
+        // add missing elements from nums2
+        System.arraycopy(nums2, 0, nums1, 0, p2 + 1);
+
+    }
 
 }

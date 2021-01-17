@@ -1,13 +1,18 @@
 package com.scofen.algorithms.study.binarytree;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.Stack;
+
+import org.springframework.util.CollectionUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -36,16 +41,16 @@ public class BinaryTreeImpl implements BinaryTree{
      * @Param [root]
      **/
     @Override
-    public List<Integer> preOrderRec(TreeNode root) {
+    public List<Integer> preOrderRec(Node root) {
         if (root == null) {
         } else {
             System.out.println(root.val);
             result.add(root.val);
-            TreeNode leftTree = root.left;
+            Node leftTree = root.left;
             if (leftTree != null) {
                 preOrderRec(leftTree);
             }
-            TreeNode rightTree = root.right;
+            Node rightTree = root.right;
             if (rightTree != null) {
                 preOrderRec(rightTree);
             }
@@ -62,8 +67,8 @@ public class BinaryTreeImpl implements BinaryTree{
      * @Param [root]
      **/
     @Override
-    public List<Integer> preOrderStack(TreeNode root) {
-        Stack<TreeNode> stack = new Stack<>();
+    public List<Integer> preOrderStack(Node root) {
+        Stack<Node> stack = new Stack<>();
         while (root != null || !stack.isEmpty()) {
             while (root != null) {
                 stack.push(root);
@@ -89,7 +94,7 @@ public class BinaryTreeImpl implements BinaryTree{
      * @Param [root]
      **/
     @Override
-    public List<Integer> inOrderRec(TreeNode root) {
+    public List<Integer> inOrderRec(Node root) {
         if (root == null) {
         } else {
             inOrderRec(root.left);
@@ -109,11 +114,11 @@ public class BinaryTreeImpl implements BinaryTree{
      * @Param [root]
      **/
     @Override
-    public List<Integer> inOrderStack(TreeNode root) {
+    public List<Integer> inOrderStack(Node root) {
         if (root == null) {
             return null;
         }
-        Stack<TreeNode> s = new Stack<TreeNode>();
+        Stack<Node> s = new Stack<Node>();
         while (root != null || !s.isEmpty()) {
             while (root != null) {
                 s.push(root);//先访问再入栈
@@ -136,7 +141,7 @@ public class BinaryTreeImpl implements BinaryTree{
      * @Param [root]
      **/
     @Override
-    public List<Integer> postOrderRec(TreeNode root) {
+    public List<Integer> postOrderRec(Node root) {
         if (root == null) {
         } else {
             postOrderRec(root.left);
@@ -164,15 +169,15 @@ public class BinaryTreeImpl implements BinaryTree{
      * @Param [root]
      **/
     @Override
-    public List<Integer> postOrderStack(TreeNode root) {
+    public List<Integer> postOrderStack(Node root) {
         if (root == null) {
             return null;
         }
-        Stack<TreeNode> s = new Stack<>();
-        Map<TreeNode, Boolean> map = new HashMap<>();
+        Stack<Node> s = new Stack<>();
+        Map<Node, Boolean> map = new HashMap<>();
         s.push(root);
         while (!s.isEmpty()) {
-            TreeNode temp = s.peek();
+            Node temp = s.peek();
             if (temp.left != null && !map.containsKey(temp.left)) {
                 temp = temp.left;
                 while (temp != null) {
@@ -189,7 +194,7 @@ public class BinaryTreeImpl implements BinaryTree{
                 s.push(temp.right);
                 continue;
             }
-            TreeNode t = s.pop();
+            Node t = s.pop();
             map.put(t, true);
             result.add(t.val);
             System.out.println(t.val);
@@ -204,19 +209,19 @@ public class BinaryTreeImpl implements BinaryTree{
      *             只要队列不为空，然后出队列，并访问，接着将访问节点的左右子树依次入队列
      */
     @Override
-    public List<List<Integer>> levelTravel(TreeNode root) {
+    public List<List<Integer>> levelTravel(Node root) {
         List<List<Integer>> ret = new ArrayList<>();
         if (root == null) {
             return ret;
         }
 
-        Queue<TreeNode> queue = new LinkedList<>();
+        Queue<Node> queue = new LinkedList<>();
         queue.offer(root);
         while (!queue.isEmpty()) {
             List<Integer> level = new ArrayList<>();
             int currentLevelSize = queue.size();
             for (int i = 1; i <= currentLevelSize; ++i) {
-                TreeNode node = queue.poll();
+                Node node = queue.poll();
                 assert node != null;
                 level.add(node.val);
                 if (node.left != null) {
@@ -235,7 +240,7 @@ public class BinaryTreeImpl implements BinaryTree{
 
     public int depth = 0;
     @Override
-    public int maxDepthByHigh(TreeNode root, int temp) {
+    public int maxDepthByHigh(Node root, int temp) {
         if (root == null) {
             return 0;
         }
@@ -248,7 +253,7 @@ public class BinaryTreeImpl implements BinaryTree{
     }
 
     @Override
-    public int maxDepthByLow(TreeNode root) {
+    public int maxDepthByLow(Node root) {
         if (root == null) {
             return 0;
         }
@@ -261,26 +266,26 @@ public class BinaryTreeImpl implements BinaryTree{
 
     //迭代实现
     @Override
-    public TreeNode buildTreePreInStack(int[] preorder, int[] inorder) {
+    public Node buildTreePreInStack(int[] preorder, int[] inorder) {
         if (preorder == null || preorder.length == 0) {
             return null;
         }
-        TreeNode root = new TreeNode(preorder[0]);
-        Deque<TreeNode> stack = new LinkedList<>();
+        Node root = new Node(preorder[0]);
+        Deque<Node> stack = new LinkedList<>();
         stack.push(root);
         int inorderIndex = 0;
         for (int i = 1; i < preorder.length; i++) {
             int preorderVal = preorder[i];
-            TreeNode node = stack.peek();
+            Node node = stack.peek();
             if (node.val != inorder[inorderIndex]) {
-                node.left = new TreeNode(preorderVal);
+                node.left = new Node(preorderVal);
                 stack.push(node.left);
             } else {
                 while (!stack.isEmpty() && stack.peek().val == inorder[inorderIndex]) {
                     node = stack.pop();
                     inorderIndex++;
                 }
-                node.right = new TreeNode(preorderVal);
+                node.right = new Node(preorderVal);
                 stack.push(node.right);
             }
         }
@@ -290,7 +295,7 @@ public class BinaryTreeImpl implements BinaryTree{
 
     //递归实现
     @Override
-    public TreeNode buildTreePreInRec(int[] preorder, int[] inorder) {
+    public Node buildTreePreInRec(int[] preorder, int[] inorder) {
         int preLen = preorder.length;
         int inLen = inorder.length;
         if (preLen != inLen){
@@ -303,24 +308,24 @@ public class BinaryTreeImpl implements BinaryTree{
         return buildTreePreIn(preorder, 0, preLen -1, map, 0, inLen -1);
     }
 
-    private TreeNode buildTreePreIn(int[] preorder, int preLeft, int preRight, Map<Integer, Integer> map, int inLeft, int inRight) {
+    private Node buildTreePreIn(int[] preorder, int preLeft, int preRight, Map<Integer, Integer> map, int inLeft, int inRight) {
         if (preLeft > preRight || inLeft > inRight){
             return null;
         }
         int rootVal = preorder[preLeft];
-        TreeNode root = new TreeNode(rootVal);
+        Node root = new Node(rootVal);
         //中序子树根节点位置
         int pIndex = map.get(rootVal);
 
         root.left = buildTreePreIn(preorder, preLeft + 1, pIndex - inLeft + preLeft,
-            map, inLeft, pIndex - 1);
+                map, inLeft, pIndex - 1);
         root.right = buildTreePreIn(preorder, pIndex - inLeft + preLeft + 1, preRight,
-            map, pIndex + 1, inRight);
+                map, pIndex + 1, inRight);
         return root;
     }
 
     @Override
-    public TreeNode buildTreeInPostRec(int[] inorder, int[] postorder) {
+    public Node buildTreeInPostRec(int[] inorder, int[] postorder) {
         int postLen = postorder.length;
         int inLen = inorder.length;
         if (postLen != inLen){
@@ -333,12 +338,12 @@ public class BinaryTreeImpl implements BinaryTree{
         return buildTreeInPost(postorder, 0, postLen -1, map, 0, inLen -1);
     }
 
-    private TreeNode buildTreeInPost(int[] postorder, int postLeft, int postRight, Map<Integer, Integer> map, int inLeft, int inRight) {
+    private Node buildTreeInPost(int[] postorder, int postLeft, int postRight, Map<Integer, Integer> map, int inLeft, int inRight) {
         if (postLeft > postRight || inLeft > inRight){
             return null;
         }
         int rootVal = postorder[postRight];
-        TreeNode root = new TreeNode(rootVal);
+        Node root = new Node(rootVal);
         //中序子树根节点位置
         int pIndex = map.get(rootVal);
 
@@ -349,51 +354,243 @@ public class BinaryTreeImpl implements BinaryTree{
         return root;
     }
 
+
+
     @Override
-    public TreeNode buildTreeInPostStack(int[] inorder, int[] postorder) {
+    public Node buildTreeInPost(int[] inorder, int[] postorder) {
         return null;
     }
 
     @Override
-    public TreeNode connect(TreeNode root) {
+    public Node buildTreeInPostStack(int[] inorder, int[] postorder) {
+        return null;
+    }
+
+
+    @Override
+    public Node connect(Node root) {
         if (root == null) {
-            return root;
+            return null;
         }
-
         // 初始化队列同时将第一层节点加入队列中，即根节点
-        Queue<TreeNode> queue = new LinkedList<>();
+        Queue<Node> queue = new LinkedList<Node>();
         queue.add(root);
-
         // 外层的 while 循环迭代的是层数
         while (!queue.isEmpty()) {
-
             // 记录当前队列大小
-            int size = queue.size();
-
+            int currentLevelSize = queue.size();
             // 遍历这一层的所有节点
-            for (int i = 0; i < size; i++) {
-
+            for (int i = 0; i < currentLevelSize; i ++) {
                 // 从队首取出元素
-                TreeNode node = queue.poll();
-
+                Node current = queue.poll();
+                assert current != null;
                 // 连接
-                if (i < size - 1) {
-                    node.next = queue.peek();
+                if (i < currentLevelSize - 1) {
+                    current.next = queue.peek();
                 }
-
                 // 拓展下一层节点
-                if (node.left != null) {
-                    queue.add(node.left);
+                if (current.left != null) {
+                    queue.offer(current.left);
                 }
-                if (node.right != null) {
-                    queue.add(node.right);
+                if (current.right != null) {
+                    queue.offer(current.right);
                 }
             }
         }
+        return root;
+    }
 
-        // 返回根节点
+    Node ans;
+    @Override
+    public Node lowestCommonAncestor(Node root, Node p, Node q) {
+        //第一种：递归
+        this.dfs(root, p, q);
+        return ans;
+        //第二种：
+/*        dfs(root);
+        while (p != null) {
+            visited.add(p.val);
+            p = parent.get(p.val);
+        }
+        while (q != null) {
+            if (visited.contains(q.val)) {
+                return q;
+            }
+            q = parent.get(q.val);
+        }
+        return null;*/
+
+    }
+
+
+    private boolean dfs(Node root, Node p, Node q) {
+        if (root == null) {
+            return false;
+        }
+        boolean lson = dfs(root.left, p, q);
+        boolean rson = dfs(root.right, p, q);
+        if ((lson && rson) || ((root.val == p.val || root.val == q.val) && (lson || rson))) {
+            ans = root;
+        }
+        return lson || rson || (root.val == p.val || root.val == q.val);
+    }
+
+    Map<Integer, Node> parent = new HashMap<Integer, Node>();
+    Set<Integer> visited = new HashSet<Integer>();
+
+    /**
+     * 我们可以用哈希表存储所有节点的父节点，然后我们就可以利用节点的父节点信息
+     * 从 p 结点开始不断往上跳，并记录已经访问过的节点，再从 q 节点开始不断往上跳，
+     * 如果碰到已经访问过的节点，那么这个节点就是我们要找的最近公共祖先。
+     * @param root
+     */
+    public void dfs(Node root) {
+//        从根节点开始遍历整棵二叉树，用哈希表记录每个节点的父节点指针。
+//        从 p 节点开始不断往它的祖先移动，并用数据结构记录已经访问过的祖先节点。
+//        同样，我们再从 q 节点开始不断往它的祖先移动，如果有祖先已经被访问过，即意味着这是 p 和 q 的深度最深的公共祖先，即 LCA 节点。
+        if (root.left != null) {
+            parent.put(root.left.val, root);
+            dfs(root.left);
+        }
+        if (root.right != null) {
+            parent.put(root.right.val, root);
+            dfs(root.right);
+        }
+    }
+
+    @Override
+    public String serialize(Node root) {
+        return serialize(root, "");
+    }
+
+    public String serialize(Node root, String str) {
+        if (root == null) {
+            str += "null,";
+        } else {
+            str += root.val + ",";
+            str = serialize(root.left, str);
+            str = serialize(root.right, str);
+        }
+        return str;
+    }
+
+
+    @Override
+    public Node deserialize(String data) {
+        String[] data_array = data.split(",");
+        List<String> data_list = new LinkedList<>(Arrays.asList(data_array));
+        return deserialize(data_list);
+    }
+
+    private Node deserialize(List<String> list) {
+        if (CollectionUtils.isEmpty(list)){
+            return null;
+        }
+        if (list.get(0).equals("null")) {
+            list.remove(0);
+            return null;
+        }
+        Node root = new Node(Integer.valueOf(list.get(0)));
+        list.remove(0);
+        root.left = deserialize(list);
+        root.right = deserialize(list);
         return root;
 
     }
+
+    /**
+     * 108. 将有序数组转换为二叉搜索树
+     *"https://leetcode-cn.com/problems/convert-sorted-array-to-binary-search-tree/"
+     将一个按照升序排列的有序数组，转换为一棵高度平衡二叉搜索树。
+     本题中，一个高度平衡二叉树是指一个二叉树每个节点 的左右两个子树的高度差
+     的绝对值不超过 1。
+     给定有序数组: [-10,-3,0,5,9],
+
+     一个可能的答案是：[0,-3,9,-10,null,5]，它可以表示下面这个高度平衡二叉搜索树：
+     0
+     / \
+     -3   9
+     /   /
+     -10  5
+     * @param nums
+     * @return
+     */
+    public Node sortedArrayToBST(int[] nums) {
+        return helper(nums, 0, nums.length - 1);
+    }
+
+    public Node helper(int[] nums, int left, int right) {
+        if (left > right) {
+            return null;
+        }
+
+        // 总是选择中间位置左边的数字作为根节点
+        int mid = (left + right) / 2;
+
+        Node root = new Node(nums[mid]);
+        root.left = helper(nums, left, mid - 1);
+        root.right = helper(nums, mid + 1, right);
+        return root;
+    }
+
+    /**
+     * 103. 二叉树的锯齿形层序遍历
+     * "https://leetcode-cn.com/problems/binary-tree-zigzag-level-order-traversal/"
+     * 给定一个二叉树，返回其节点值的锯齿形层序遍历。
+     * （即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。
+     *
+     * 例如：
+     * 给定二叉树 [3,9,20,null,null,15,7],
+     *
+     *     3
+     *    / \
+     *   9  20
+     *     /  \
+     *    15   7
+     * 返回锯齿形层序遍历如下：
+     *
+     * [
+     *   [3],
+     *   [20,9],
+     *   [15,7]
+     * ]
+     * @param root
+     * @return
+     */
+    public List<List<Integer>> zigzagLevelOrder(Node root) {
+        List<List<Integer>> ans = new LinkedList<>();
+        if (root == null) {
+            return ans;
+        }
+
+        Queue<Node> nodeQueue = new LinkedList<>();
+        nodeQueue.add(root);
+        boolean isOrderLeft = true;
+
+        while (!nodeQueue.isEmpty()) {
+            Deque<Integer> levelList = new LinkedList<>();
+            int size = nodeQueue.size();
+            for (int i = 0; i < size; ++i) {
+                Node curNode = nodeQueue.poll();
+                assert curNode != null;
+                if (isOrderLeft) {
+                    levelList.addLast(curNode.val);
+                } else {
+                    levelList.addFirst(curNode.val);
+                }
+                if (curNode.left != null) {
+                    nodeQueue.add(curNode.left);
+                }
+                if (curNode.right != null) {
+                    nodeQueue.add(curNode.right);
+                }
+            }
+            ans.add(new LinkedList<>(levelList));
+            isOrderLeft = !isOrderLeft;
+        }
+
+        return ans;
+    }
+
 
 }
