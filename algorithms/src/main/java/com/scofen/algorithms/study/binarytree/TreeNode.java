@@ -20,6 +20,8 @@ public class TreeNode {
 
     TreeNode right;
 
+    TreeNode next;
+
     TreeNode(int val) {
         this.val = val;
     }

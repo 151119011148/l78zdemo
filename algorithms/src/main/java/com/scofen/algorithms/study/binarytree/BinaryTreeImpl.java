@@ -300,28 +300,100 @@ public class BinaryTreeImpl implements BinaryTree{
         for (int i = 0 ; i < inLen; i ++){
             map.put(inorder[i], i);
         }
-        return buildTree(preorder, 0, preLen -1, map, 0, inLen -1);
+        return buildTreePreIn(preorder, 0, preLen -1, map, 0, inLen -1);
     }
 
-    private TreeNode buildTree(int[] preorder, int preLeft, int preRight, Map<Integer, Integer> map, int inLeft, int inRight) {
+    private TreeNode buildTreePreIn(int[] preorder, int preLeft, int preRight, Map<Integer, Integer> map, int inLeft, int inRight) {
         if (preLeft > preRight || inLeft > inRight){
             return null;
         }
         int rootVal = preorder[preLeft];
         TreeNode root = new TreeNode(rootVal);
-        //中序子树根本节点位置
+        //中序子树根节点位置
         int pIndex = map.get(rootVal);
 
-        root.left = buildTree(preorder, preLeft + 1, pIndex - inLeft + preLeft,
+        root.left = buildTreePreIn(preorder, preLeft + 1, pIndex - inLeft + preLeft,
             map, inLeft, pIndex - 1);
-        root.right = buildTree(preorder, pIndex - inLeft + preLeft + 1, preRight,
+        root.right = buildTreePreIn(preorder, pIndex - inLeft + preLeft + 1, preRight,
             map, pIndex + 1, inRight);
         return root;
     }
 
     @Override
-    public TreeNode buildTreeInPost(int[] inorder, int[] postorder) {
+    public TreeNode buildTreeInPostRec(int[] inorder, int[] postorder) {
+        int postLen = postorder.length;
+        int inLen = inorder.length;
+        if (postLen != inLen){
+            throw new RuntimeException("Incorrect Data Input!");
+        }
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0 ; i < inLen; i ++){
+            map.put(inorder[i], i);
+        }
+        return buildTreeInPost(postorder, 0, postLen -1, map, 0, inLen -1);
+    }
+
+    private TreeNode buildTreeInPost(int[] postorder, int postLeft, int postRight, Map<Integer, Integer> map, int inLeft, int inRight) {
+        if (postLeft > postRight || inLeft > inRight){
+            return null;
+        }
+        int rootVal = postorder[postRight];
+        TreeNode root = new TreeNode(rootVal);
+        //中序子树根节点位置
+        int pIndex = map.get(rootVal);
+
+        root.left = buildTreeInPost(postorder, postLeft, pIndex - 1 -inLeft + postLeft,
+                map, inLeft, pIndex - 1);
+        root.right = buildTreeInPost(postorder, postRight - inRight+pIndex, postRight - 1,
+                map, pIndex + 1, inRight);
+        return root;
+    }
+
+    @Override
+    public TreeNode buildTreeInPostStack(int[] inorder, int[] postorder) {
         return null;
+    }
+
+    @Override
+    public TreeNode connect(TreeNode root) {
+        if (root == null) {
+            return root;
+        }
+
+        // 初始化队列同时将第一层节点加入队列中，即根节点
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+
+        // 外层的 while 循环迭代的是层数
+        while (!queue.isEmpty()) {
+
+            // 记录当前队列大小
+            int size = queue.size();
+
+            // 遍历这一层的所有节点
+            for (int i = 0; i < size; i++) {
+
+                // 从队首取出元素
+                TreeNode node = queue.poll();
+
+                // 连接
+                if (i < size - 1) {
+                    node.next = queue.peek();
+                }
+
+                // 拓展下一层节点
+                if (node.left != null) {
+                    queue.add(node.left);
+                }
+                if (node.right != null) {
+                    queue.add(node.right);
+                }
+            }
+        }
+
+        // 返回根节点
+        return root;
+
     }
 
 }

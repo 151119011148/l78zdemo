@@ -59,12 +59,27 @@ public interface BinaryTree {
 
     /**
      * 从中序与后序遍历序列构造二叉树
+     * 递归实现
      * @param inorder
      * @param postorder
      * @return
      */
-    public TreeNode buildTreeInPost(int[] inorder, int[] postorder);
+    public TreeNode buildTreeInPostRec(int[] inorder, int[] postorder);
 
+    /**
+     * 从中序与后序遍历序列构造二叉树
+     * 递归实现
+     * @param inorder
+     * @param postorder
+     * @return
+     */
+    public TreeNode buildTreeInPostStack(int[] inorder, int[] postorder);
+
+
+    /**
+     * 填充每个节点的下一个右侧节点指针
+     */
+    public TreeNode connect(TreeNode root);
 
 
 }
