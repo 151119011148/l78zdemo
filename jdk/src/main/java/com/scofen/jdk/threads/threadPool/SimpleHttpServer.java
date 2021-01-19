@@ -18,7 +18,6 @@ public class SimpleHttpServer {
 
     static ThreadPool<HttpRequestHandle> threadPool = new DefaultThreadPool<>(1);
     //SimpleHttpServer的跟路径
-    //C:\Users\GF\Desktop\sourceCode\demo\study\util\src\main\resources\static\index.html
     static String basePath = "static/index.html";
     static ServerSocket serverSocket;
     //服务监听端口

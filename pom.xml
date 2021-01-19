@@ -6,7 +6,10 @@
 	<groupId>com.scofen</groupId>
 	<artifactId>l78z</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+    <modules>
+        <module>flow_limit</module>
+    </modules>
+    <packaging>pom</packaging>
 
 	<name>l78z</name>
 	<description>Demo project for Spring Boot</description>

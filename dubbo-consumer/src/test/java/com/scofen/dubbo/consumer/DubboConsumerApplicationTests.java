@@ -1,10 +1,10 @@
-package com.scofen.dubboprovider;
+package com.scofen.dubbo.consumer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DubboProviderApplicationTests {
+class DubboConsumerApplicationTests {
 
 	@Test
 	void contextLoads() {

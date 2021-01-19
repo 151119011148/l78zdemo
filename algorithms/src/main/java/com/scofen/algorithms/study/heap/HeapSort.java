@@ -1,5 +1,7 @@
 package com.scofen.algorithms.study.heap;
 
+import com.alibaba.fastjson.JSON;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,6 +15,11 @@ import java.util.PriorityQueue;
  * @date 2020/11/2716:26
  */
 public class HeapSort {
+
+    public static void main(String[] args) {
+        lastStoneWeight(new int[]{2,7,4,1,8,1});
+    }
+
 
 
     /**
@@ -120,8 +127,9 @@ public class HeapSort {
                 alphabet = i;
                 //如果出现次数最多的那个字符的数量大于阈值，说明他不能使得
                 // 两相邻的字符不同，直接返回空字符串即可
-                if (max > threshold)
+                if (max > threshold) {
                     return "";
+                }
             }
         }
         //到这一步说明他可以使得两相邻的字符不同，我们随便返回一个结果，res就是返回
@@ -234,5 +242,37 @@ public class HeapSort {
         return sb.toString();
 
     }
+
+    /**
+     * 1046. 最后一块石头的重量
+     * ”https://leetcode-cn.com/problems/last-stone-weight/“
+     *有一堆石头，每块石头的重量都是正整数。
+     *
+     * 每一回合，从中选出两块 最重的 石头，然后将它们一起粉碎。假设石头的重量分别为 x 和 y，且 x <= y。那么粉碎的可能结果如下：
+     *
+     * 如果 x == y，那么两块石头都会被完全粉碎；
+     * 如果 x != y，那么重量为 x 的石头将会完全粉碎，而重量为 y 的石头新重量为 y-x。
+     * 最后，最多只会剩下一块石头。返回此石头的重量。如果没有石头剩下，就返回 0。
+     * @param stones
+     * @return
+     */
+    public static int lastStoneWeight(int[] stones) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> b - a);
+        for (int stone : stones) {
+            pq.offer(stone);
+        }
+        System.out.println(JSON.toJSONString(pq));
+        while (pq.size() > 1) {
+            int a = pq.poll();
+            int b = pq.poll();
+            if (a > b) {
+                pq.offer(a - b);
+            }
+        }
+        return pq.isEmpty() ? 0 : pq.poll();
+    }
+
+
+
 
 }

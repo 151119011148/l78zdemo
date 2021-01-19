@@ -1,4 +1,4 @@
-package com.scofen.dubboprovider.spi;
+package com.scofen.dubbo.provider.spi;
 
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.common.compiler.Compiler;

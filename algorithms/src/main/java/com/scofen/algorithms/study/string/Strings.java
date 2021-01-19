@@ -29,8 +29,12 @@ public class Strings {
 //        reverseString(new char[]{ 'h','e','l','l','o'});
 //        reverse(9646321);
 
-        countAndSay(10);
+//        countAndSay(10);
+        largeGroupPositions("abbxxxxzzy");
+
     }
+
+
 
 
 
@@ -478,7 +482,31 @@ public class Strings {
         return res.toString();
     }
 
-
+    /**
+     * 830. 较大分组的位置
+     * "https://leetcode-cn.com/problems/positions-of-large-groups/"
+     * 在一个由小写字母构成的字符串 s 中，包含由一些连续的相同字符所构成的分组。
+     * 我们称所有包含大于或等于三个连续字符的分组为 较大分组 。
+     * 找到每一个 较大分组 的区间，按起始位置下标递增顺序排序后，返回结果。
+     * @param s
+     * @return
+     */
+    public static List<List<Integer>> largeGroupPositions(String s) {
+        List<List<Integer>> ret = new ArrayList<>();
+        int length = s.length();
+        int num = 1;
+        for (int i = 0; i < length; i++) {
+            if (i == length - 1 || s.charAt(i) != s.charAt(i + 1)) {
+                if (num >= 3) {
+                    ret.add(Arrays.asList(i - num + 1, i));
+                }
+                num = 1;
+            } else {
+                num++;
+            }
+        }
+        return ret;
+    }
 
 
 }

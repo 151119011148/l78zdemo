@@ -9,6 +9,7 @@ package com.scofen.algorithms.leetcode.linked;
 
 import com.scofen.algorithms.leetcode.EveryDay;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -403,5 +404,98 @@ public class LinkedLists {
         return temp;
 
     }
+
+    /**
+     * 430. 扁平化多级双向链表
+     *"https://leetcode-cn.com/problems/flatten-a-multilevel-doubly-linked-list/"
+     * 多级双向链表中，除了指向下一个节点和前一个节点指针之外，它还有一个子链表指针，
+     * 可能指向单独的双向链表。这些子列表也可能会有一个或多个自己的子项，依此类推，
+     * 生成多级数据结构，如下面的示例所示。
+     *
+     * 给你位于列表第一级的头节点，请你扁平化列表，使所有结点出现在单级双链表中。
+     *
+     */
+    class Node {
+        public int val;
+        public Node prev;
+        public Node next;
+        public Node child;
+        Node random;
+    }
+    public Node flatten(Node head) {
+        if (head == null) {
+            return null;
+        }
+        Node nextNode = flatten(head.next);
+        Node childNode = flatten(head.child);
+        if (childNode == null) {
+            head.next = nextNode;
+            if (nextNode != null) {
+                nextNode.prev = head;
+            }
+        } else {
+            head.next = childNode;
+            childNode.prev = head;
+            while (childNode.next != null) {
+                childNode = childNode.next;
+            }
+            childNode.next = nextNode;
+            if (nextNode != null) {
+                nextNode.prev = childNode;
+            }
+            head.child = null; // 注意前置节点的child要置空
+        }
+        return head;
+    }
+
+    /**
+     * 138. 复制带随机指针的链表
+     * "https://leetcode-cn.com/problems/copy-list-with-random-pointer/"
+     * 给定一个链表，每个节点包含一个额外增加的随机指针，该指针可以指向链表中的
+     * 任何节点或空节点。
+     *
+     * 要求返回这个链表的 深拷贝。 
+     *
+     * 我们用一个由 n 个节点组成的链表来表示输入/输出中的链表。每个节点用一个 
+     * [val, random_index] 表示：
+     *
+     * val：一个表示 Node.val 的整数。
+     * random_index：随机指针指向的节点索引（范围从 0 到 n-1）；如果不指向任何节点，
+     * 则为  null 。
+     */
+    // HashMap which holds old nodes as keys and new nodes as its values.
+    HashMap<Node, Node> visitedHash = new HashMap<Node, Node>();
+
+    public Node copyRandomList(Node head) {
+
+        if (head == null) {
+            return null;
+        }
+
+        // If we have already processed the current node, then we simply return the cloned version of
+        // it.
+        if (this.visitedHash.containsKey(head)) {
+            return this.visitedHash.get(head);
+        }
+
+        // Create a new node with the value same as old node. (i.e. copy the node)
+        Node node = new Node();
+        node.val = head.val;
+
+        // Save this value in the hash map. This is needed since there might be
+        // loops during traversal due to randomness of random pointers and this would help us avoid
+        // them.
+        this.visitedHash.put(head, node);
+
+        // Recursively copy the remaining linked list starting once from the next pointer and then from
+        // the random pointer.
+        // Thus we have two independent recursive calls.
+        // Finally we update the next and random pointers for the new node created.
+        node.next = this.copyRandomList(head.next);
+        node.random = this.copyRandomList(head.random);
+
+        return node;
+    }
+
 
 }

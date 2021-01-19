@@ -7,6 +7,8 @@
  */
 package com.scofen.algorithms.study.dynamicprogramming;
 
+import java.util.Arrays;
+
 /**
  * TODO
  *
@@ -15,6 +17,11 @@ package com.scofen.algorithms.study.dynamicprogramming;
  * @since 2020-12-17 10:03
  */
 public class DP {
+
+    public static void main(String[] args) {
+        fib(0);
+    }
+
 
     /**
      * 714. 买卖股票的最佳时机含手续费
@@ -164,6 +171,89 @@ public class DP {
         return dp[length - 1];
 
 
+    }
+
+    /**
+     * 188. 买卖股票的最佳时机 IV
+     * ”https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iv/“
+     * 给定一个整数数组 prices ，它的第 i 个元素 prices[i] 是一支给定的股票在第 i 天的价格。
+     *
+     * 设计一个算法来计算你所能获取的最大利润。你最多可以完成 k 笔交易。
+     *
+     * 注意：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+     * @param k
+     * @param prices
+     * @return
+     */
+    public int maxProfit(int k, int[] prices) {
+        if (prices.length == 0) {
+            return 0;
+        }
+
+        int n = prices.length;
+        k = Math.min(k, n / 2);
+        int[][] buy = new int[n][k + 1];
+        int[][] sell = new int[n][k + 1];
+
+        buy[0][0] = -prices[0];
+        sell[0][0] = 0;
+        for (int i = 1; i <= k; ++i) {
+            buy[0][i] = sell[0][i] = Integer.MIN_VALUE / 2;
+        }
+
+        for (int i = 1; i < n; ++i) {
+            buy[i][0] = Math.max(buy[i - 1][0], sell[i - 1][0] - prices[i]);
+            for (int j = 1; j <= k; ++j) {
+                buy[i][j] = Math.max(buy[i - 1][j], sell[i - 1][j] - prices[i]);
+                sell[i][j] = Math.max(sell[i - 1][j], buy[i - 1][j - 1] + prices[i]);
+            }
+        }
+
+        return Arrays.stream(sell[n - 1]).max().getAsInt();
+    }
+
+    /**
+     *509. 斐波那契数
+     * "https://leetcode-cn.com/problems/fibonacci-number/"
+     * 斐波那契数，通常用 F(n) 表示，形成的序列称为 斐波那契数列 。该数列由 0 和 1 开始，
+     * 后面的每一项数字都是前面两项数字的和。也就是：
+     *
+     * F(0) = 0，F(1) = 1
+     * F(n) = F(n - 1) + F(n - 2)，其中 n > 1
+     */
+    public static int fib(int n) {
+        int[] dp = new int[n + 3];
+        dp[0] = 0;
+        dp[1] = dp[2] = 1;
+        for (int i = 3; i <= n; i++){
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        return dp[n];
+    }
+
+    /**
+     * 123. 买卖股票的最佳时机 III
+     * “https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/”
+     * 给定一个数组，它的第 i 个元素是一支给定的股票在第 i 天的价格。
+     *
+     * 设计一个算法来计算你所能获取的最大利润。你最多可以完成 两笔 交易。
+     *
+     * 注意：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+
+     * @param prices
+     * @return
+     */
+    public int maxProfit3(int[] prices) {
+        int n = prices.length;
+        int buy1 = -prices[0], sell1 = 0;
+        int buy2 = -prices[0], sell2 = 0;
+        for (int i = 1; i < n; ++i) {
+            buy1 = Math.max(buy1, -prices[i]);
+            sell1 = Math.max(sell1, buy1 + prices[i]);
+            buy2 = Math.max(buy2, sell1 - prices[i]);
+            sell2 = Math.max(sell2, buy2 + prices[i]);
+        }
+        return sell2;
     }
 
 

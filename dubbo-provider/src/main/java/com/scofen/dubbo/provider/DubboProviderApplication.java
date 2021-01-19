@@ -1,4 +1,4 @@
-package com.scofen.dubboprovider;
+package com.scofen.dubbo.provider;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -162,4 +162,9 @@ public class DoubleLinkedImpl implements Linked {
         return true;
     }
 
+
+
+
+
+
 }

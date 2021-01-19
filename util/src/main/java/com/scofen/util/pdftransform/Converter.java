@@ -28,9 +28,9 @@ public class Converter {
     private static final String secretKey = "Cd1DT5allOQQpK1BTwEkPD2htKXH6jwj";
     private static AipOcr client;
 
-    private static String pdfPath = "C:\\Users\\GF\\Desktop\\sourceCode\\demo\\l78zdemo\\util\\pdf\\Kafka权威指南.pdf";
-    private static String pngPath = "C:\\Users\\GF\\Desktop\\sourceCode\\demo\\l78zdemo\\util\\png\\Kafka权威指南";
-    private static String logPath = "C:\\Users\\GF\\Desktop\\sourceCode\\demo\\l78zdemo\\util\\log\\";
+    private static String pdfPath = "C:\\Users\\weiyi\\Desktop\\资料\\书籍\\Java 8实战.pdf";
+    private static String pngPath = "D:\\data\\source\\l78z\\util\\png\\Java8实战";
+    private static String logPath = "D:\\data\\source\\l78z\\util\\log\\";
 
 
     private static void init(){
@@ -87,7 +87,7 @@ public class Converter {
     private static void png2Log(){
         File dir = new File(pngPath);
         BufferedWriter out = null;
-        String target = logPath + "kafka.log";
+        String target = logPath + "Java8实战.log";
         try {
 
             List<File> files = Lists.newArrayList(dir.listFiles());
