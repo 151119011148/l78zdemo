@@ -7,15 +7,16 @@
  */
 package com.scofen.algorithms.study.array;
 
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * TODO
@@ -164,6 +165,41 @@ public class Array {
         }
 
     }
+
+    /**
+     * 989. 数组形式的整数加法
+     * "https://leetcode-cn.com/problems/add-to-array-form-of-integer/"
+     *对于非负整数 X 而言，X 的数组形式是每位数字按从左到右的顺序形成的数组。
+     * 例如，如果 X = 1231，那么其数组形式为 [1,2,3,1]。
+     *
+     * 给定非负整数 X 的数组形式 A，返回整数 X+K 的数组形式。
+
+     * @param A
+     * @param K
+     * @return
+     */
+    public List<Integer> addToArrayForm(int[] A, int K) {
+        List<Integer> res = new ArrayList<>();
+        int n = A.length;
+        for (int i = n - 1; i >= 0; --i) {
+            int sum = A[i] + K % 10;
+            K /= 10;
+            if (sum >= 10) {
+                K++;
+                sum -= 10;
+            }
+            res.add(sum);
+        }
+
+        while (K > 0) {
+            res.add(K % 10);
+            K /= 10;
+        }
+        Collections.reverse(res);
+        return res;
+
+    }
+
 
     /**
      * @param board
@@ -487,5 +523,77 @@ public class Array {
         return list;
 
     }
+
+    /**
+     * 628. 三个数的最大乘积
+     * "https://leetcode-cn.com/problems/maximum-product-of-three-numbers/"
+     * 给定一个整型数组，在数组中找出由三个数组成的最大乘积，并输出这个乘积。
+     * 注意:
+     *
+     * 给定的整型数组长度范围是[3,104]，数组中所有的元素范围是[-1000, 1000]。
+     * 输入的数组中任意三个数的乘积不会超出32位有符号整数的范围。
+     * @param nums
+     * @return
+     */
+    public int maximumProduct(int[] nums) {
+
+        Arrays.sort(nums);
+        int n = nums.length;
+        //分别求出三个最大正数的乘积，以及两个最小负数与最大正数的乘积，二者之间的最大值即为所求答案
+        return Math.max(nums[0] * nums[1] * nums[n - 1],
+            nums[n - 3] * nums[n - 2] * nums[n - 1]);
+
+    }
+
+    /**
+     * 1128. 等价多米诺骨牌对的数量 简单
+     * 给你一个由一些多米诺骨牌组成的列表 dominoes。
+     * 如果其中某一张多米诺骨牌可以通过旋转 0 度或 180 度得到另一张多米诺骨牌，我们就认为这两张牌是等价的。
+     * 形式上，dominoes[i] = [a, b] 和 dominoes[j] = [c, d] 等价的前提是 a==c 且 b==d，或是 a==d 且 b==c。
+     * 在 0 <= i < j < dominoes.length 的前提下，找出满足 dominoes[i] 和 dominoes[j] 等价的骨牌对 (i, j) 的数量。
+
+     * “https://leetcode-cn.com/problems/number-of-equivalent-domino-pairs/”
+     * @param dominoes
+     * @return
+     */
+    public int numEquivDominoPairs(int[][] dominoes) {
+        int[] num = new int[100];
+        int ret = 0;
+        for (int[] domino : dominoes) {
+            int val = domino[0] < domino[1] ? domino[0] * 10 + domino[1] : domino[1] * 10 + domino[0];
+            ret += num[val];
+            num[val]++;
+        }
+        return ret;
+    }
+
+    /**
+     * 724. 寻找数组的中心索引 简单
+     *给定一个整数类型的数组 nums，请编写一个能够返回数组 “中心索引” 的方法。
+     * 我们是这样定义数组 中心索引 的：数组中心索引的左侧所有元素相加的和等于右侧所有元素相加的和。
+     * 如果数组不存在中心索引，那么我们应该返回 -1。如果数组有多个中心索引，那么我们应该返回最靠近左边的那一个。
+     * "https://leetcode-cn.com/problems/find-pivot-index/"
+     *
+     * 输入：
+     * nums = [1, 7, 3, 6, 5, 6]
+     * 输出：3
+     * 解释：
+     * 索引 3 (nums[3] = 6) 的左侧数之和 (1 + 7 + 3 = 11)，与右侧数之和 (5 + 6 = 11) 相等。
+     * 同时, 3 也是第一个符合要求的中心索引。
+     * @param nums
+     * @return
+     */
+    public int pivotIndex(int[] nums) {
+        int total = Arrays.stream(nums).sum();
+        int sum = 0;
+        for (int i = 0; i < nums.length; ++i) {
+            if (2 * sum + nums[i] == total) {
+                return i;
+            }
+            sum += nums[i];
+        }
+        return -1;
+    }
+
 
 }

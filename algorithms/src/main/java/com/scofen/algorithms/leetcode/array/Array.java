@@ -1,6 +1,7 @@
 package com.scofen.algorithms.leetcode.array;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Create by  GF  in  11:27 2020/12/12
@@ -70,5 +71,25 @@ public class Array {
         return false;
     }
 
+    /**
+     * 119. 杨辉三角 II
+     * "https://leetcode-cn.com/problems/pascals-triangle-ii/"
+     * 输入: 3
+     * 输出: [1,3,3,1]
+     * @param rowIndex
+     * @return
+     */
+    public List<Integer> getRow(int rowIndex) {
+        Integer dp[]=new Integer[rowIndex+1];
+        dp[0]=1;
+        for (int i = 1; i <= rowIndex; i++) {
+            dp[0]= dp[i]=1;
+            for (int j = i-1; j >0 ; j--) {
+                dp[j] = dp[j] +dp[j-1];
+            }
+        }
+        return Arrays.asList(dp);
+
+    }
 
 }

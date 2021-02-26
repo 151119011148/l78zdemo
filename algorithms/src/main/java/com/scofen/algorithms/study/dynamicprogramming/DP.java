@@ -8,6 +8,7 @@
 package com.scofen.algorithms.study.dynamicprogramming;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * TODO
@@ -130,12 +131,16 @@ public class DP {
      * @return
      */
     public int maxSubArray(int[] nums) {
-        int pre = 0, maxAns = nums[0];
-        for (int x : nums) {
-            pre = Math.max(pre + x, x);
-            maxAns = Math.max(maxAns, pre);
+        int result;
+        int[] dp = new int[nums.length];
+        dp[0] = nums[0];
+        result = dp[0];
+        for (int i = 1; i < nums.length; i++) {
+            dp[i] = Math.max(dp[i - 1] + nums[i], nums[i]);
+            result = Math.max(result, dp[i]);
         }
-        return maxAns;
+        return result;
+
     }
 
 
@@ -254,6 +259,51 @@ public class DP {
             sell2 = Math.max(sell2, buy2 + prices[i]);
         }
         return sell2;
+    }
+
+    /**
+     * 646. 最长数对链
+     * ”https://leetcode-cn.com/problems/maximum-length-of-pair-chain/“
+     * 给出 n 个数对。 在每一个数对中，第一个数字总是比第二个数字小。
+     *
+     * 现在，我们定义一种跟随关系，当且仅当 b < c 时，数对(c, d) 才可以跟在 (a, b) 后面。我们用这种形式来构造一个数对链。
+     *
+     * 给定一个数对集合，找出能够形成的最长数对链的长度。你不需要用到所有的数对，你可以以任何顺序选择其中的一些数对来构造。
+
+     * 示例：
+     *
+     * 输入：[[1,2], [2,3], [3,4]]
+     * 输出：2
+     * 解释：最长的数对链是 [1,2] -> [3,4]
+
+     * @param pairs
+     * @return
+     */
+    public int findLongestChain(int[][] pairs) {
+        if (pairs == null || pairs.length <= 0 || pairs[0].length <= 0) {
+            return 0;
+        }
+        // 1.定义排序：按照每个数对的start从小到大排序
+        Arrays.sort(pairs, Comparator.comparingInt(pair -> pair[0]));
+        int length = pairs.length;
+        int[] dp = new int[length];
+        // 2.初始状态
+        Arrays.fill(dp, 1);
+        dp[0] = 1;
+        int allMax = Integer.MIN_VALUE;
+        for (int i = 1; i < length; i++) {
+            dp[i] = 1;
+            for (int j = 0; j < i; j++) {
+                if (pairs[i][0] > pairs[j][1]) {
+                // 3.转移方程
+                // 若dp[j]+1较大 ,则说明在dp[j]之后接上一个dp[i]数对能使得链更长
+                // 若dp[i]较大,这说明在dp[j]之后接上一个dp[i]数对反而使数对更短
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            allMax = Math.max(allMax, dp[i]);
+        }
+        return allMax;
     }
 
 

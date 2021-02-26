@@ -24,78 +24,73 @@ import java.util.Map;
  */
 public class Strings {
     public static void main(String[] args) {
-//        wordPattern("abba", "dog cat cat dog");
+        //        wordPattern("abba", "dog cat cat dog");
 
-//        reverseString(new char[]{ 'h','e','l','l','o'});
-//        reverse(9646321);
+        //        reverseString(new char[]{ 'h','e','l','l','o'});
+        //        reverse(9646321);
 
-//        countAndSay(10);
+        //        countAndSay(10);
         largeGroupPositions("abbxxxxzzy");
 
     }
 
-
-
-
-
     /**
      * "https://leetcode-cn.com/problems/group-anagrams/"
-     *49. 字母异位词分组
+     * 49. 字母异位词分组
      * 给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
-     *
+     * <p>
      * 示例:
-     *
+     * <p>
      * 输入: ["eat", "tea", "tan", "ate", "nat", "bat"]
      * 输出:
      * [
-     *   ["ate","eat","tea"],
-     *   ["nat","tan"],
-     *   ["bat"]
+     * ["ate","eat","tea"],
+     * ["nat","tan"],
+     * ["bat"]
      * ]
      */
     public List<List<String>> groupAnagrams(String[] strs) {
         Map<String, List<String>> ret = new HashMap<>();
-        for (String item : strs){
+        for (String item : strs) {
             char[] chars = item.toCharArray();
             Arrays.sort(chars);
             String key = new String(chars);
             List list = ret.get(key);
-            if (list == null || list.size() == 0){
+            if (list == null || list.size() == 0) {
                 list = new ArrayList();
             }
-                list.add(item);
-                ret.put(key, list);
+            list.add(item);
+            ret.put(key, list);
         }
         return new ArrayList<>(ret.values());
     }
 
     /**
      * "https://leetcode-cn.com/problems/word-pattern/"
-     *290. 单词规律
-     *
+     * 290. 单词规律
      */
     public static boolean wordPattern(String pattern, String s) {
         char[] keys = pattern.toCharArray();
         String[] values = s.split(" ");
         Map<Character, String> result1 = new HashMap<>();
         Map<String, Character> result2 = new HashMap<>();
-        if (keys.length != values.length){
+        if (keys.length != values.length) {
             return false;
         }
-        for (int i = 0; i < keys.length; i ++){
+        for (int i = 0; i < keys.length; i++) {
             Character c = keys[i];
             String sv = values[i];
-            if (!result1.containsKey(c)){
+            if (!result1.containsKey(c)) {
                 result1.put(c, sv);
-            }else {
-                if (!result1.get(c).equals(sv)){
+            } else {
+                if (!result1.get(c).equals(sv)) {
                     return false;
                 }
             }
-            if (!result2.containsKey(sv)){
+            if (!result2.containsKey(sv)) {
                 result2.put(sv, c);
-            }else {
-                if (!result2.get(sv).equals(c)){
+            } else {
+                if (!result2.get(sv).equals(c)) {
                     return false;
                 }
             }
@@ -105,21 +100,20 @@ public class Strings {
     }
 
     /**
-     *"https://leetcode-cn.com/problems/reverse-string/"
+     * "https://leetcode-cn.com/problems/reverse-string/"
      * 344. 反转字符串
-     *编写一个函数，其作用是将输入的字符串反转过来。
+     * 编写一个函数，其作用是将输入的字符串反转过来。
      * 输入字符串以字符数组 char[] 的形式给出。
-     *
+     * <p>
      * 不要给另外的数组分配额外的空间，你必须原地修改输入数组、使用 O(1) 的额外空间
      * 解决这一问题。
-     *
+     * <p>
      * 你可以假设数组中的所有字符都是 ASCII 码表中的可打印字符。
-
      */
     public static void reverseString(char[] s) {
         int length = s.length;
         char temp;
-        for (int i = 0; i < s.length / 2; i ++){
+        for (int i = 0; i < s.length / 2; i++) {
             temp = s[i];
             s[i] = s[length - i - 1];
             s[length - i - 1] = temp;
@@ -127,7 +121,7 @@ public class Strings {
     }
 
     /**
-     *"https://leetcode-cn.com/problems/reverse-integer/"
+     * "https://leetcode-cn.com/problems/reverse-integer/"
      *
      * @param x
      * @return
@@ -137,10 +131,10 @@ public class Strings {
         while (x != 0) {
             int pop = x % 10;
             x /= 10;
-            if (rev > Integer.MAX_VALUE/10 || (rev == Integer.MAX_VALUE / 10 && pop > 7)) {
+            if (rev > Integer.MAX_VALUE / 10 || (rev == Integer.MAX_VALUE / 10 && pop > 7)) {
                 return 0;
             }
-            if (rev < Integer.MIN_VALUE/10 || (rev == Integer.MIN_VALUE / 10 && pop < -8)) {
+            if (rev < Integer.MIN_VALUE / 10 || (rev == Integer.MIN_VALUE / 10 && pop < -8)) {
                 return 0;
             }
             rev = rev * 10 + pop;
@@ -152,15 +146,15 @@ public class Strings {
      * 387. 字符串中的第一个唯一字符
      * "https://leetcode-cn.com/problems/first-unique-character-in-a-string/"
      * 给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。
-
+     * <p>
      * 示例：
-     *
+     * <p>
      * s = "leetcode"
      * 返回 0
-     *
+     * <p>
      * s = "loveleetcode"
      * 返回 2
-
+     *
      * @param s
      * @return
      */
@@ -187,13 +181,14 @@ public class Strings {
      * 给定两个字符串 s 和 t，它们只包含小写字母。
      * 字符串 t 由字符串 s 随机重排，然后在随机位置添加一个字母。
      * 请找出在 t 中被添加的字母。
+     *
      * @param s
      * @param t
      * @return
      */
     public char findTheDifference(String s, String t) {
-//        如果将两个字符串拼接成一个字符串，则问题转换成求字符串中出现奇数次的字符。
-//        类似于「136. 只出现一次的数字」，我们使用位运算的技巧解决本题。
+        //        如果将两个字符串拼接成一个字符串，则问题转换成求字符串中出现奇数次的字符。
+        //        类似于「136. 只出现一次的数字」，我们使用位运算的技巧解决本题。
         int ret = 0;
         for (int i = 0; i < s.length(); ++i) {
             ret ^= s.charAt(i);
@@ -211,12 +206,13 @@ public class Strings {
      * 说明：本题中，我们将空字符串定义为有效的回文串。
      * 输入: "A man, a plan, a canal: Panama"
      * 输出: true
+     *
      * @param s
      * @return
      */
     public boolean isPalindrome(String s) {
-//        使用语言中的字符串翻转 API 得到sgood 的逆序字符串sgood_rev，
-//        只要这两个字符串相同，那么 sgood 就是回文串。
+        //        使用语言中的字符串翻转 API 得到sgood 的逆序字符串sgood_rev，
+        //        只要这两个字符串相同，那么 sgood 就是回文串。
 
         StringBuffer sgood = new StringBuffer();
         int length = s.length();
@@ -231,19 +227,19 @@ public class Strings {
 
     }
 
-
     /**
      * 8. 字符串转换整数 (atoi)
      * 请你来实现一个 atoi 函数，使其能将字符串转换成整数。
-     *
+     * <p>
      * 首先，该函数会根据需要丢弃无用的开头空格字符，直到寻找到第一个非空格的字符为止。接下来的转化规则如下：
-     *
+     * <p>
      * 如果第一个非空字符为正或者负号时，则将该符号与之后面尽可能多的连续数字字符组合起来，形成一个有符号整数。
      * 假如第一个非空字符是数字，则直接将其与之后连续的数字字符组合起来，形成一个整数。
      * 该字符串在有效的整数部分之后也可能会存在多余的字符，那么这些字符可以被忽略，它们对函数不应该造成影响。
      * 注意：假如该字符串中的第一个非空格字符不是一个有效整数字符、字符串为空或字符串仅包含空白字符时，则你的函数不需要进行转换，即无法进行有效转换。
-     *
+     * <p>
      * 在任何情况下，若函数不能进行有效的转换时，请返回 0 。
+     *
      * @param str
      * @return
      */
@@ -272,23 +268,24 @@ public class Strings {
         return (int) (automaton.sign * automaton.ans);
 
     }
+
     class Automaton {
         public int sign = 1;
         public long ans = 0;
         private String state = "start";
         private Map<String, String[]> table = new HashMap<String, String[]>() {{
-            put("start", new String[]{"start", "signed", "in_number", "end"});
-            put("signed", new String[]{"end", "end", "in_number", "end"});
-            put("in_number", new String[]{"end", "end", "in_number", "end"});
-            put("end", new String[]{"end", "end", "end", "end"});
+            put("start", new String[] { "start", "signed", "in_number", "end" });
+            put("signed", new String[] { "end", "end", "in_number", "end" });
+            put("in_number", new String[] { "end", "end", "in_number", "end" });
+            put("end", new String[] { "end", "end", "end", "end" });
         }};
 
         public void get(char c) {
             state = table.get(state)[get_col(c)];
-            if ("in_number".equals(state)) {
+            if ("in_number" .equals(state)) {
                 ans = ans * 10 + c - '0';
                 ans = sign == 1 ? Math.min(ans, (long) Integer.MAX_VALUE) : Math.min(ans, -(long) Integer.MIN_VALUE);
-            } else if ("signed".equals(state)) {
+            } else if ("signed" .equals(state)) {
                 sign = c == '+' ? 1 : -1;
             }
         }
@@ -308,8 +305,9 @@ public class Strings {
     }
 
     /**
-     *"https://leetcode-cn.com/problems/implement-strstr/"
+     * "https://leetcode-cn.com/problems/implement-strstr/"
      * 28. 实现 strStr()
+     *
      * @param haystack
      * @param needle
      * @return
@@ -337,7 +335,6 @@ public class Strings {
     }
 
     /**
-     *
      * 1.     1
      * 2.     11
      * 3.     21
@@ -348,6 +345,7 @@ public class Strings {
      * 描述前一项，这个数是 11 即 “ 二 个 1 ” ，记作 "21"
      * 描述前一项，这个数是 21 即 “ 一 个 2 + 一 个 1 ” ，记作 "1211"
      * 描述前一项，这个数是 1211 即 “ 一 个 1 + 一 个 2 + 二 个 1 ” ，记作 "111221"
+     *
      * @param n
      * @return
      */
@@ -390,12 +388,13 @@ public class Strings {
     }
 
     /**
-     *”https://leetcode-cn.com/problems/longest-common-prefix/“
+     * ”https://leetcode-cn.com/problems/longest-common-prefix/“
      * 14. 最长公共前缀
      * 编写一个函数来查找字符串数组中的最长公共前缀。
      * 如果不存在公共前缀，返回空字符串 ""。
      * 输入: ["flower","flow","flight"]
      * 输出: "fl"
+     *
      * @param strs
      * @return
      */
@@ -424,10 +423,11 @@ public class Strings {
     }
 
     /**
-     *316. 去除重复字母
+     * 316. 去除重复字母
      * "https://leetcode-cn.com/problems/remove-duplicate-letters/"
-     *给你一个字符串 s ，请你去除字符串中重复的字母，使得每个字母只出现一次。
+     * 给你一个字符串 s ，请你去除字符串中重复的字母，使得每个字母只出现一次。
      * 需保证 返回结果的字典序最小（要求不能打乱其他字符的相对位置）。
+     *
      * @param s
      * @return
      */
@@ -458,14 +458,14 @@ public class Strings {
         int[] count = new int[26];
         boolean[] exists = new boolean[26];
         // 初始化
-        for(char ch : s.toCharArray()){
+        for (char ch : s.toCharArray()) {
             count[ch - 'a']++;
         }
         // 遍历s并入栈
         for (int i = 0; i < s.length(); i++) {
             char temp = s.charAt(i);
-            if (!exists[temp - 'a']){
-                while (!deque.isEmpty() && deque.getLast() > temp && count[deque.getLast() - 'a'] > 0){
+            if (!exists[temp - 'a']) {
+                while (!deque.isEmpty() && deque.getLast() > temp && count[deque.getLast() - 'a'] > 0) {
                     exists[deque.getLast() - 'a'] = false;
                     deque.removeLast();
                 }
@@ -476,7 +476,7 @@ public class Strings {
         }
         //返回
         StringBuilder res = new StringBuilder();
-        for(char ch : deque){
+        for (char ch : deque) {
             res.append(ch);
         }
         return res.toString();
@@ -488,6 +488,7 @@ public class Strings {
      * 在一个由小写字母构成的字符串 s 中，包含由一些连续的相同字符所构成的分组。
      * 我们称所有包含大于或等于三个连续字符的分组为 较大分组 。
      * 找到每一个 较大分组 的区间，按起始位置下标递增顺序排序后，返回结果。
+     *
      * @param s
      * @return
      */
@@ -507,6 +508,7 @@ public class Strings {
         }
         return ret;
     }
+
 
 
 }

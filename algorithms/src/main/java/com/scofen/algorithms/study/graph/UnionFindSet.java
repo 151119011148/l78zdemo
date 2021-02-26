@@ -16,6 +16,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * TODO
  *
@@ -211,7 +215,7 @@ public class UnionFindSet {
         return stringBuilder.toString();
     }
 
-    private static class UnionFind1 {
+    public static class UnionFind1 {
 
         private int[] parent;
         /**
@@ -362,26 +366,26 @@ public class UnionFindSet {
         }
         return merged;
     }
-}
 
-class UnionFind3 {
-    int[] parent;
 
-    public UnionFind3(int n) {
-        parent = new int[n];
-        for (int i = 0; i < n; i++) {
-            parent[i] = i;
+    private class UnionFind3 {
+        int[] parent;
+
+        public UnionFind3(int n) {
+            parent = new int[n];
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+            }
+        }
+
+        public void union(int index1, int index2) {
+            parent[find(index2)] = find(index1);
+        }
+
+        public int find(int index) {
+            return parent[index] == index ? parent[index] : find(parent[index]);
         }
     }
-
-    public void union(int index1, int index2) {
-        parent[find(index2)] = find(index1);
-    }
-
-    public int find(int index) {
-        return parent[index] == index ? parent[index] : find(parent[index]);
-    }
-
     /**
      * 1584. 连接所有点的最小费用
      * "https://leetcode-cn.com/problems/min-cost-to-connect-all-points/"
@@ -419,63 +423,39 @@ class UnionFind3 {
         return ans;
     }
 
-    class UnionFind4 {
+    private class UnionFind4 {
 
-        int[] f; //并查集find数组
+        int[] parents; //并查集find数组
 
         public UnionFind4(int n) {
-            f = new int[n + 1];
+            parents = new int[n + 1];
             //初始化find数组，让初始每个节点都自成一个集合，互相不联通
-            for (int i = 0; i < f.length; i++) {
-                f[i] = i;
+            for (int i = 0; i < parents.length; i++) {
+                parents[i] = i;
             }
         }
 
         public int find(int x) {//find函数，判断是否同一个root节点
-            return f[x] == x ? x : find(f[x]);
+            return parents[x] == x ? x : find(parents[x]);
         }
 
         //把两集合合并
         public void union(int index1, int index2) {
-            f[find(index1)] = find(index2);
+            parents[find(index1)] = find(index2);
         }
 
     }
 
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     class Edge implements Comparable<Edge> {
+
         private int x;
+
         private int y;
+
         private int len;
-
-        public int getX() {
-            return x;
-        }
-
-        public void setX(int x) {
-            this.x = x;
-        }
-
-        public Edge(int x, int y, int len) {
-            this.x = x;
-            this.y = y;
-            this.len = len;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public void setY(int y) {
-            this.y = y;
-        }
-
-        public int getLen() {
-            return len;
-        }
-
-        public void setLen(int len) {
-            this.len = len;
-        }
 
         @Override
         public int compareTo(Edge o) {//内置比较器实现按len升序
