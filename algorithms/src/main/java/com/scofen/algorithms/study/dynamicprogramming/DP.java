@@ -11,7 +11,12 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 /**
- * TODO
+ * 动规五部曲
+ * 1. 确定dp数组（dp table）以及下标的含义
+ * 2. 确定递推公式
+ * 3. dp数组如何初始化
+ * 4. 确定遍历顺序
+ * 5. 举例推导dp数组
  *
  * @author weiyi
  * @version V1.0
@@ -306,5 +311,70 @@ public class DP {
         return allMax;
     }
 
+    /**
+     * leetcode：115. 不同的子序列
+     *
+     *"https://leetcode-cn.com/problems/distinct-subsequences/"
+     * 输入：s = "rabbbit", t = "rabbit"
+     * 输出：3
+     * 解释：
+     * 如下图所示, 有 3 种可以从 s 中得到 "rabbit" 的方案。
+     * (上箭头符号 ^ 表示选取的字母)
+     * rabbbit
+     * ^^^^ ^^
+     * rabbbit
+     * ^^ ^^^^
+     * rabbbit
+     * ^^^ ^^^
+     */
+    public int numDistinct(String s, String t) {
+        //1. 确定dp数组（dp table）以及下标的含义
+        //dp[i][j]：以i-1为结尾的s子序列中出现以j-1为结尾的t的个数为dp[i][j]。
+        int[][] dp = new int[s.length() + 1][t.length() + 1];
+        //2. 确定递推公式
+        //s[i - 1] 与 t[j - 1]相等,当s[i - 1] 与 t[j - 1]相等时，dp[i][j]可以有两部分组成。
+        //一部分是用s[i - 1]来匹配，那么个数为dp[i - 1][j - 1]。
+        //一部分是不用s[i - 1]来匹配，个数为dp[i - 1][j]。
+        //dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
+
+        //s[i - 1] 与 t[j - 1] 不相等
+        //dp[i][j] = dp[i - 1][j];
+
+
+        //3. dp数组如何初始化
+        //从递推公式dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j]; 和 dp[i][j] = dp[i - 1][j]; 中可以看出dp[i][0] 和dp[0][j]是一定要初始化的。
+        //dp[i][0] 以i-1为结尾的s可以随便删除元素，出现空字符串的个数。
+        //那么dp[i][0]一定都是1，因为也就是把以i-1为结尾的s，删除所有元素，出现空字符串的个数就是1。
+
+        //再来看dp[0][j]，dp[0][j]：空字符串s可以随便删除元素，出现以j-1为结尾的字符串t的个数。
+        //那么dp[0][j]一定都是0，s如论如何也变成不了t。
+
+        //最后就要看一个特殊位置了，即：dp[0][0] 应该是多少。
+        //dp[0][0]应该是1，空字符串s，可以删除0个元素，变成空字符串t。
+        for (int i = 0; i <= s.length(); i++){
+            dp[i][0] = 1;
+        }
+        for (int j = 1; j <= t.length(); j++){
+            dp[0][j] = 0;
+        }
+
+        //4.确定遍历顺序
+        //从递推公式dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j]; 和 dp[i][j] = dp[i - 1][j]; 中可以看出dp[i][j]都是根据左上方和正上方推出来的。
+        //所以遍历的时候一定是从上到下，从左到右，这样保证dp[i][j]可以根据之前计算出来的数值进行计算。
+
+        for (int i = 1; i <= s.length(); i++) {
+            for (int j = 1; j <= t.length(); j++) {
+                if (s.charAt(i - 1)==t.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        return dp[s.length()][t.length()];
+
+        //5. 举例推导dp数组.如果写出来的代码怎么改都通过不了，不妨把dp数组打印出来，看一看，是不是这样的
+
+    }
 
 }
