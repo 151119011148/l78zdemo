@@ -596,4 +596,29 @@ public class Array {
     }
 
 
+    /**
+     * 删除有序数组中的重复项 II
+     * 给你一个有序数组 nums ，请你 原地 删除重复出现的元素，使每个元素 最多出现两次 ，返回删除后数组的新长度。
+     * https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array-ii/submissions/
+     * @param nums
+     * @return
+     */
+    public int removeDuplicates2(int[] nums) {
+        int n = nums.length;
+        if (n <= 2) {
+            return n;
+        }
+        int slow = 2, fast = 2;
+        while (fast < n) {
+            if (nums[slow - 2] != nums[fast]) {
+                nums[slow] = nums[fast];
+                ++slow;
+            }
+            ++fast;
+        }
+        return slow;
+
+    }
+
+
 }

@@ -1,0 +1,35 @@
+@startuml
+left to right direction
+actor User as u
+
+package 绑定的手机号-未注册 {
+    usecase "绑定手机号" as change1
+    usecase "触发帐号合并" as mobile1
+    change1 --> mobile1: include
+}
+
+package 绑定的手机号-已注册-不是本人注册 {
+    usecase "绑定手机号" as change2
+    usecase "触发帐号合并" as mobile2
+
+    change2 -->  mobile2: include
+    note right of mobile2: 合并到新注册的帐号上
+    change2 --> (手机号注册新的帐号): include
+    change2 --> (帐号降级 \n手机号对应的帐号): include
+}
+
+package 绑定的手机号-已注册-本人注册 {
+    usecase "绑定手机号" as change3
+    usecase "触发帐号合并" as mobile3
+
+    change3 --> mobile3: include
+
+    change3 --> (冲突的平台帐号解绑): include
+    note right of (冲突的平台帐号解绑): 手机号对应的帐号，\n解绑【冲突】的平台帐号
+}
+
+u --> change1: extend
+u --> change2: extend
+u --> change3: extend
+
+@enduml

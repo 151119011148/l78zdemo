@@ -227,6 +227,60 @@ public class LinkedLists {
     }
 
     /**
+     * 92. 反转链表 II
+     * "https://leetcode-cn.com/problems/reverse-linked-list-ii/"
+     * 反转从位置 m 到 n 的链表。请使用一趟扫描完成反转。
+     *
+     * 说明:
+     * 1 ≤ m ≤ n ≤ 链表长度。
+     *
+     * 示例:
+     *
+     * 输入: 1->2->3->4->5->NULL, m = 2, n = 4
+     * 输出: 1->4->3->2->5->NULL
+     * @param head
+     * @param left
+     * @param right
+     * @return
+     */
+    public LinkedNode reverseBetween(LinkedNode head, int left, int right) {
+        // 因为头节点有可能发生变化，使用虚拟头节点可以避免复杂的分类讨论
+        LinkedNode dummyNode = new LinkedNode(-1);
+        dummyNode.next = head;
+
+        LinkedNode pre = dummyNode;
+        // 第 1 步：从虚拟头节点走 left - 1 步，来到 left 节点的前一个节点
+        // 建议写在 for 循环里，语义清晰
+        for (int i = 0; i < left - 1; i++) {
+            pre = pre.next;
+        }
+
+        // 第 2 步：从 pre 再走 right - left + 1 步，来到 right 节点
+        LinkedNode rightNode = pre;
+        for (int i = 0; i < right - left + 1; i++) {
+            rightNode = rightNode.next;
+        }
+
+        // 第 3 步：切断出一个子链表（截取链表）
+        LinkedNode leftNode = pre.next;
+        LinkedNode curr = rightNode.next;
+
+        // 注意：切断链接
+        pre.next = null;
+        rightNode.next = null;
+
+        // 第 4 步：同第 206 题，反转链表的子区间
+        reverseList(leftNode);
+
+        // 第 5 步：接回到原来的链表中
+        pre.next = rightNode;
+        leftNode.next = curr;
+        return dummyNode.next;
+    }
+
+
+
+    /**
      * @param head
      * @param val
      * @return
@@ -372,6 +426,8 @@ public class LinkedLists {
     }
 
     /**
+     * 61. 旋转链表
+     * "https://leetcode-cn.com/problems/rotate-list/"
      * @param head
      * @param k
      * @return
@@ -404,6 +460,49 @@ public class LinkedLists {
         return temp;
 
     }
+
+    public LinkedNode rotateRightSolution2(LinkedNode head, int k) {
+        if (head == null) {
+            return null;
+        }
+
+        //求链表长度
+        int len = 1;
+        LinkedNode cur = head;
+        while (cur != null){
+            len += 1;
+            cur = cur.next;
+        }
+
+        // 对长度取模
+        k %= len;
+        if (k == 0){
+            return head;
+        }
+
+        // 让 fast 先向后走 k 步
+        LinkedNode fast = head, slow = head;
+        while (k > 0){
+            fast = fast.next;
+            k -= 1;
+        }
+
+        // 此时 slow 和 fast 之间的距离是 k；fast 指向第 k+1 个节点
+        // 当 fast.next 为空时，fast 指向链表最后一个节点，slow 指向倒数第 k + 1 个节点
+        while (fast.next != null){
+            fast = fast.next;
+            slow = slow.next;
+        }
+        // newHead 是倒数第 k 个节点，即新链表的头
+        LinkedNode  newHead = slow.next;
+        // 让倒数第 k + 1 个节点 和 倒数第 k 个节点断开
+        slow.next = null;
+        // 让最后一个节点指向原始链表的头
+        fast.next = head;
+        return newHead;
+
+    }
+
 
     /**
      * 430. 扁平化多级双向链表

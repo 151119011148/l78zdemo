@@ -1,0 +1,52 @@
+@startuml
+artifact "uic-user" {
+cloud 独立部署单元①{
+artifact "module:user" as a {
+folder "user-api" as 接入层
+folder "user-biz" as 应用层
+folder "user-domain" as 领域层
+folder "user-infractructure" as 基础设施层
+folder "user-dependency" as 二方依赖层
+folder "user-deploy"
+基础设施层 --|> 领域层
+二方依赖层 --|> 领域层
+接入层 --|> 应用层
+应用层 --> 领域层
+}
+}
+cloud 独立部署单元②{
+artifact "module:user-batch" as b {
+folder "user-batch-api"
+folder "user-batch-biz"
+folder "user-batch-deploy"
+}
+}
+
+
+
+cloud 独立部署单元③{
+artifact "module:user-gateway" as c {
+folder "user-gateway-api"
+folder "user-gateway-biz"
+folder "user-gateway-deploy"
+}
+}
+
+cloud 独立部署单元④{
+artifact "module:user-job" as d {
+folder "user-job-biz"
+folder "user-job-deploy"
+}
+}
+artifact "module:user-open-service" as e {
+folder "user-open-service-api"
+folder "user-open-service-deploy"
+}
+artifact "module:user-common" {
+
+}
+}
+b ----> a: 包依赖
+c ..> a: rpc调用
+d ..> a:rpc调用
+@enduml 

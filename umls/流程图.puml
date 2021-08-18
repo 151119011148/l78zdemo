@@ -1,0 +1,33 @@
+@startuml
+:绑定手机号;
+if (检查当前帐号是否绑定手机号) then (已绑定)
+    if (检查userId是否相同) then (相同)
+        :返回userId;
+        stop
+    else (不同)
+        :抛异常;
+        stop
+    endif
+else (未绑定)
+
+if (检查userId是否存在手机帐号) then (不存在)
+    :抛异常;
+    stop
+else (存在)
+    switch (绑定场景)
+    case (null \n老逻辑)
+        :调用merge领域服务;
+    case (\n\n 1 \n本人注册)
+        :调用unbindConflictThenMerge\n领域服务;
+    case (2 \n不是本人注册)
+        :帐号降级;
+        :基于手机号注册新的帐号;
+        :调用merge领域服务;
+    case (3 \n绑定平台帐号)
+        :已下线;
+    endswitch
+    stop
+endif
+
+
+@enduml

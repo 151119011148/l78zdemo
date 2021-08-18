@@ -1,0 +1,33 @@
+@startuml
+participant 业务入口 as busi
+control userMergeDomainService as domain
+entity userInfoAggr as aggr
+queue userDegradeEvent as event
+database repository as repository
+
+busi -> domain ++: 调用帐号降级服务
+domain -> repository ++: 加载聚合
+return 返回aggr
+note right: 也可由调用方传入
+
+domain -> aggr ++: 判断是否包含mobile
+return 返回
+note right: 如果包含其他通用帐号，也允许降级
+
+domain -> aggr ++:解绑手机帐号
+return 返回
+
+domain -> repository ++: 数据持久化
+repository -> repository: 删除user_info
+repository -> repository: 删除mobile_user_mapping
+repository -> repository: 删除email_user_mapping 和\ngeneral_user_mapping
+note right: 兼容其他通用帐号被删除的场景
+return 返回
+
+domain -> event ++: 产生解绑领域事件
+event -> event: 删除通用帐号的头像昵称
+event -> event: 发送帐号降级事件
+event -> event: 发送行为记录
+
+
+@enduml

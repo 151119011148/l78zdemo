@@ -1,0 +1,59 @@
+
+@startuml
+skinparam backgroundColor #EEEBDC
+
+participant "BehaviorCaptchaService" as BehaviorCaptchaService
+participant "CalculateTokenService" as CalculateTokenService
+participant "RuleEngineDefault" as RuleEngineDefault
+participant "ImageManager" as ImageManager
+participant "CacheComponent" as CacheComponent
+participant "UserBehaviorDataCollectService" as UserBehaviorDataCollectService
+participant "RiskManager" as RiskManager
+
+
+
+
+
+group getBehaviorCaptchaTokenV2
+
+    group token规则校验不通过
+    BehaviorCaptchaService -> CalculateTokenService ++: ruleCheck（token规则校验）
+    CalculateTokenService -> RuleEngineDefault ++: execute
+    return 返回
+    return token规则校验不通过
+    end
+
+    group token规则校验通过
+    activate BehaviorCaptchaService
+    BehaviorCaptchaService -> CalculateTokenService ++: ruleCheck（token规则校验）
+    CalculateTokenService -> RuleEngineDefault ++: execute
+    return 返回
+    return 返回
+    BehaviorCaptchaService -> CalculateTokenService ++: genTokenAndEncrypt
+    CalculateTokenService -> ImageManager ++: getTokenBySessionId
+    return 返回
+    CalculateTokenService -> CacheComponent ++: setToCache
+    return BehaviorCaptchaEncrypt
+    return BehaviorCaptchaEncrypt
+    end
+
+end
+
+group checkBehaviorCaptchaData
+    BehaviorCaptchaService -> CalculateTokenService ++: getToken
+    return CacheBehaviorTokenData
+
+    BehaviorCaptchaService -> CalculateTokenService ++: ruleCheck（token规则校验）
+    return 返回
+
+    BehaviorCaptchaService -> UserBehaviorDataCollectService ++: collectingUserBehaviorDataByClient（数据采集）
+    return 返回
+
+    BehaviorCaptchaService -> RiskManager ++: behaviorCheck（风控校验）
+    return 返回
+
+    BehaviorCaptchaService -> CalculateTokenService ++: updateTokenInBehavior（token置为有效）
+    return 返回
+end
+
+@enduml
