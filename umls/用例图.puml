@@ -33,3 +33,115 @@ u --> change2: extend
 u --> change3: extend
 
 @enduml
+
+
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor 业务岗
+note left of 业务岗
+  平台、核心企业、供应商、
+  保理/金融机构有业务岗
+end note
+
+actor 风控岗
+note left of 风控岗
+  平台、核心企业、供应商、
+  保理/金融机构有风控岗
+end note
+
+actor 财务岗
+note left of 财务岗
+  平台、核心企业、供应商、
+  保理/金融机构有财务岗
+end note
+
+rectangle 银票系统 {
+  业务岗 -- (开户)
+  业务岗 -- (用户注册)
+  业务岗 -- (登录)
+  业务岗 -- (银票开立)
+  业务岗 -- (银票融资)
+  业务岗 -- (银票转让)
+
+  (开户) --> (企业信息) : include
+  (开户) --> (开通账号) : include
+  (开户) --> (绑定UKey) : include
+
+  (用户注册) --> (打开邀请链接) : include
+  (用户注册) --> (完善企业信息) : include
+  (用户注册) --> (审核流程) : include
+  (用户注册) --> (授信) : include
+
+  (银票开立) --> (申请开立银票) : include
+  (银票开立) --> (审核流程) : include
+  (银票开立) --> (结算) : include
+
+  (银票融资) --> (创建融资单) : include
+  (银票融资) --> (审核流程) : include
+  (银票融资) --> (融资确认) : include
+  (银票融资) --> (融资放款) : include
+  (银票融资) --> (结算) : include
+
+  (银票转让) --> (审核流程) : include
+  (银票转让) --> (延期) : include
+
+
+  (开通账号) --> (通知) : include
+  (企业信息) --> (录入企业信息) : include
+  (企业信息) --> (验证企业信息) : include
+  (授信) --> (保理公司授信) : include
+  (授信) --> (验证上游授信额度) : include
+  (授信) --> (调整上级供应商/核心企业授信额度) : include
+  (申请开立银票) --> (提交应收帐款等资料) : include
+  (审核流程) --> (审核): include
+  (延期) --> (结算) : include
+
+  (结算) --> (计息) : include
+
+  (通知) <|-- (短信通知)
+  (通知) <|-- (邮件通知)
+
+  (验证上游授信额度) <|-- (验证核心企业授信额度) : include
+  (验证上游授信额度) <|-- (验证上级供应商授信额度) : include
+
+  (计息) <|-- (银票融资计息)
+  (计息) <|-- (延期计息)
+  (计息) <|-- (逾期罚息)
+
+  (审核) <|-- (平台业务/财务/风控审核)
+  (审核) <|-- (核心企业业务/财务/风控审核)
+  (审核) <|-- (供应商业务/财务/风控审核)
+  (审核) <|-- (保理/金融业务/财务/风控审核)
+
+  [业务核心接口模块] -left--> 业务核心
+}
+
+note left of 业务核心
+  所有外部接口均由业务核心提供
+  包括银行类接口、统一用户信息接口等
+  该部分接口已ready（但和已有参照代码的接口完全不兼容）
+end note
+
+node 业务核心 {
+  () "充值接口"
+  () "提现接口"
+  () "放款接口"
+  () "还款接口"
+  () "银行账户信息校验接口"
+  () "用户开户接口"
+  () "用户信息设置接口"
+  () "用户信息查询接口"
+}
+
+@enduml
+
+
+@startuml
+actor foo
+foo --> (bar) : normal
+foo --> (bar1) #line:red;line.bold;text:red  : red bold
+foo --> (bar2) #green;line.dashed;text:green : green dashed
+foo --> (bar3) #blue;line.dotted;text:blue   : blue dotted
+@enduml

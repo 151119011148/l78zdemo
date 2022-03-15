@@ -1,0 +1,114 @@
+@startuml
+@startgantt
+
+[4月份(22个工作日)] lasts 22 days
+[5月份(21个工作日)] lasts 21 days
+[5月份(21个工作日)] starts at [4月份(22个工作日)]'s end
+[6月份(21个工作日)] lasts 21 days
+[6月份(21个工作日)] starts at [5月份(21个工作日)]'s end
+[4月份(22个工作日)] is colored in GreenYellow
+[5月份(21个工作日)] is colored in Fuchsia
+[6月份(21个工作日)] is colored in Red
+
+[需求评审] lasts 0 days
+[use case整理] lasts 2 days
+[use case功能拆分] lasts 2 days
+[use case功能拆分] starts at [use case整理]'s end
+
+-- 后台开发 --
+[数据库设计] lasts 5 days
+[数据库设计] starts at [use case功能拆分]'s end
+
+[API设计] lasts 8 days
+[API设计] starts at [use case功能拆分]'s end
+
+[开户-后台] lasts 2 days
+[开户-后台] starts at [数据库设计]'s end
+[银票转让-后台] lasts 5 days
+[银票转让-后台] starts at [开户-后台]'s end
+[银票融资-后台] lasts 5 days
+[银票融资-后台] starts at [银票转让-后台]'s end
+[注册-后台] lasts 2 days
+[注册-后台] starts at [数据库设计]'s end
+[银票开立-后台] lasts 5 days
+[银票开立-后台] starts at [注册-后台]'s end
+[银票结算-后台] lasts 5 days
+[银票结算-后台] starts at [银票开立-后台]'s end
+[状态机Full test] lasts 3 days
+[状态机Full test] starts at [银票融资-后台]'s end
+[关键操作日志] lasts 2 days
+[关键操作日志] starts at [状态机Full test]'s end
+[Session处理] lasts 2 days
+[Session处理] starts at [关键操作日志]'s end
+[后台内部联调] lasts 5 days
+[后台内部联调] starts at [Session处理]'s end
+[账户接口联调] lasts 3 days
+[账户接口联调] starts at [后台内部联调]'s end
+[后台内测、fix bug] lasts 10 days
+[后台内测、fix bug] starts at [账户接口联调]'s end
+
+-- 区块链开发 --
+[银票业务通道-区块链] lasts 5 days
+[银票业务通道-区块链] starts at [银票融资-后台]'s end
+[银票开立-区块链] lasts 5 days
+[银票开立-区块链] starts at [银票业务通道-区块链]'s end
+[银票融资-区块链] lasts 5 days
+[银票融资-区块链] starts at [银票开立-区块链]'s end
+[银票转让-区块链] lasts 5 days
+[银票转让-区块链] starts at [银票融资-区块链]'s end
+[银票结算-区块链] lasts 5 days
+[银票结算-区块链] starts at [银票转让-区块链]'s end
+[银票接口内部联调-区块链] lasts 3 days
+[银票接口内部联调-区块链] starts at [后台内测、fix bug]'s end
+[区块链部署-测试环境] lasts 2 days
+[区块链部署-测试环境] starts at [银票接口内部联调-区块链]'s end
+
+[银票后台-区块链联调] lasts 3 days
+[银票后台-区块链联调] starts at [区块链部署-测试环境]'s end
+
+
+-- 前端开发 --
+[原型图整理] lasts 3 days
+
+[开户-前端] lasts 3 days
+[开户-前端] starts at [原型图整理]'s end
+[注册-前端] lasts 3 days
+[注册-前端] starts at [开户-前端]'s end
+[登录-前端] lasts 1 days
+[登录-前端] starts at [注册-前端]'s end
+[企业资料-前端] lasts 7 days
+[企业资料-前端] starts at [登录-前端]'s end
+[银票管理-前端] lasts 7 days
+[银票管理-前端] starts at [企业资料-前端]'s end
+[银票转让-前端] lasts 4 days
+[银票转让-前端] starts at [银票管理-前端]'s end
+[银票结算-前端] lasts 2 days
+[银票结算-前端] starts at [银票转让-前端]'s end
+[银票融资-前端] lasts 7 days
+[银票融资-前端] starts at [银票结算-前端]'s end
+[客户管理-前端] lasts 9 days
+[客户管理-前端] starts at [银票融资-前端]'s end
+[系统管理-前端] lasts 7 days
+[系统管理-前端] starts at [客户管理-前端]'s end
+[银票前后端联调] lasts 3 days
+[银票前后端联调] starts at [系统管理-前端]'s end
+
+-- 测试、部署 --
+[后台部署-测试环境] lasts 2 days
+[后台部署-测试环境] starts at [银票后台-区块链联调]'s end
+[前端部署-测试环境] lasts 2 days
+[前端部署-测试环境] starts at [银票前后端联调]'s end
+[模拟用户测试] lasts 6 days
+[模拟用户测试] starts at [前端部署-测试环境]'s end
+[fix bug] lasts 4 days
+[fix bug] starts at [前端部署-测试环境]'s end
+
+[区块链部署-生产环境] lasts 2 days
+[区块链部署-生产环境] starts at [银票后台-区块链联调]'s end
+[银票后台部署-生产环境] lasts 2 days
+[银票后台部署-生产环境] starts at [fix bug]'s end
+[银票前端部署-生产环境] lasts 1 days
+[银票前端部署-生产环境] starts at [fix bug]'s end
+
+@endgantt
+@enduml

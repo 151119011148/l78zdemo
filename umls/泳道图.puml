@@ -1,0 +1,136 @@
+-- example1
+@startuml
+|u| 用户
+start
+:使用连接器;
+|#green|s|数环
+:执行连接器流程;
+|#gold|o|三方开放平台
+:使用三方开放平台能力;
+|s|
+stop
+@enduml
+
+
+
+example2
+@startuml
+start
+repeat :foo作为开始标注;
+  :读取数据;
+  :生成图片;
+backward:这是一个后撤行为;
+repeat while (更多数据?)
+stop
+@enduml
+
+
+example3
+@startuml
+@startuml
+|#pink|Actor_For_red|
+start
+if (color?) is (red) then
+#pink:**action red**;
+:foo1;
+else (not red)
+|#lightgray|Actor_For_no_red|
+#lightgray:**action not red**;
+:foo2;
+endif
+|Next_Actor|
+#lightblue:foo3;
+:foo4;
+|Final_Actor|
+#palegreen:foo5;
+stop
+@enduml
+
+矩易系统流程
+@startuml
+|u| 矩易用户
+start
+:使用矩易App;
+|#yellow|j|矩易App
+:使用抖店能力;
+:跳转H5页面;
+|#green|s|数环通
+:执行连接器流程;
+|#gold|o|抖店开放平台
+:使用抖店开放平台能力;
+|j|
+stop
+@enduml
+
+@startuml
+left to right direction
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+
+actor 用户
+
+rectangle 数环通产品 {
+    用户 -- (发布商品到抖店)
+    用户 -- (修改抖店商品)
+    用户 -- (修改抖店商品库存)
+    用户 -- (同步商品信息到矩易)
+    用户 -- (同步订单信息到矩易)
+    用户 -- (订单发货)
+
+
+    (发布商品到抖店) --> (查询抖店商品类目)  #green;line.dashed;text:green : include
+    (发布商品到抖店) --> (查询抖店商品类目属性) #green;line.dashed;text:green : include
+    (发布商品到抖店) --> (创建抖店素材文件夹) : include
+    (发布商品到抖店) --> (批量上传素材到抖店素材文件夹) : include
+    (发布商品到抖店) --> (查询抖店素材文件夹详情) : include
+
+
+}
+@enduml
+
+
+@startuml
+|u| 用户
+start
+|#yellow|f|矩易APP
+:发布商品到抖店;
+|#green|o|数环通H5页面
+:检验数环通帐号;
+
+|#gold|b|数环通后端
+:注册数环通帐号;
+|#green|o|数环通H5页面
+:检验通过;
+:检验矩易帐号;
+
+|#gold|b|数环通后端
+:授权绑定矩易帐号;
+|#green|o|数环通H5页面
+:检验通过;
+:检验抖店帐号;
+
+|#gold|b|数环通后端
+:授权绑定抖店帐号;
+|#green|o|数环通H5页面
+:检验通过;
+:初始化流程模板;
+
+|#gold|b|数环通后端
+:绑定流程模板;
+:新建并保存流程;
+|#green|o|数环通H5页面
+:保存流程成功;
+:重定向;
+|#yellow|f|矩易APP
+:上传素材，选择类目等;
+:执行发布商品流程;
+|#gold|b|数环通后端
+:执行发布商品流程;
+|#yellow|f|矩易APP
+:执行成功;
+|u| 用户
+:发布成功;
+stop
+@enduml
+
+

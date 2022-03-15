@@ -5,6 +5,7 @@ entity userInfoAggr as aggr
 queue userDegradeEvent as event
 database repository as repository
 
+
 busi -> domain ++: 调用帐号降级服务
 domain -> repository ++: 加载聚合
 return 返回aggr
