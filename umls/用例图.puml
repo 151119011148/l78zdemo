@@ -145,3 +145,53 @@ foo --> (bar1) #line:red;line.bold;text:red  : red bold
 foo --> (bar2) #green;line.dashed;text:green : green dashed
 foo --> (bar3) #blue;line.dotted;text:blue   : blue dotted
 @enduml
+
+
+@startuml
+left to right direction
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+
+actor 管理员
+note left of 管理员
+  数环员工
+end note
+
+
+actor 用户
+管理员 --> 用户 : include
+
+
+rectangle 数环产品用例 {
+    用户 --> (用户注册)
+    用户 --> (创建机构与组织)
+    用户 --> (组织授权与管理)
+    用户 --> (修改密码)
+    用户 --> (登录)
+    用户 --> (添加用户（保存授权信息）)
+    用户 --> (保存流程)
+    用户 --> (选购商品)#line:red;line.bold;text:red
+    用户 --> (支付订单)#line:red;line.bold;text:red
+
+
+    管理员 --> (配置连接器) #green;line.dashed;text:green
+    管理员 --> (保存流程模板)
+    管理员 --> (查询监控日志) #green;line.dashed;text:green
+
+
+    (用户注册) --> (审核流程)  #green;line.dashed;text:green : include
+    (用户注册) --> (完善企业信息) #green;line.dashed;text:green : include
+    (用户注册) --> (完善帐号密码信息) : include
+    (用户注册) --> (打开注册页面) : include
+
+    (支付订单) --> (初始化实例和功能) #line:red;line.bold;text:red : include
+    (支付订单) --> (支付（支付渠道）) #line:red;line.bold;text:red : include
+    (选购商品) --> (下单（包含续费）) #line:red;line.bold;text:red : include
+
+
+    (登录)  --> (图形验证码，滑块，防撞库等安全校验) #green;line.dashed;text:green : include
+    (登录)  --> (短信验证码校验) : include
+    (登录)  --> (密码校验) : include
+}
+@enduml
+

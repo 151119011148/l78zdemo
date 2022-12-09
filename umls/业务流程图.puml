@@ -1,0 +1,113 @@
+@startuml
+:绑定手机号;
+if (检查当前帐号是否绑定手机号) then (已绑定)
+    if (检查userId是否相同) then (相同)
+        :返回userId;
+        stop
+    else (不同)
+        :抛异常;
+        stop
+    endif
+else (未绑定)
+
+if (检查userId是否存在手机帐号) then (不存在)
+    :抛异常;
+    stop
+else (存在)
+    switch (绑定场景)
+    case (null \n老逻辑)
+        :调用merge领域服务;
+    case (\n\n 1 \n本人注册)
+        :调用unbindConflictThenMerge\n领域服务;
+    case (2 \n不是本人注册)
+        :帐号降级;
+        :基于手机号注册新的帐号;
+        :调用merge领域服务;
+    case (3 \n绑定平台帐号)
+        :已下线;
+    endswitch
+    stop
+endif
+
+
+@enduml
+
+@startuml
+|u| 用户
+start
+:使用三方平台;
+|#palegreen|j|三方平台
+:使用数环通能力;
+:查询能力列表（appkey）;
+:已拥有/未拥有;
+:用户选择父模板进行付费;
+if (是否进行过授权?（**是否有openId**）) is (是) then
+#pink:**可以使用数环通的能力**;
+:通过openId调用数环通的流程;
+stop
+else (否)
+#pink:**点击授权链接**;
+endif
+|#DarkSeaGreen|s|数环通授权页面
+:跳转授权页面;
+|#DarkSlateGray|o|数环通
+:校验授权链接有效性;
+if (是否校验通过?) is (否) then
+|#DarkSeaGreen|s|数环通授权页面
+#lightgray:**授权链接校验失败**;
+stop
+else (是)
+|#DarkSeaGreen|s|数环通授权页面
+:校验成功;
+:注册登录数环通帐号;
+|#DarkSlateGray|o|数环通
+:校验用户的帐号密码;
+if (是否校验通过?) is (否) then
+|#DarkSeaGreen|s|数环通授权页面
+#lightgray:**登录失败**;
+stop
+else (是)
+|#DarkSlateGray|o|数环通后端
+:生成用户的独立组织;
+endif
+|#DarkSeaGreen|s|数环通授权页面
+:登陆成功;
+#pink:**确认是否授权**;
+:授权;
+|#DarkSlateGray|o|数环通后端
+:生成预授权码auth_code;
+|#DarkSeaGreen|s|数环通授权页面
+:重定向到三方平台页面，返回预授权码auth_code;
+|#palegreen|j|三方平台
+group 客户页面（回调地址1）
+:通过auth_code获取用户令牌access_token;
+end group
+|#DarkSlateGray|o|数环通后端
+:校验code有效性;
+:生成openId，以及uid和oid的映射;生成access_token，refresh_token;
+|#palegreen|j|三方平台
+:授权成功;
+#pink:**APP授权（开始使用）**;
+|#DarkSeaGreen|s|数环通授权页面
+:携带accessToken,groupId,parentTemplateId;
+|#DarkSlateGray|o|数环通后端
+:accessToken免登,并升级成为OAUTH2专用版本;
+:查询父模板，返回待授权帐号 ;
+|#DarkSeaGreen|s|数环通授权页面
+#pink:**依次对父模板中需要进行授权的资产进行授权**;
+|#DarkSlateGray|o|数环通后端
+:依次授权,保存授权账号;
+|#DarkSeaGreen|s|数环通授权页面
+:所有资产授权成功;
+|#DarkSlateGray|o|数环通后端
+:通过模板初始化流程;
+|#DarkSeaGreen|s|数环通授权页面
+:流程初始化成功;
+|#palegreen|j|三方平台
+group 客户页面（回调地址2）
+:使用数环通能力;
+end group
+stop
+@enduml
+
+

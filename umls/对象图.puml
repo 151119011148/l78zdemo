@@ -1,0 +1,258 @@
+
+
+
+
+
+
+
+@startuml
+hide circle
+hide spot
+entity product {
+    `id` bigint(32) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `gmt_create` datetime NOT NULL COMMENT '创建时间',
+    `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+    `creator` datetime NOT NULL COMMENT '创建人',
+    `modifier` datetime NOT NULL COMMENT '修改人',
+    `is_removed` tinyint(4) NOT NULL COMMENT '是否被删除',
+    `product_id` varchar(64) DEFAULT NULL COMMENT '商品Id',
+    `product_name` varchar(32) DEFAULT NULL COMMENT '商品名称',
+    `img_url` tinyint(4) DEFAULT NULL COMMENT '商品主图',
+    `desc` varchar(256) DEFAULT NULL COMMENT '商品描述',
+    `product_type` tinyint(4) DEFAULT NULL COMMENT '商品类型',
+    `status` tinyint(4) DEFAULT NULL COMMENT '商品状态 0：下架； 1：上架； 2：商品售空',
+    `required_inventory` tinyint(4) DEFAULT NULL COMMENT '是否有库存属性',
+}
+
+entity product_sku {
+    `id` bigint(32) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `gmt_create` datetime NOT NULL COMMENT '创建时间',
+    `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+    `creator` datetime NOT NULL COMMENT '创建人',
+    `modifier` datetime NOT NULL COMMENT '修改人',
+    `is_removed` tinyint(4) NOT NULL COMMENT '是否被删除',
+    `product_id` varchar(64) DEFAULT NULL COMMENT '商品Id',
+    `sku_id` varchar(64) DEFAULT NULL COMMENT '商品skuId',
+    `sku_name` varchar(64) DEFAULT NULL COMMENT '商品skuName',
+    `stock` varchar(32) DEFAULT NULL COMMENT '库存',
+    `price` int(32) DEFAULT NULL COMMENT '价格',
+}
+
+entity product_property {
+    `id` bigint(32) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `gmt_create` datetime NOT NULL COMMENT '创建时间',
+    `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+    `creator` datetime NOT NULL COMMENT '创建人',
+    `modifier` datetime NOT NULL COMMENT '修改人',
+    `is_removed` tinyint(4) NOT NULL COMMENT '是否被删除',
+    `sku_id` varchar(64) DEFAULT NULL COMMENT '商品skuId',
+    `property_name` varchar(64) DEFAULT NULL COMMENT '属性名'
+    `property_value` varchar(32) DEFAULT NULL COMMENT '属性值',
+    `property_unit` varchar(64) DEFAULT NULL COMMENT '属性单位',
+}
+
+
+entity order {
+    `id` bigint(32) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `gmt_create` datetime NOT NULL COMMENT '创建时间',
+    `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+    `creator` datetime NOT NULL COMMENT '创建人',
+    `modifier` datetime NOT NULL COMMENT '修改人',
+    `is_removed` tinyint(4) NOT NULL COMMENT '是否被删除',
+    `order_id` varchar(64) DEFAULT NULL COMMENT '订单Id',
+    `buyer_id` varchar(64) DEFAULT NULL COMMENT '购买人id(userId)',
+    `buyer_name` varchar(32) DEFAULT NULL COMMENT '购买人名称',
+    `buyer_address` varchar(64) DEFAULT NULL COMMENT '购买人地址',
+    `buyer_phone` varchar(32) DEFAULT NULL COMMENT '购买人联系方式',
+    `status` tinyint(4) DEFAULT NULL COMMENT '订单状态 1：待支付； 2：已支付； 3：备货中；4：已发货；5：已完成；',
+}
+
+entity order_item {
+    `id` bigint(32) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `gmt_create` datetime NOT NULL COMMENT '创建时间',
+    `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+    `is_removed` tinyint(4) NOT NULL COMMENT '是否被删除',
+    `product_id` varchar(64) DEFAULT NULL COMMENT '商品id',
+    `product_sku_id` varchar(64) DEFAULT NULL COMMENT '商品skuId',
+    `quantity` int(32) DEFAULT NULL COMMENT '数量',
+    `product_info` varchar(1024) DEFAULT NULL COMMENT '商品信息json',
+    `amount` int(32) DEFAULT NULL COMMENT '价格',
+    `comment` varchar(256) DEFAULT NULL COMMENT '订单备注',
+
+}
+
+product  }|--|| product_sku : "product_id"
+product_sku }|--|| product_property : "sku_id"
+order }|--|| order_item : "order_id"
+product_sku }|..|| order_item : "sku_id"
+product }|..|| order_item : "product_id"
+@enduml
+
+
+@startuml
+hide circle
+hide spot
+entity ipaas_instance {
+    `id` bigint(32) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `gmt_create` datetime NOT NULL COMMENT '创建时间',
+    `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+    `creator` datetime NOT NULL COMMENT '创建人',
+    `modifier` datetime NOT NULL COMMENT '修改人',
+    `is_removed` tinyint(4) NOT NULL COMMENT '是否被删除',
+    `group_id` varchar(50) NOT NULL COMMENT '组织uuid',
+    `tenant_id` varchar(50) NOT NULL COMMENT '租户uuid',
+    `instance_id` varchar(64) DEFAULT NULL COMMENT '实例Id',
+    `owner_type` tinyint(4) DEFAULT NULL COMMENT '归属者类型 1-个人 2-企业组织',
+    `owner_id` varchar(64) DEFAULT NULL COMMENT '归属者Id',
+    `effective_begin` datetime DEFAULT NULL COMMENT '生效开始时间',
+    `effective_end` datetime DEFAULT NULL COMMENT '生效结束时间',
+    `effective_value` int(8) DEFAULT NULL COMMENT '有效期',
+    `effective_unit` varchar(32) DEFAULT NULL COMMENT '有效期单位',
+    `status` tinyint(4) DEFAULT NULL COMMENT '实例状态 1：待激活； 2：生效中； 3：已过期；4：已冻结；5：已注销；',
+}
+
+entity ipaas_instance_feature {
+    `id` bigint(32) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `gmt_create` datetime NOT NULL COMMENT '创建时间',
+    `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+    `creator` datetime NOT NULL COMMENT '创建人',
+    `modifier` datetime NOT NULL COMMENT '修改人',
+    `is_removed` tinyint(4) NOT NULL COMMENT '是否被删除',
+    `group_id` varchar(50) NOT NULL COMMENT '组织uuid',
+    `tenant_id` varchar(50) NOT NULL COMMENT '租户uuid',
+    `instance_id` varchar(64) DEFAULT NULL COMMENT '实例Id',
+    `owner_type` tinyint(4) DEFAULT NULL COMMENT '归属者类型 1-个人 2-企业组织',
+    `owner_id` varchar(64) DEFAULT NULL COMMENT '归属者Id',
+    `feature_code` varchar(64) DEFAULT NULL COMMENT '功能编码',
+    `feature_name` varchar(32) DEFAULT NULL COMMENT '功能名称',
+    `total` int(16) DEFAULT NULL COMMENT 'total',
+    `balance` int(16) DEFAULT NULL COMMENT 'balance',
+    `unit` varchar(32) DEFAULT NULL COMMENT '功能单位',
+}
+
+entity ipaas_instance_feature_running_record {
+    `id` bigint(32) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `gmt_create` datetime NOT NULL COMMENT '创建时间',
+    `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+    `is_removed` tinyint(4) NOT NULL COMMENT '是否被删除',
+    `group_id` varchar(50) NOT NULL COMMENT '组织uuid',
+    `tenant_id` varchar(50) NOT NULL COMMENT '租户uuid',
+    `instance_id` varchar(64) DEFAULT NULL COMMENT '实例Id',
+    `owner_type` tinyint(4) DEFAULT NULL COMMENT '归属者类型 1-个人 2-企业组织',
+    `owner_id` varchar(64) DEFAULT NULL COMMENT '归属者Id',
+    `feature_code` varchar(64) DEFAULT NULL COMMENT '功能编码',
+    `cost_count` int(8) DEFAULT NULL COMMENT '消耗次数',
+}
+
+
+ipaas_instance  }|--|| ipaas_instance_feature : "instance_id"
+ipaas_instance_feature }|--|| ipaas_instance_feature_running_record : "instance_id"
+@enduml
+
+@startuml
+ entity ipaas_group {
+ }
+ entity ipaas_access_key {
+    `id` bigint NOT NULL AUTO_INCREMENT,
+    `uuid` varchar(50) NOT NULL,
+    `tenant_id` varchar(50) NOT NULL COMMENT '租户uuid',
+    `group_id` varchar(50) NOT NULL COMMENT '组织uuid',
+    `user_id` varchar(50) NOT NULL COMMENT '用户ID',
+    `last_modified_timestamp` bigint NOT NULL COMMENT '更新时间戳',
+    `creator` varchar(50) NOT NULL COMMENT '创建者uuid',
+    `modifier` varchar(50) NOT NULL COMMENT '修改者uuid',
+    `gmt_create` datetime NOT NULL COMMENT '创建时间',
+    `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+    `is_removed` tinyint NOT NULL DEFAULT '0' COMMENT '删除标识，0未删除 1已删除',
+    `app_key` varchar(64) NOT NULL COMMENT '访问的key',
+    `app_secret` varchar(50) NOT NULL COMMENT '访问的keySecret',
+    `redirect_url` varchar(128) NOT NULL COMMENT '重定向url',
+    `sign_method` tinyint(50) NOT NULL COMMENT '加签算法',
+    `resource_type` varchar(20) DEFAULT NULL COMMENT '资源类型',
+    `resource_id` varchar(50) DEFAULT NULL COMMENT '资源的id，由资源类型决定。',
+    `expired_time` datetime DEFAULT NULL COMMENT '过期时间',
+    `env` varchar(20) NOT NULL COMMENT '系统环境'
+}
+
+ entity ipaas_oauth_user {
+    `id` bigint NOT NULL AUTO_INCREMENT,
+    **`open_id` varchar(64) NOT NULL**,
+    `tenant_id` varchar(50) NOT NULL COMMENT '租户uuid',
+    `group_id` varchar(50) NOT NULL COMMENT '组织uuid',
+    **`app_key` varchar(64) NOT NULL COMMENT '访问的key'**,
+    `user_id` varchar(50) NOT NULL COMMENT '用户ID',
+    `last_modified_timestamp` bigint NOT NULL COMMENT '更新时间戳',
+    `creator` varchar(50) NOT NULL COMMENT '创建者uuid',
+    `modifier` varchar(50) NOT NULL COMMENT '修改者uuid',
+    `gmt_create` datetime NOT NULL COMMENT '创建时间',
+    `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+    `is_removed` tinyint NOT NULL DEFAULT '0' COMMENT '删除标识，0未删除 1已删除',
+    **`access_token` varchar(64) NOT NULL COMMENT 'access_token'**,
+    **`refresh_token` varchar(64) NOT NULL COMMENT 'refresh_token'**,
+    **`expired_time_access_token` datetime DEFAULT NULL COMMENT 'access_token过期时间'**,
+    **`expired_time_refresh_token` datetime DEFAULT NULL COMMENT 'refresh_token过期时间'**,
+    `env` varchar(20) NOT NULL COMMENT '系统环境'
+ }
+
+ entity ipaas_case_template {
+  `gmt_create` datetime NOT NULL COMMENT '创建时间',
+  `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+  `creator` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '创建者uuid',
+  `modifier` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '修改者uuid',
+  `is_removed` tinyint NOT NULL COMMENT '是否被删除',
+  `group_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '组织uuid',
+  `tenant_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '租户uuid',
+  `owner_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '归属用户Uid',
+  `parent_template_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '模板id',
+  `template_id` varchar(50) NOT NULL COMMENT '归属模板id',
+  `template_name` varchar(50) NOT NULL COMMENT '模板名称',
+  `status` varchar(20) DEFAULT NULL COMMENT '模板状态',
+  `template_type` varchar(20) DEFAULT NULL COMMENT '模板类型，系统模板or用户模板',
+  `template_category` varchar(50) DEFAULT NULL COMMENT '模板分类',
+  `template_description` varchar(2000) DEFAULT NULL COMMENT '模板说明',
+  `from_app_id` varchar(50) DEFAULT NULL COMMENT '来源appId',
+  `from_flow_id` varchar(50) DEFAULT NULL COMMENT '来源flowId',
+  `env` varchar(20) NOT NULL COMMENT '系统环境',
+  `connectors` mediumtext COMMENT '连接的APP列表',
+  `meta` mediumtext COMMENT '元数据',
+  `view_meta` mediumtext NOT NULL COMMENT '前端展示配置',
+  `extensions` mediumtext COMMENT '扩展字段, 与流程无关的',
+  PRIMARY KEY (`id`) USING BTREE
+ }
+
+  entity ipaas_user_template_auth {
+     `id` bigint NOT NULL AUTO_INCREMENT,
+     **`user_id` varchar(50) NOT NULL COMMENT '用户ID'**,
+     **`template_id` varchar(64) NOT NULL**,
+     `meta` varchar(1000) DEFAULT NULL COMMENT '模板授权元信息',
+     `tenant_id` varchar(50) NOT NULL COMMENT '租户uuid',
+     `group_id` varchar(50) NOT NULL COMMENT '组织uuid',
+     `owner_type` tinyint(4) DEFAULT NULL COMMENT '归属者类型 1-个人 2-企业组织',
+     `owner_id` varchar(64) DEFAULT NULL COMMENT '归属者Id',
+     `creator` varchar(50) NOT NULL COMMENT '创建者uuid',
+     `modifier` varchar(50) NOT NULL COMMENT '修改者uuid',
+     `gmt_create` datetime NOT NULL COMMENT '创建时间',
+     `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+     `is_removed` tinyint NOT NULL DEFAULT '0' COMMENT '删除标识，0未删除 1已删除',
+     `env` varchar(20) NOT NULL COMMENT '系统环境'
+
+  }
+
+  entity meta{
+       `connector_id` varchar(64) DEFAULT NULL COMMENT 'connector_id',
+       `connector_auth_variable` varchar(16) NOT NULL COMMENT '连接器授权变量',
+       `connector_auth_variable_name` varchar(16) NOT NULL COMMENT '连接器授权变量名称',
+       `asset_id` varchar(64) NOT NULL COMMENT '资产id',
+  }
+
+ipaas_group  }|--|| ipaas_access_key : "group_id"
+ipaas_access_key }|--|| ipaas_oauth_user : "app_key"
+ipaas_group  }|--|| ipaas_case_template : "group_id"
+ipaas_oauth_user }|--|| ipaas_user_template_auth : "user_id"
+ipaas_case_template ||--|| ipaas_user_template_auth : "template_id"
+ipaas_user_template_auth }|--|| meta : "id"
+
+@enduml
+
+
+

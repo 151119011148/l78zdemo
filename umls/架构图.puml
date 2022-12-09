@@ -50,3 +50,153 @@ b ----> a: 包依赖
 c ..> a: rpc调用
 d ..> a:rpc调用
 @enduml 
+
+
+@startuml
+artifact "ipaas-shuhuan-market" {
+
+    artifact "module:ipaas-api" as api{
+        folder 权益服务 as 权益服务
+    }
+
+    cloud 独立部署单元1{
+        artifact "module:market" as market {
+            folder "market-start/console" as 接入层
+            folder "market-service" as 应用层
+            folder "market-service/entity" as 领域层
+            folder "market-mapper" as 基础设施层
+
+            基础设施层 --|> 领域层
+            接入层 --> 应用层
+            应用层 --> 领域层
+        }
+    }
+
+
+    cloud 独立部署单元2{
+        artifact "module:engine" as engine {
+
+        }
+    }
+
+
+}
+gateway ----> api: 包依赖
+gateway ..> engine: rpc调用
+engine ..> api: rpc调用
+@enduml 
+
+@startuml
+
+cloud "com.shuhuan.ipaas.core.utils" {
+    folder infrastructure{
+    }
+}
+cloud "com.shuhuan.ipaas.api" as api{
+}
+cloud "com.shuhuan.ipaas.market.order" as "ordercontext"{
+    package northbound{
+        package remote{
+            package controller{
+            }
+            package provider{
+            }
+            package subscriber{
+            }
+        }
+
+        package local{
+            package appservice{
+            }
+
+            card pl{
+            }
+        }
+    }
+    component domain{
+    }
+    package southbound{
+        package port{
+            package client{
+            }
+            package repository{
+            }
+            package publisher{
+            }
+            card acl{
+            }
+
+        }
+        package adapter{
+            package clientImpl{}
+            package repositoryImpl{}
+            package publisherImpl{}
+        }
+    }
+    remote --|> local: 包依赖
+    local --|> domain: 包依赖
+    domain --|> port: 包依赖
+    port --|> adapter: 包依赖
+}
+database database {
+}
+queue queue {
+}
+ordercontext --|> infrastructure: 包依赖
+clientImpl ..> api: rpc调用
+repositoryImpl --|> database
+publisherImpl --|> queue
+@enduml
+
+@startuml
+
+cloud "com.shuhuan.ipaas.core.utils" {
+    folder infrastructure{
+    }
+}
+cloud "com.shuhuan.ipaas.api" as api{
+}
+cloud "com.shuhuan.ipaas.market" as "market"{
+    component start{
+        folder start-order{
+            package controller{
+                class OrderController{}
+            }
+            package appservice{
+                class OrderService{}
+            }
+            card pl{
+            }
+        }
+
+    }
+    component service{
+        folder service-order{
+
+            folder domain{
+                class OrderManager{}
+
+            }
+
+            folder client{
+                package clientImpl{}
+                package repositoryImpl{}
+                package publisherImpl{}
+                card acl{
+                }
+            }
+
+        }
+    controller --|> appservice: 包依赖
+    appservice --|> domain: 包依赖
+    domain --|> client: 包依赖
+}
+database database {
+}
+queue queue {
+}
+service --|> infrastructure: 包依赖
+clientImpl ..> api: rpc调用
+repositoryImpl --|> database
+publisherImpl --|> queue
+@enduml

@@ -133,3 +133,116 @@ folder "com.shuhuan.ipaas.gateway" {
 
 
 @enduml
+
+@startuml
+
+folder "com.shuhuan.ipaas.gateway" {
+
+    abstract class ExecutionHandler{
+
+        private String name;
+
+        private String targetRef;
+
+        private FlowInstance flow;
+
+        private ExecutionHandler nextHandler;
+
+        private String exceptionRef;
+
+        public abstract boolean isAsync();
+
+        public abstract FlowElementType getElementType();
+
+        public abstract void execute(Execution ec, Consumer<Execution> callback) throws Exception;
+
+        public void cascade();
+    }
+
+    abstract class AbstractForkGateway{
+
+        private String joinAt;
+
+        private Map<String, Semaphore> forkedSems;
+
+        protected void processFork(Execution ec, ExecutionForkContext context, Consumer<Execution> callback);
+
+    }
+
+    class CatchErrorGateway{
+
+        public CatchErrorGateway(FlowInstance flow, ForkGatewayPO po);
+
+        public void execute(Execution ec, Consumer<Execution> callback);
+
+    }
+
+    class OnErrorGateway{
+
+        public CatchErrorGateway(FlowInstance flow, ForkGatewayPO po);
+
+        public void execute(Execution ec, Consumer<Execution> callback);
+
+
+    }
+
+    class JoinGateway{
+
+        private Consumer<Execution> callback;
+
+        private StatementList statements;
+
+        private Execution ec;
+
+    }
+
+    class Execution{
+
+        private String requestId;
+        private Execution parent;
+        private FlowInstance flow;
+        private Map<String, Object> contextObjects;
+        private Map<String, Object> globalContextObjects;
+
+        private ExecutionRuntime runtime;
+        private ExecutionStepContext currentStep;
+        private ExecutionTriggerContext triggerContext;
+        private ExecutionLogContext logContext;
+        private AtomicBoolean finish;
+
+        private Exception error;
+        private boolean isFork = false;
+
+        List<ExecutionForkContext> contexts;
+
+        private ExpressionContext expressionContext;
+
+    }
+
+
+    enum FlowElementType{
+
+        FOR_COUNT_GATEWAY("ForCountGateway"),
+
+        JOIN_GATEWAY("JoinGateway"),
+
+        CATCH_ERROR_GATEWAY("CatchErrorGateway"),
+
+        ON_ERROR_GATEWAY("OnErrorGateway"),
+    }
+
+
+    ExecutionHandler <|-- AbstractForkGateway
+    AbstractForkGateway <|-- CatchErrorGateway
+    AbstractForkGateway <|-- OnErrorGateway
+    AbstractForkGateway <|-- JoinGateway
+    CatchErrorGateway *-- Execution
+    OnErrorGateway *-- Execution
+    JoinGateway *-- Execution
+    ExecutionHandler *-- FlowElementType
+
+
+}
+
+
+@enduml

@@ -1,5 +1,6 @@
 package com.scofen.designpattern.proxy.testPerformance;
 
+import org.junit.Test;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
@@ -23,6 +24,7 @@ public class CglibProxyTest implements MethodInterceptor {
         return (Test) enhancer.create();
     }
 
+    @Override
     public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
         return proxy.invokeSuper(obj, args);
     }

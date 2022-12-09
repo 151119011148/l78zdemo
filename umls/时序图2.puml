@@ -32,3 +32,366 @@ event -> event: 发送行为记录
 
 
 @enduml
+
+
+@startuml
+participant 业务入口 as busi
+control OrderController as orderController
+control EventSubscriber as eventSubscriber
+participant OrderAppService as orderAppService
+participant EventPublish as eventPublish
+participant InstanceAppService as InstanceAppService
+participant InstanceService as InstanceService
+entity OrderService as orderService
+entity Order as Order
+participant InventoryClient as inventoryClient
+queue OrderDomainEvent as orderDomainEvent
+database OrderRepository as orderRepository
+
+
+group 下单购买付费版商品
+busi -> orderController ++: 下单购买付费版商品
+orderController -> orderAppService ++: placingOrder
+orderAppService -> orderService ++: placingOrder
+orderService -> inventoryClient: check
+orderService -> inventoryClient: lock
+orderService -> Order: calculateAmount
+orderService -> orderRepository: save
+orderRepository -> orderRepository: saveOrder
+orderService -> orderDomainEvent: sendPlacingOrderEvent
+return return
+return return
+return 下单成功
+end
+
+group 扫码支付中
+busi -> orderController ++: 支付中
+orderController -> orderAppService ++: payForOrder
+orderAppService -> orderService ++: payForOrder
+orderService -> Order: handleOrderStatus
+orderService -> orderRepository: save
+orderRepository -> orderRepository: saveOrder
+orderService -> orderDomainEvent: sendPayForOrderEvent
+return return
+return return
+return 下单成功
+end
+
+group 支付成功
+busi -> orderController ++: 支付成功
+orderController -> orderAppService ++: completeOrder
+orderAppService -> orderService ++: completeOrder
+orderService -> Order: handleOrderStatus
+orderService -> orderRepository: save
+orderRepository -> orderRepository: saveOrder
+orderService -> orderDomainEvent: sendCompleteOrderEvent
+orderAppService -> eventPublish: publishEvent
+eventSubscriber -> eventPublish: subscribeEvent
+eventSubscriber -> InstanceAppService: newInstance
+InstanceAppService -> InstanceService: newInstance
+return return
+return return
+return 下单成功
+end
+
+@enduml
+
+
+
+
+
+@startuml
+participant 业务方 as thirdPlatform
+participant 数环通前端授权页面 as busi
+control OauthController as OauthController
+database IpaasAccessKeyDAO as IpaasAccessKeyDAO
+entity AccessKeyEntity as AccessKeyEntity
+
+group 获取授权码
+thirdPlatform -> busi : 获取授权码
+busi -> OauthController : checkUrlCode
+activate OauthController
+OauthController -> IpaasOauthService : checkUrlCode
+activate IpaasOauthService
+IpaasOauthService -> IpaasOauthServiceImpl : checkUrlCode
+activate IpaasOauthServiceImpl
+IpaasOauthServiceImpl -> IpaasOauthServiceImpl : getAccessKey
+activate IpaasOauthServiceImpl
+IpaasOauthServiceImpl -> IpaasAccessKeyDAO : selectByPrimaryKey
+activate IpaasAccessKeyDAO
+IpaasAccessKeyDAO --> IpaasOauthServiceImpl
+deactivate IpaasAccessKeyDAO
+IpaasOauthServiceImpl --> IpaasOauthServiceImpl
+deactivate IpaasOauthServiceImpl
+IpaasOauthServiceImpl -> AccessKeyEntity : checkUrlCode
+activate AccessKeyEntity
+AccessKeyEntity -> AccessKeyEntity : checkAuth
+activate AccessKeyEntity
+AccessKeyEntity --> AccessKeyEntity
+deactivate AccessKeyEntity
+AccessKeyEntity --> IpaasOauthServiceImpl
+deactivate AccessKeyEntity
+IpaasOauthServiceImpl --> IpaasOauthService
+deactivate IpaasOauthServiceImpl
+IpaasOauthService --> OauthController
+deactivate IpaasOauthService
+return
+
+end
+
+group 确认授权
+thirdPlatform -> busi : 确认授权
+busi -> OauthController : confirmAuth
+activate OauthController
+OauthController -> IpaasOauthService : confirmAuth
+activate IpaasOauthService
+IpaasOauthService -> IpaasOauthServiceImpl : confirmAuth
+activate IpaasOauthServiceImpl
+IpaasOauthServiceImpl -> IpaasOauthServiceImpl : getAccessKey
+activate IpaasOauthServiceImpl
+IpaasOauthServiceImpl -> IpaasAccessKeyDAO : selectByPrimaryKey
+activate IpaasAccessKeyDAO
+IpaasAccessKeyDAO --> IpaasOauthServiceImpl
+deactivate IpaasAccessKeyDAO
+IpaasOauthServiceImpl --> IpaasOauthServiceImpl
+deactivate IpaasOauthServiceImpl
+IpaasOauthServiceImpl -> AccessKeyEntity : checkAuth
+activate AccessKeyEntity
+AccessKeyEntity --> IpaasOauthServiceImpl
+deactivate AccessKeyEntity
+IpaasOauthServiceImpl -> AccessKeyEntity : generateAuthCode
+activate AccessKeyEntity
+AccessKeyEntity --> IpaasOauthServiceImpl
+deactivate AccessKeyEntity
+IpaasOauthServiceImpl -> OauthUserEffectAuthCodeDomainEvent : new
+activate OauthUserEffectAuthCodeDomainEvent
+OauthUserEffectAuthCodeDomainEvent -> AccessKeyEntity : identity
+activate AccessKeyEntity
+AccessKeyEntity --> OauthUserEffectAuthCodeDomainEvent
+deactivate AccessKeyEntity
+OauthUserEffectAuthCodeDomainEvent --> IpaasOauthServiceImpl
+deactivate OauthUserEffectAuthCodeDomainEvent
+IpaasOauthServiceImpl --> IpaasOauthService
+deactivate IpaasOauthServiceImpl
+IpaasOauthService --> OauthController
+deactivate IpaasOauthService
+return
+end
+@enduml
+
+@startuml
+group 获取授权令牌
+participant Actor
+Actor -> OpenOauthController : getAccessToken
+activate OpenOauthController
+OpenOauthController -> IpaasOauthService : getAccessToken
+activate IpaasOauthService
+IpaasOauthService -> IpaasOauthServiceImpl : getAccessToken
+activate IpaasOauthServiceImpl
+IpaasOauthServiceImpl -> RedisCacheManager : getValue
+activate RedisCacheManager
+RedisCacheManager --> IpaasOauthServiceImpl
+deactivate RedisCacheManager
+IpaasOauthServiceImpl -> AccessKeyEntity : checkSign
+activate AccessKeyEntity
+AccessKeyEntity -> AccessKeyEntity : λ→
+activate AccessKeyEntity
+AccessKeyEntity --> AccessKeyEntity
+deactivate AccessKeyEntity
+AccessKeyEntity --> IpaasOauthServiceImpl
+deactivate AccessKeyEntity
+IpaasOauthServiceImpl -> IpaasOauthServiceImpl : getOauthUser
+activate IpaasOauthServiceImpl
+IpaasOauthServiceImpl -> IpaasOauthUserDAO : findOneByUserId
+activate IpaasOauthUserDAO
+IpaasOauthUserDAO --> IpaasOauthServiceImpl
+deactivate IpaasOauthUserDAO
+IpaasOauthServiceImpl --> IpaasOauthServiceImpl
+deactivate IpaasOauthServiceImpl
+IpaasOauthServiceImpl -> IpaasOauthServiceImpl : λ→
+activate IpaasOauthServiceImpl
+IpaasOauthServiceImpl -> OauthUserEntity : reset
+activate OauthUserEntity
+OauthUserEntity -> TokenValueObject : updateAccessToken
+activate TokenValueObject
+TokenValueObject -> TokenValueObject : generateAccessToken
+activate TokenValueObject
+TokenValueObject --> TokenValueObject
+deactivate TokenValueObject
+TokenValueObject --> OauthUserEntity
+deactivate TokenValueObject
+OauthUserEntity -> TokenValueObject : updateRefreshToken
+activate TokenValueObject
+TokenValueObject -> TokenValueObject : generateAccessToken
+activate TokenValueObject
+TokenValueObject --> TokenValueObject
+deactivate TokenValueObject
+TokenValueObject -> TokenValueObject : generateRefreshToken
+activate TokenValueObject
+TokenValueObject --> TokenValueObject
+deactivate TokenValueObject
+TokenValueObject --> OauthUserEntity
+deactivate TokenValueObject
+OauthUserEntity --> IpaasOauthServiceImpl
+deactivate OauthUserEntity
+IpaasOauthServiceImpl -> IpaasOauthUserDAO : updateByPrimaryKey
+activate IpaasOauthUserDAO
+IpaasOauthUserDAO --> IpaasOauthServiceImpl
+deactivate IpaasOauthUserDAO
+IpaasOauthServiceImpl -> IpaasOauthServiceImpl : λ→
+activate IpaasOauthServiceImpl
+IpaasOauthServiceImpl -> OauthUserEntity : newOauthUser
+activate OauthUserEntity
+OauthUserEntity -> TokenValueObject : new
+activate TokenValueObject
+TokenValueObject -> TokenValueObject : generateAccessToken
+activate TokenValueObject
+TokenValueObject --> TokenValueObject
+deactivate TokenValueObject
+TokenValueObject -> TokenValueObject : generateRefreshToken
+activate TokenValueObject
+TokenValueObject --> TokenValueObject
+deactivate TokenValueObject
+TokenValueObject --> OauthUserEntity
+deactivate TokenValueObject
+OauthUserEntity -> OauthUserEntity : new
+activate OauthUserEntity
+OauthUserEntity -> OpenId : new
+activate OpenId
+OpenId -> OpenId : identity
+activate OpenId
+OpenId --> OpenId
+deactivate OpenId
+OpenId --> OauthUserEntity
+deactivate OpenId
+OauthUserEntity --> OauthUserEntity
+deactivate OauthUserEntity
+OauthUserEntity --> IpaasOauthServiceImpl
+deactivate OauthUserEntity
+IpaasOauthServiceImpl -> IpaasOauthUserDAO : insert
+activate IpaasOauthUserDAO
+IpaasOauthUserDAO --> IpaasOauthServiceImpl
+deactivate IpaasOauthUserDAO
+IpaasOauthServiceImpl -> OauthUserEffectAccessTokenDomainEvent : new
+activate OauthUserEffectAccessTokenDomainEvent
+OauthUserEffectAccessTokenDomainEvent -> OauthUserEntity : identity
+activate OauthUserEntity
+OauthUserEntity --> OauthUserEffectAccessTokenDomainEvent
+deactivate OauthUserEntity
+OauthUserEffectAccessTokenDomainEvent --> IpaasOauthServiceImpl
+deactivate OauthUserEffectAccessTokenDomainEvent
+IpaasOauthServiceImpl -> OauthUserEffectRefreshTokenDomainEvent : new
+activate OauthUserEffectRefreshTokenDomainEvent
+OauthUserEffectRefreshTokenDomainEvent -> OauthUserEntity : identity
+activate OauthUserEntity
+OauthUserEntity --> OauthUserEffectRefreshTokenDomainEvent
+deactivate OauthUserEntity
+OauthUserEffectRefreshTokenDomainEvent --> IpaasOauthServiceImpl
+deactivate OauthUserEffectRefreshTokenDomainEvent
+IpaasOauthServiceImpl --> IpaasOauthServiceImpl
+deactivate IpaasOauthServiceImpl
+IpaasOauthServiceImpl --> IpaasOauthServiceImpl
+deactivate IpaasOauthServiceImpl
+IpaasOauthServiceImpl --> IpaasOauthService
+deactivate IpaasOauthServiceImpl
+IpaasOauthService --> OpenOauthController
+deactivate IpaasOauthService
+return
+end
+@enduml
+
+@startuml
+group 刷新授权令牌
+participant Actor
+Actor -> OpenOauthController : refreshAccessToken
+activate OpenOauthController
+OpenOauthController -> IpaasOauthService : refreshAccessToken
+activate IpaasOauthService
+IpaasOauthService -> IpaasOauthServiceImpl : refreshAccessToken
+activate IpaasOauthServiceImpl
+IpaasOauthServiceImpl -> IpaasOauthServiceImpl : getAccessKey
+activate IpaasOauthServiceImpl
+IpaasOauthServiceImpl -> IpaasAccessKeyDAO : selectByPrimaryKey
+activate IpaasAccessKeyDAO
+IpaasAccessKeyDAO --> IpaasOauthServiceImpl
+deactivate IpaasAccessKeyDAO
+IpaasOauthServiceImpl --> IpaasOauthServiceImpl
+deactivate IpaasOauthServiceImpl
+IpaasOauthServiceImpl -> AccessKeyEntity : checkSign
+activate AccessKeyEntity
+AccessKeyEntity -> AccessKeyEntity : λ→
+activate AccessKeyEntity
+AccessKeyEntity --> AccessKeyEntity
+deactivate AccessKeyEntity
+AccessKeyEntity --> IpaasOauthServiceImpl
+deactivate AccessKeyEntity
+IpaasOauthServiceImpl -> IpaasOauthServiceImpl : getOauthUserByRefreshToken
+activate IpaasOauthServiceImpl
+IpaasOauthServiceImpl -> RedisCacheManager : getValue
+activate RedisCacheManager
+RedisCacheManager --> IpaasOauthServiceImpl
+deactivate RedisCacheManager
+IpaasOauthServiceImpl --> IpaasOauthServiceImpl
+deactivate IpaasOauthServiceImpl
+IpaasOauthServiceImpl -> TokenValueObject : countDown
+activate TokenValueObject
+TokenValueObject --> IpaasOauthServiceImpl
+deactivate TokenValueObject
+IpaasOauthServiceImpl -> OauthUserEffectRefreshTokenDomainEvent : new
+activate OauthUserEffectRefreshTokenDomainEvent
+OauthUserEffectRefreshTokenDomainEvent -> OauthUserEntity : identity
+activate OauthUserEntity
+OauthUserEntity --> OauthUserEffectRefreshTokenDomainEvent
+deactivate OauthUserEntity
+OauthUserEffectRefreshTokenDomainEvent --> IpaasOauthServiceImpl
+deactivate OauthUserEffectRefreshTokenDomainEvent
+IpaasOauthServiceImpl -> TokenValueObject : updateRefreshToken
+activate TokenValueObject
+TokenValueObject -> TokenValueObject : generateAccessToken
+activate TokenValueObject
+TokenValueObject --> TokenValueObject
+deactivate TokenValueObject
+TokenValueObject -> TokenValueObject : generateRefreshToken
+activate TokenValueObject
+TokenValueObject --> TokenValueObject
+deactivate TokenValueObject
+TokenValueObject --> IpaasOauthServiceImpl
+deactivate TokenValueObject
+IpaasOauthServiceImpl -> OauthUserInvalidRefreshTokenDomainEvent : new
+activate OauthUserInvalidRefreshTokenDomainEvent
+OauthUserInvalidRefreshTokenDomainEvent -> OauthUserEntity : identity
+activate OauthUserEntity
+OauthUserEntity --> OauthUserInvalidRefreshTokenDomainEvent
+deactivate OauthUserEntity
+OauthUserInvalidRefreshTokenDomainEvent --> IpaasOauthServiceImpl
+deactivate OauthUserInvalidRefreshTokenDomainEvent
+IpaasOauthServiceImpl -> TokenValueObject : updateRefreshToken
+activate TokenValueObject
+TokenValueObject -> TokenValueObject : generateAccessToken
+activate TokenValueObject
+TokenValueObject --> TokenValueObject
+deactivate TokenValueObject
+TokenValueObject -> TokenValueObject : generateRefreshToken
+activate TokenValueObject
+TokenValueObject --> TokenValueObject
+deactivate TokenValueObject
+TokenValueObject --> IpaasOauthServiceImpl
+deactivate TokenValueObject
+IpaasOauthServiceImpl -> OauthUserEffectRefreshTokenDomainEvent : new
+activate OauthUserEffectRefreshTokenDomainEvent
+OauthUserEffectRefreshTokenDomainEvent -> OauthUserEntity : identity
+activate OauthUserEntity
+OauthUserEntity --> OauthUserEffectRefreshTokenDomainEvent
+deactivate OauthUserEntity
+OauthUserEffectRefreshTokenDomainEvent --> IpaasOauthServiceImpl
+deactivate OauthUserEffectRefreshTokenDomainEvent
+IpaasOauthServiceImpl -> IpaasOauthUserDAO : updateByPrimaryKey
+activate IpaasOauthUserDAO
+IpaasOauthUserDAO --> IpaasOauthServiceImpl
+deactivate IpaasOauthUserDAO
+IpaasOauthServiceImpl --> IpaasOauthService
+deactivate IpaasOauthServiceImpl
+IpaasOauthService --> OpenOauthController
+deactivate IpaasOauthService
+return
+@enduml

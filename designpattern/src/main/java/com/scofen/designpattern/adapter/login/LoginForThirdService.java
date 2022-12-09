@@ -10,6 +10,7 @@ import com.scofen.designpattern.utils.Result;
  */
 public class LoginForThirdService extends LoginService {
 
+    @Override
     public Result loginForQQ(String id) {
         //1.id设为全局唯一
         //2.密码默认EMPTY

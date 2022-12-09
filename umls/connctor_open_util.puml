@@ -1,0 +1,665 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor 用户
+note left of 用户
+  试用用户、付费用户、合作伙伴
+end note
+
+actor 管理员
+note left of 管理员
+  员工
+end note
+
+管理员 --> 用户 : include
+
+rectangle 开放平台 {
+  用户 -- (新增连接器草稿) #line:red;line.bold;text:red
+  用户 -- (编辑连接器草稿) #line:red;line.bold;text:red
+  用户 -- (创建连接器版本) #line:red;line.bold;text:red
+  用户 -- (查询连接器版本列表) #line:red;line.bold;text:red
+  用户 -- (连接器上架) #line:red;line.bold;text:red
+  用户 -- (连接器下架) #green;line.dashed;text:green
+  用户 -- (查询连接器模板) #green;line.dashed;text:green
+
+
+  (编辑连接器草稿) --> (修改授权，trigger，action等主体信息) : include
+  (编辑连接器草稿) --> (修改官网，帮助文档等帮助信息) : include
+  (编辑连接器草稿) --> (修改名称，描述，图标等基本信息) : include
+
+}
+
+rectangle 管理后台 {
+  管理员 -- (批准连接器上架) #green;line.dashed;text:green
+
+  管理员 -- (拒绝连接器上架) #green;line.dashed;text:green
+
+}
+
+@enduml
+
+@startuml
+|u| 用户
+start
+:使用连接器开放工具;
+|#palegreen|j|数环通开放平台
+:新增连接器草稿;
+:编辑连接器草稿;
+|u| 用户
+:确认连接器信息;
+|#DarkSlateGray|j|数环通开放平台
+:创建连接器版本;
+|#DarkSlateGray|j|数环通开放平台
+:申请连接器上架;
+|#DarkSeaGreen|o|数环通管理后台
+:校验连接器有效性;
+if (是否校验通过?) is (否) then
+:**拒绝**;
+stop
+else (是)
+:批准;
+stop
+@enduml
+
+
+@startuml
+cloud "ipaas-shuhuan-gateway" as gateway{
+}
+
+cloud "ipaas-shuhuan-open" {
+
+    artifact "connector" as connector {
+        folder "接入层" as controller
+        folder "应用层" as service
+        folder "领域层" as manager
+        folder "基础设施层" as dao
+        database database {
+        }
+
+        manager <|-- dao
+        controller --> service
+        service --> manager
+        dao --|> database
+    }
+
+    artifact "open_api" as open {
+
+    }
+
+}
+
+cloud "ipaas-shuhuan-admin" as admin{
+    artifact "connectorManager" as connectorManager {
+    }
+}
+
+
+artifact "module:ipaas-api" as api{
+    folder 连接器服务 as 连接器服务
+}
+
+gateway ..> connector: rpc调用
+gateway ..> admin: rpc调用
+admin ..> api: rpc调用
+connector ..> api: rpc调用
+
+@enduml 
+
+@startuml
+participant gateway as gateway
+participant open as open
+participant admin as admin
+
+group 新增开放连接器
+    gateway -> open ++: createOpenConnector
+    open -> open: createOpenConnector(OpenConnector openConnector)
+    return 返回
+end group
+
+group 编辑开放连接器
+    group 编辑授权和资产
+        gateway -> open ++: editAuth
+        open -> open: editAuth(OpenConnector openConnector)
+        return 返回
+    end group
+    group 编辑operation
+        gateway -> open ++: editOperation
+        open -> open: editOperation(OpenConnector openConnector)
+        return 返回
+    end group
+    group 编辑脚本
+        gateway -> open ++: editScript
+        open -> open: editScript(OpenConnector openConnector)
+        return 返回
+    end group
+end group
+
+group 创建连接器版本
+    gateway -> open ++: createVersion
+    open -> open : createVersion(OpenConnector openConnector)
+    return
+end group
+
+group 上架审核
+    gateway -> open ++: publishOpenConnector
+    open -> open : publishOpenConnector(OpenConnector openConnector)
+
+    open --> admin ++: publish(OpenConnector openConnector)
+    admin -> admin : approved(OpenConnector openConnector)
+    return
+    return
+end group
+
+@enduml
+
+
+
+@startsalt
+{
+     包                    | 描述
+    OpenConnector           | 开放连接器业务域
+    + controller           | 接入层
+    ++ OpenConnectorController           | 连接器开放服务
+    + service             | 应用层
+    ++ OpenConnectorService               | 连接器开放接口
+    ++ impl               | 接口实现
+    +++ OpenConnectorServiceImpl               | 接口实现
+    + manager             | 领域层
+    ++ ConnectorManager             | 连接器开放业务实现
+    + dao                 | 基础设施层
+    ++ ConnectorDAO                 | 连接器开放数据层
+
+}
+@endsalt
+
+
+@startuml
+
+folder "com.shuhuan.ipaas.openconnector.domain" {
+
+
+    cloud 开放连接器域{
+        class OpenConnector{
+
+            ConnectorKey connectorKey;//开放连接器ID
+
+            ConnectorBasicInfo basicInfo;//开放连接器基本信息
+
+            AuthInfo authInfo;//开放连接器授权和资产信息
+
+            Map<String, TriggerDefinitionPO> triggers;//开放连接器触发器信息
+
+            Map<String, OperationDefinitionPO> operations;//开放连接器执行器信息
+
+            Map<ScriptKey, string> scripts;//开放连接器脚本列表
+
+            void createOpenConnector(OpenConnector openConnector);//新建开放连接器
+
+            void editOpenConnector(OpenConnector openConnector);//编辑开放连接器
+
+            void publish(String connectorId);//发布
+
+            void offline(String connectorId);//下线
+
+        }
+
+        class ConnectorKey{
+
+            String connectorId;//连接器ID
+
+            String version = 1.0.0;//连接器版本
+        }
+
+        class ScriptKey{
+
+            String connectorId;//连接器ID
+
+            String sourceCode;
+
+            String version;//脚本版本
+        }
+
+        class ParentConnector{
+
+            String connectorId;//父连接器ID
+
+            String name;//父连接器名称
+        }
+
+        class ConnectorBasicInfo{
+
+            String name;//连接器名称
+
+            ParentConnector parentConnector;//父连接器信息
+
+            String desc;//连接器描述
+
+            String websiteUrl;//连接器官网地址
+
+            String helpUrl;//连接器帮助中心地址
+
+            String connectorIconUrl;//连接器图标地址
+
+            StatusEnum status;//连接器状态：draft-草稿，unpublished-未发布，auditing-上架审核中，online-已上架，offline-已下架，reject-上架被驳回
+
+            ConnectorTypeEnum connectorType;//连接器类型
+
+            ConnectorScopeEnum connectorScope;//连接器作用域
+
+            ConnectorSourceEnum connectorSource;//连接器来源
+
+            ApplicationApplyTypeEnum applicationApplyType;//应用申请类型
+
+            ConnectorTagEnum connectorTagEnum;//连接器标签
+        }
+
+        class AuthInfo{
+            AuthDefinition authDefinition;//连接器授权信息
+
+            AssetDefinition assetDefinition;//连接器资产信息
+        }
+
+        class AuthDefinition{
+
+           AuthTypeEnum authType;
+
+            private ExecuteDefinition test;
+
+            private ExecuteDefinition validate;
+
+            private List<FieldObjectPO> beforeInputFields;
+
+            private List<FieldObjectPO> inputFields;
+
+            private List<FieldObjectPO> outputFields;
+
+            private AuthOauth2TokenDefinitionPO oauth2Config;
+
+            private AuthApiTokenDefinitionPO apiTokenConfig;
+
+            private AuthThirdAuthDefinitionPO thirdAuthConfig;
+
+       }
+
+
+        class AssetDefinition{
+            private Boolean autoRefresh;//可删除
+
+            private Integer autoRefreshInterval;//可删除
+
+            private List<FieldObjectPO> assetTemplate;//用于定义哪些字段需要存进账号中
+
+            private String assetNameField;
+
+            private String assetUkField;
+
+        }
+
+        class AuthOauth2TokenDefinition{
+
+            private List<ExecuteDefinition> preAuthorize;
+
+            private ExecuteDefinitionPO authorizeUrl;
+
+            private ExecuteDefinitionPO accessToken;
+
+            private ExecuteDefinitionPO refreshAccessToken;
+
+            private Boolean autoRefresh;
+
+            private Integer autoRefreshInterval;
+        }
+
+        class AuthApiTokenDefinition{
+
+            private ExecuteDefinitionPO refreshAccessToken;
+
+            private Boolean autoRefresh;
+
+            private ExecuteDefinitionPO accessToken;
+
+            private Integer autoRefreshInterval;
+
+        }
+
+        class AuthThirdAuthDefinition{
+            private ExecuteDefinitionPO refreshAccessToken;
+
+            private Boolean autoRefresh;
+
+            private ExecuteDefinitionPO accessToken;
+
+            private Integer autoRefreshInterval;
+
+        }
+
+       class ExecuteDefinition{
+            private String executeType;
+
+            private String outputField;
+
+            private String outputStrategy;
+
+        }
+
+       class FunctionDefinition extends ExecuteDefinition{
+            private String providerClass;
+
+            private String function;
+
+            private String paramsExpression;
+
+            private  boolean  isExpress = false;
+
+            private String returnType;
+
+            private String returnItemType;
+
+        }
+
+       class RequestDefinition extends ExecuteDefinition{
+            private String method;
+
+            private String url;
+
+            private RequestBodyDefinitionPO body;
+
+            private Map<String, Object> queryParams;
+
+            private Map<String, Object> formParams;
+
+            private Map<String, Object> headers;
+
+            private RequestSignDefinitionPO signConfig;
+
+            private List<String> beforeMergeFields;
+
+            private String responseType;
+
+            private List<ExecuteDefinitionPO> beforeRequest;
+
+            private List<ExecuteDefinitionPO> afterResponse;
+
+        }
+
+
+       class ScriptDefinition extends ExecuteDefinition{
+            private String connectorId;
+
+            private String connectorVersion;
+
+            private String sceneCode;
+
+            private String type;
+
+            private String version;
+
+            private String paramsExpression;
+
+            private String returnType;
+
+            private String returnItemType;
+
+        }
+
+        class OperationDefinition {
+
+            private String key;
+
+            private boolean resultIsList = false;
+
+            private ExecuteDefinitionPO operation;
+
+            private List<FieldObjectPO> inputFields;
+
+            private List<FieldObjectPO> outputFields;
+
+        }
+
+        class TriggerDefinition extends OperationDefinition {
+
+            private String triggerMode;
+
+            private TriggerConfigDefinitionPO triggerConfig;
+
+            private ExecuteDefinitionPO sample;//获取样本数据
+
+            private List<ExecuteDefinitionPO> beforeTrigger;//触发前执行
+
+            private List<ExecuteDefinitionPO> afterTrigger;//触发后执行
+
+
+        }
+
+
+
+    }
+
+
+
+
+    OpenConnector *-- ConnectorKey
+    OpenConnector *-- ScriptKey
+    OpenConnector *-- ConnectorBasicInfo
+    ConnectorBasicInfo *-- ParentConnector
+    OpenConnector *-- AuthInfo
+    OpenConnector *-- OperationDefinition
+    OpenConnector *-- TriggerDefinition
+    AuthInfo *-- AuthDefinition
+    AuthInfo *-- AssetDefinition
+
+    AuthDefinition *-- AuthOauth2TokenDefinition
+    AuthDefinition *-- AuthApiTokenDefinition
+    AuthDefinition *-- AuthThirdAuthDefinition
+
+    AuthDefinition *-- ExecuteDefinition
+
+
+
+}
+
+@enduml
+
+@startuml
+entity ipaas_open_connector_base {
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `gmt_create` datetime NOT NULL COMMENT '创建时间',
+  `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+  `is_removed` tinyint NOT NULL COMMENT '是否被删除',
+  `group_id` varchar(50) NOT NULL COMMENT '组织uuid',
+  `tenant_id` varchar(50) DEFAULT NULL COMMENT '租户uuid',
+  `connector_id` varchar(50) NOT NULL COMMENT '连接器id',
+  `connector_version` varchar(20) NOT NULL COMMENT '版本',
+  `connector_name` varchar(50) NOT NULL COMMENT '展示名称，用户可以修改',
+  `parent_connector_id` varchar(50)  DEFAULT NULL COMMENT '父连接器id',
+  `parent_connector_name` varchar(50)   DEFAULT NULL COMMENT '父连接器名称',
+  `connector_description` varchar(100)  COMMENT '连接器描述',
+  `official_website_url` varchar(100)  COMMENT '官网地址',
+  `help_center_url` varchar(100)  COMMENT '帮助中心地址',
+  `icon_url` varchar(1000)  COMMENT '图标地址',
+  `connector_type` varchar(50)  COMMENT '连接器类型,
+  `connector_scope` varchar(100)  COMMENT '作用域，内部使用，开放使用',
+  `from_type` varchar(100)  COMMENT '来源类型, 目前仅来自自建',
+  `connector_tag` varchar(100)  COMMENT '连接器标签',
+  `owner_type` varchar(50)  COMMENT '归属类型',
+  `owner_id` varchar(50)  COMMENT '归属Uid',
+  `auth_config` varchar(1000) COMMENT '授权配置的json',
+
+  `status` varchar(20) NOT NULL COMMENT '连接器状态：draft-草稿，unpublished-未发布，auditing-上架审核中，online-已上架，offline-已下架，reject-上架被驳回',
+  `refuse_reason` varchar(1000) COMMENT '拒绝原因列表的json',
+  `env` varchar(20) NOT NULL COMMENT '系统环境',
+  `extensions` text COMMENT '扩展字段',
+  `last_modified_timestamp` bigint NOT NULL COMMENT '最后修改时间戳',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `connector_id` (`connector_id`,`connector_version`) USING BTREE
+}
+
+entity ipaas_open_connector_operation {
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `gmt_create` datetime NOT NULL COMMENT '创建时间',
+  `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+  `is_removed` tinyint NOT NULL COMMENT '是否被删除',
+  `group_id` varchar(50) NOT NULL COMMENT '组织uuid',
+  `connector_id` varchar(50) NOT NULL COMMENT '连接器id',
+  `connector_version` varchar(20)  DEFAULT NULL COMMENT '连接器版本号',
+  `operation_key` varchar(16) NOT NULL COMMENT 'operation的id',
+  `operation_type` varchar(16) NOT NULL COMMENT 'operation的类型: action, trigger',
+  `param_class` varchar(20)  COMMENT '版本',
+  `result_class` varchar(20)  COMMENT '版本',
+  `result_is_list` tinyint  COMMENT '版本',
+  `operation` varchar(1000)  COMMENT '执行器的json',
+  `inputFields` varchar(1000)  COMMENT '入参',
+  `outputFields` varchar(1000)  COMMENT '出参',
+  `operation_query_type` varchar(20)  COMMENT '执行动作查询类型:LOOP_ALL',
+  `ref_loop_all_operation` varchar(64)  COMMENT '关联的逐条处理Operation',
+  `loop_all_config` varchar(1000)  COMMENT '逐条处理配置的json',
+  `trigger_mode` varchar(16) COMMENT '触发器类型',
+  `sample` varchar(1000)  COMMENT '获取样本数据的json',
+  `response` varchar(1000)  COMMENT 'Push类型触发器的json',
+  `before_trigger` varchar(1000)  COMMENT '触发前执行的json',
+  `after_trigger` varchar(1000)  COMMENT '触发后执行的json',
+
+  `env` varchar(20) NOT NULL COMMENT '系统环境',
+  `extensions` text COMMENT '扩展字段',
+  `last_modified_timestamp` bigint NOT NULL COMMENT '最后修改时间戳',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `operation_id` (`connector_id`,`connector_version`,`operation_key`) USING BTREE
+}
+
+entity ipaas_script {
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  `connector_id` varchar(50)  NOT NULL COMMENT '连接器id',
+  `scene_code` varchar(200)  NOT NULL COMMENT '脚本场景码，用来标识该脚本应用场景，需要配置到meta中\n(开发自定义，connector_id+scene_code+type+version唯一定位一条脚本)',
+  `type` varchar(100)  NOT NULL COMMENT '脚本类型：java、js、python',
+  `name` varchar(100)  NOT NULL COMMENT '脚本名称',
+  `script_id` varchar(50)  NOT NULL COMMENT '脚本uuid',
+  `source_code` longtext  NOT NULL COMMENT '脚本源代码',
+  `version` varchar(20)  NOT NULL COMMENT '脚本版本(每次更新时版本会将当前时间作为版本号更新)',
+  `status` varchar(20)  NOT NULL COMMENT '脚本生效状态 1.生效 2.未生效',
+  `remark` varchar(200)  DEFAULT NULL COMMENT '脚本备注',
+  `is_removed` tinyint NOT NULL COMMENT '是否被删除',
+  `env` varchar(20)  NOT NULL COMMENT '环境标记：testing-测试、staging-预发、production-生产',
+  `last_modified_timestamp` bigint NOT NULL COMMENT '最后修改时间戳',
+  `extensions` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT '扩展字段',
+  `creator` varchar(50)  NOT NULL COMMENT '创建者',
+  `modifier` varchar(50)  NOT NULL COMMENT '修改者',
+  `gmt_create` datetime NOT NULL COMMENT '创建时间',
+  `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+  `connector_version` varchar(20)  DEFAULT NULL COMMENT '连接器版本号',
+  PRIMARY KEY (`id`)
+}
+
+ipaas_open_connector_base  }|..|| ipaas_open_connector_operation : "connector_id + connector_version"
+ipaas_open_connector_base  }|..|| ipaas_script : "connector_id + connector_version"
+
+@enduml 
+
+
+
+@startuml
+participant OpenConnectorController as controller
+control OpenConnectorService as service
+entity OpenConnectorManager as manager
+database repository as repository
+
+group 创建连接器
+controller -> service ++: createOpenConnector
+service -> manager ++: createOpenConnector(OpenConnector openConnector)
+manager -> repository ++: saveOpenConnectorBase(OpenConnectorBaseDO openConnectorBase)
+return 返回
+manager --> repository ++: saveOpenConnectorOperation(List<OpenConnectorOperationDO> operations)
+return 返回
+return 返回
+return 返回
+end group
+
+group 编辑连接器
+    group 编辑基本信息
+        controller -> service ++: editBase
+        service -> manager ++: editBase(OpenConnector openConnector)
+        manager -> repository ++: editBase(OpenConnectorBaseDO openConnectorBase)
+        return 返回
+        return 返回
+        return 返回
+    end group
+    group 编辑授权
+        controller -> service ++: editAuth
+        service -> manager ++: editAuth(OpenConnector openConnector)
+        manager -> repository ++: editAuth(OpenConnectorBaseDO openConnectorBase)
+        return 返回
+        return 返回
+        return 返回
+    end group
+    group 编辑operation
+        controller -> service ++: editOperation
+        service -> manager ++: editOperation(OpenConnector openConnector)
+        manager --> repository ++: editOperation(List<OpenConnectorOperationDO> operations)
+        return 返回
+        return 返回
+        return 返回
+    end group
+    group 编辑脚本
+        controller -> service ++: editScript
+        service -> manager ++: editScript(OpenConnector openConnector)
+        manager --> repository ++: editScript(List<OpenConnectorOperationDO> operations)
+        return 返回
+        return 返回
+        return 返回
+    end group
+end group
+
+
+
+group 连接器上架审核
+controller -> service ++: publishOpenConnector
+service -> manager ++: getOpenConnector(ConnectorId id)
+manager -> repository ++: getOpenConnector(ConnectorId id)
+return 返回OpenConnector
+manager -> manager: updateStatus(OpenConnector openConnector)
+manager -> repository ++: editOpenConnectorBase(OpenConnector openConnector)
+return 返回OpenConnector
+
+return 返回
+return 返回
+end group
+
+@enduml
+
+
+@startuml
+participant AdminConnectorController as controller
+control ConnectorService as service
+entity ConnectorManager as manager
+participant ConnectorApi as ConnectorApi
+database repository as repository
+
+
+
+group 批准上架
+controller -> service ++: approved
+service -> manager ++: approved(ConnectorKey connectorKey)
+manager -> repository ++: getOpenConnector(ConnectorKey connectorKey)
+return 返回OpenConnector
+
+manager -> ConnectorApi ++: updateConnector(CreateConnectorParam param)
+return 返回
+
+manager -> repository ++: updateStatus(ConnectorId id)
+return 返回
+return 返回
+return 返回
+end group
+
+group 拒绝
+controller -> service ++: reject
+service -> manager ++: reject(ConnectorKey connectorKey, String reason)
+manager -> repository ++: getOpenConnector(ConnectorKey connectorKey)
+return 返回OpenConnector
+manager -> repository ++: updateOpenConnector(ConnectorKey connectorKey, Reason reason)
+
+return 返回
+return 返回
+return 返回
+end group
+@enduml

@@ -1,9 +1,6 @@
 package com.scofen.designpattern.factory.abstractFactory;
 
 
-import com.scofen.designpattern.factory.Audi;
-import com.scofen.designpattern.factory.Car;
-
 /**
  * Create by  GF  in  17:20 2018/8/2
  * Description:
@@ -22,7 +19,6 @@ public abstract class AbstractFactory {
         }else if("Benz".equals(name)){
             return new BenzFactory().getCar();//方法工厂
         }else if("Audi".equals(name)){
-            return new Audi();//
         }
         System.out.println("这个车我搞不了");
         return null;

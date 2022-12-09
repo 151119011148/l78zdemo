@@ -1,5 +1,6 @@
 package com.scofen.designpattern.interpreter;
 
+
 /**
  * Create by  GF  in  16:28 2019/3/14
  * Description:

@@ -2,6 +2,8 @@ package com.scofen.designpattern.proxy.myselfProxy;
 
 
 
+import com.scofen.designpattern.proxy.Person;
+
 import java.lang.reflect.Method;
 
 /**

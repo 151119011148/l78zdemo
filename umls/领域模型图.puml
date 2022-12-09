@@ -1,0 +1,146 @@
+@startuml
+
+folder "com.shuhuan.ipaas.market.domain" {
+
+
+    cloud 商品域{
+        class Product{
+            Integer id;
+            ProductId productId;
+            String productName;//商品名称
+            String productSpu;//商品spu 1-虚拟商品 2-实物
+            String productType;//商品类型 11-试用版 12-付费版
+            String imgUrl;//商品主图
+            String desc;//商品描述
+            Integer status;//0：下架； 1：上架； 2：商品售空；
+            Integer requiredInventory;//是否有库存属性 0：没有； 1：有；
+            List<ProductSku> productSku;//sku列表
+
+            void createProduct(ProductDto productDto);//新建商品
+            void syncShelves(String productId, int status);//同步商品状态
+        }
+        Product *-- ProductId
+
+        class Effective{
+            Date effectiveBegin;//生效开始时间
+            Date effectiveEnd;//生效结束时间
+            String effectiveValue;//有效期
+            String effectiveUnit;//有效期单位
+        }
+
+        class Price{
+            String price;//价格
+            String priceUnit;//价格单位
+        }
+        ProductSku *-- Price
+        ProductSku *-- Effective
+        ProductSku *-- SkuId
+
+
+        class ProductSku{
+            Integer id;
+            String productId;
+            SkuId skuId;
+            Price price;//价格
+            Integer stock;//库存
+            Effective effectiveValue;//有效期
+            List<ProductProperty> property;//属性键值对
+
+            void createSku(ProductSkuDto skuDto);//新建Sku
+            void checkInventory(ProductSku sku, int requiredInventory);//检查库存
+            void syncSku(String skuId, int stock);//同步库存
+            void changePriceTo(ProductId productId, SkuId skuId, Price price);//改价
+
+        }
+
+        class ProductProperty{
+            Integer id;
+            String skuId;
+            Integer propertyType;//属性类型，1-消费类 2-身份类
+            String propertyNameId;
+            String propertyName;//属性名，权益值
+            String propertyValueId;//属性值id，权益值id
+            String propertyValue;//属性值，权益值
+            String propertyUnit;//单位
+        }
+
+
+    }
+
+
+    cloud 订单域{
+        class Order{
+            Integer id;
+            OrderId orderId;
+            String buyerId;//买家id
+            String buyerName;//买家名字
+            String buyerPhone;//买家电话
+            String buyerAddress;//买家地址
+            Integer status;//订单状态1：待支付； 2：已支付； 3：备货中；4：已发货；5：已完成；
+            Price price;//订单总金额，单位分；
+            List<OrderItem> orderItems;//订单详情
+
+            void newOrder(OrderDto orderDto);//创建订单
+            void calculateAmount();//计算订单原价
+            void handleOrderStatus(String orderId, OrderStatusEnum event, final int status);//订单状态流转，建议状态机实现
+        }
+
+    }
+
+    cloud 实例域{
+
+        class Instance{
+          Integer id;
+          InstanceId instanceId;//实例id
+          Effective  effective;// 有效期
+          Integer status;//实例状态 1：待激活； 2：生效中； 3：已过期；4：已冻结；5：已注销；
+          Owner owner;//归属信息
+          List<InstanceFeature> instanceFeatures;
+
+          void newInstance(InstanceDto instanceDto);//初始化实例
+          void reduceAmount();//消耗
+        }
+
+        class InstanceFeature{
+          Integer  id;//
+          String  instanceId;//
+          String  featureCode;//featureCode
+          Integer  featureType;//featureType
+          Deposit deposit;//
+          Owner owner;//feature归属类型
+        }
+
+        class InstanceFeatureRunningRecord{
+          Integer  id;//
+          String  instanceId;//实例id
+          String  featureCode;//featureCode
+          Integer featureType;//featureType
+        }
+
+        class Owner{
+          Integer ownerType;//feature归属类型
+          Integer ownerId;//feature归属id
+        }
+        class Deposit{
+          Integer totalAmount;//feature总额
+          Integer balance;//feature余额
+          String  unit;//单位
+        }
+        Instance *-- InstanceId
+    }
+
+    Order *-- Product
+    Product *-- ProductSku
+    ProductSku *-- ProductProperty
+    ProductSku --> Instance
+    ProductProperty --> InstanceFeature
+    Instance *-- InstanceFeature
+    Instance *-- Owner
+    InstanceFeature --> InstanceFeatureRunningRecord
+    InstanceFeature *-- Owner
+    InstanceFeature *-- Deposit
+
+
+}
+
+@enduml

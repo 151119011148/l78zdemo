@@ -1,0 +1,528 @@
+@startsalt
+{
+    {T
+    + 包结构                 | 描述
+    + currentcontext        | 该上下文包名
+    ++ ohs(northbound)      | 开放主机服务模式，南向网关
+    +++ remote              | 远程服务层
+    ++++ controller         | 控制器服务：服务资源契约。面向UI前端，消息契约模型为面向前端的展现模型。
+    ++++ resource           | 资源服务：服务资源契约。面向下游限界上下文或第三方调用者，消息契约模型由请求消息与响应消息组成
+    ++++ provider           | 提供者服务：服务行为契约。面向下游限界上下文或第三方调用者，消息契约模型由请求消息与响应消息组成
+    ++++ subscriber         | 订阅者服务：服务事件契约。消息契约模型就是事件本身
+    +++ local               | 本地服务层
+    ++++ appservice         | 应用服务
+    ++ pl                   | 发布语言
+    ++ domain               | 领域层
+    +++ model               | 领域模型
+    +++ service             | 领域服务
+    ++ acl(southbound)      | 防腐层模式，北向网关
+    +++ ports               | 端口层
+    ++++ repository         | 资源库
+    ++++ client             | 客户端
+    ++++ publisher          | 发布者
+    +++ adapters            | 适配器层
+    ++++ repository         | 资源库适配器
+    ++++ client             | 客户端适配器
+    ++++ publisher          | 发布者适配器
+    ++++ pl                 | 发布语言
+    }
+}
+@endsalt
+
+@startsalt
+{
+    {T
+    + 包结构                 | 描述
+    + order                 | 该上下文包名
+    ++ start                | 远程服务层
+    ++++ controller         | 控制器服务：服务资源契约。面向UI前端，消息契约模型为面向前端的展现模型。
+    ++++ service            | 应用服务
+    ++ service              | 本地服务层
+    ++ domain               | 领域层
+    +++ model               | 领域模型
+    +++ manager             | 领域服务
+    ++ client               | 端口层
+    ++++ repository         | 资源库
+    ++++ adapters           | 适配器层
+    ++++ acl                | 防腐层
+    }
+}
+@endsalt
+
+@startuml
+
+cloud "com.shuhuan.ipaas.utils" {
+
+    folder "domain"{
+        interface Identity<T> extends Serializable{
+            T value();
+        }
+
+        interface RandomIdentity<T> extends Identity{
+            T next();
+        }
+        class UUIDIdentity<T> implements RandomIdentity{}
+
+        class SnowFlowIdentity<T> implements RandomIdentity{
+        }
+        interface AggregateRoot<T>{
+
+        }
+        interface ID extends Identity{}
+        interface Entity<T>{
+          ID identity();
+          boolean sameIdentityAs(T other);
+        }
+        ID *-- Entity
+        interface ValueObject<T>{
+          boolean sameValueAs(T other);
+          T copy();
+        }
+        abstract class ValueObjectSupport<T extends ValueObject<T>> implements ValueObject {
+
+        }
+        abstract class DomainEvent<T>{
+          boolean sameEventAs(T other);
+        }
+        class Effective{
+            Date effectiveBegin;//生效开始时间
+            Date effectiveEnd;//生效结束时间
+            String effectiveValue;//有效期
+            String effectiveUnit;//有效期单位
+        }
+        class Owner{
+          Integer ownerType;//归属类型
+          Integer ownerId;//归属id
+        }
+        class Deposit{
+          Integer totalAmount;//总额
+          Integer balance;//余额
+          String  unit;//单位
+        }
+
+    }
+
+    folder "exception"{
+        class IpaasInfrastructureException extends Exception{}
+    }
+    folder "event"{
+        interface EventPublisher{}
+        interface EventSubscriber{}
+    }
+    folder "Repository"{
+
+        interface Repository<E extends AggregateRoot, ID extends Identity> {
+            Optional<E> findById(ID id);
+            List<E> findAll();
+            List<E> findAllMatching(Criteria criteria);
+
+            boolean exists(ID id);
+
+            void save(E entity);
+            void saveAll(Collection<? extends E> entities);
+
+            void remove(ID id);
+            void removeAll(Collection<? extends E> entities);
+            void removeAllMatching(Criteria criteria);
+        }
+        Repository *-- Identity
+        Repository *-- AggregateRoot
+    }
+
+
+}
+@enduml
+
+@startuml
+cloud "com.shuhuan.ipaas.market.ordercontext"{
+    package northbound{
+        package remote{
+            package controller{
+                class OrderController{}
+            }
+            package provider{
+                class OrderProvider{}
+            }
+            package subscriber{
+                interface OrderEventSubscriber extends EventSubscriber{}
+            }
+        }
+
+        package local{
+            package appservice{
+                class OrderAppService{}
+                class NotificationService implements OrderEventSubscriber{}
+            }
+
+            package acl{
+            }
+        }
+    }
+    package domain{
+        class OrderService{}
+        class Order extends Entity{}
+        class OrderDomainEvent extends DomainEvent{}
+        class Order implements AggregateRoot{}
+    }
+    package southbound{
+        package port{
+            package client{
+                interface InventoryClient{
+                    check(Order order);
+                    lock(Order order);
+                    syncStock(Order order);
+
+                }
+            }
+            package repository{
+                interface OrderRepository extends Repository{}
+            }
+            package publisher{
+                interface OrderEventPublisher extends EventPublisher{}
+            }
+
+        }
+        package adapter{
+            package clientAdapter{
+                class InventoryClientAdapter implements InventoryClient{
+
+                }
+            }
+            package repositoryAdapter{
+                class OrderRepositoryAdapter implements OrderRepository{}
+            }
+            package publisherAdapter{
+                class OrderEventPublisherAdapter implements OrderEventPublisher{
+
+                }
+            }
+        }
+    }
+    OrderController *-- OrderAppService
+    OrderAppService *-- OrderService
+    OrderAppService *-- EventPublisher
+    OrderService *-- OrderRepository
+    InventoryClient *-- Order
+}
+
+
+@enduml
+
+@startuml
+folder "com.shuhuan.ipaas.market.start.instance" as start{
+
+
+
+        package subscriber{
+            class InstanceEventSubscriber implements EventSubscriber{
+                //监听事件（包括引擎执行完成事件，订单完成事件）
+                @Resource
+                NotificationService notificationService;
+
+                public void subscribe(String message);
+            }
+        }
+        package provider{
+            class InstanceProvider{
+                @Resource
+                InstanceAppService instanceAppService;
+            }
+        }
+        package controller{
+            class InstanceController{
+                @Resource
+                InstanceAppService instanceAppService;
+            }
+        }
+        package appservice{
+            class InstanceAppService{
+                @Resource
+                InstanceService instanceService;
+            }
+            class NotificationService implements InstanceEventSubscriber{
+                @Resource
+                InstanceService instanceService;
+
+                public void handle(String message);
+            }
+        }
+
+        package acl{
+            class InstanceConverter{
+                //DTO 与 DO 转换
+                public static Instance convert2(InstanceDTO dto);
+                public static InstanceDTO read4(Instance dto);
+            }
+        }
+}
+
+folder "com.shuhuan.ipaas.market.service.instance" as service{
+
+    package domain{
+        class InstanceQueryService{
+
+            @Resource
+            InstanceRepository instanceRepository;
+
+            public Instance findById(InstanceId instanceId);
+            public List<Instance> findAllMatching(Instance instance);
+
+        }
+        class InstanceService{
+
+            @Resource
+            InstanceRepository instanceRepository;
+
+            public void newInstance(Instance instance);
+
+            public void reduceAmount();
+
+        }
+        class Instance extends Entity implements AggregateRoot{
+
+        }
+        class InstanceFactory{
+        	public static Instance create()
+        	public static Instance create(String name)
+        	public static Instance create(String id, String name)
+        }
+    }
+
+    package repository{
+        interface InstanceRepository extends Repository{}
+    }
+
+    InstanceController --> InstanceAppService
+    InstanceProvider --> InstanceAppService
+    InstanceAppService *-- InstanceConverter
+    InstanceAppService --> InstanceService
+    NotificationService --> InstanceService
+    NotificationService --> InstanceQueryService
+    InstanceService --> Repository
+    InstanceService *-- Instance
+    InstanceService *-- InstanceFactory
+    InstanceQueryService --> Repository
+    InstanceQueryService *-- Instance
+
+}
+
+@enduml
+
+
+@startuml
+cloud "com.shuhuan.ipaas.gateway" as gateway{
+    package openapi{
+         class OauthParam {
+
+            @NotNull(message = "appKey must not null")
+            String appKey;
+
+            @NotNull(message = "groupId must not null")
+            String groupId;
+
+            String accessToken;
+
+            @NotNull(message = "授权链接非法，参数timestamp缺失！")
+            String timestamp;
+
+            String method;
+
+            String version;
+
+        }
+        class CheckUrlCodeParam extends OauthParam {
+
+            @NotNull(message = "授权链接非法，参数preCode缺失！")
+            private String urlCode;
+
+            @NotNull(message = "跳转地址非法，参数redirectUrl缺失！")
+            private String redirectUrl;
+        }
+
+        class ConfirmAuthParam extends OauthParam {
+
+            @NotNull(message = "跳转地址非法，参数redirectUrl缺失！")
+            private String redirectUrl;
+        }
+
+        class GetAccessTokenParam extends OauthParam {
+
+            @NotNull(message = "获取授权码非法，参数authCode缺失！")
+            private String authCode;
+
+        }
+
+        class RefreshAccessTokenParam extends OauthParam {
+
+            @NotNull(message = "刷新授权码非法，参数refreshToken缺失！")
+            private String refreshToken;
+
+        }
+
+        class OauthUserVO{
+
+            private String openId;
+
+            private String tenantId;
+
+            private String groupId;
+
+            private String accessToken;
+
+            private String refreshToken;
+
+            private Date accessTokenExpired;
+
+            private Date refreshTokenExpired;
+        }
+
+        class OauthController {
+
+            @Resource
+            private IpaasOauthService oauthService;
+
+            public IpaasResult<Boolean> checkUrlCode(@RequestBody @Validated CheckUrlCodeParam checkUrlCodeParam);
+
+            public IpaasResult<String> confirmAuth(@RequestBody @Validated ConfirmAuthParam confirmAuthParam);
+
+            public IpaasResult<OauthUserVO> getAccessToken(@RequestBody @Validated GetAccessTokenParam getAccessTokenParam, @RequestHeader("sign") String sign);
+
+            public IpaasResult<OauthUserVO> refreshAccessToken(@RequestBody @Validated RefreshAccessTokenParam refreshAccessTokenParam, @RequestHeader("sign") String sign);
+       }
+    }
+    OauthController *-- OauthUserVO
+    OauthController *-- CheckUrlCodeParam
+    OauthController *-- ConfirmAuthParam
+    OauthController *-- GetAccessTokenParam
+    OauthController *-- RefreshAccessTokenParam
+
+
+
+}
+@enduml
+@startuml
+    package service.oauth{
+
+        interface IpaasOauthService {
+
+            Boolean checkUrlCode(BaseOauthValueObject baseOauthValueObject, String urlCode);
+
+            String confirmAuth(BaseOauthValueObject baseOauthValueObject, String userId);
+
+            OauthUserEntity getAccessToken(BaseOauthValueObject baseOauthValueObject, String authCode, String sign);
+
+            OauthUserEntity refreshAccessToken(BaseOauthValueObject baseOauthValueObject, String refreshToken, String sign);
+
+        }
+
+        OauthController --> IpaasOauthService
+        IpaasOauthService *-- AccessKeyEntity
+        IpaasOauthService *-- OauthUserEntity
+
+        class OauthUserEntity {
+
+            private TokenValueObject token;
+
+            private AccessInfoValueObject access;
+
+            private OwnerValueObject owner;
+
+            private GmtOperationValueObject gmtOperation;
+
+            public static OauthUserEntity newOauthUser(String userId, AccessKeyEntity accessKeyEntity);
+
+            public void reset();
+
+            public void on(OauthUserEffectAccessTokenDomainEvent effectAccessToken);
+
+            public void on(OauthUserEffectRefreshTokenDomainEvent effectRefreshToken);
+
+            public void on(OauthUserInvalidRefreshTokenDomainEvent invalidRefreshToken);
+        }
+
+        class AccessKeyEntity {
+
+            private AccessInfoValueObject access;
+
+            private OwnerValueObject owner;
+
+            private GmtOperationValueObject gmtOperation;
+
+            private AuthCodeValueObject authCode;
+
+            public void checkAuth(String timestamp, String redirectUrl);
+
+            public void checkUrlCode(String timestamp, String redirectUrl, String urlCode);
+
+            public void generateAuthCode(String userId);
+
+            public void checkSign(Map<String, Object> inputParams, String appSecret, String sign);
+
+            public void on(OauthUserEffectAuthCodeDomainEvent authCodeDomainEvent);
+
+        }
+
+
+        database ipaas{
+            class AccessKeyDao{}
+            class OauthUserDao{}
+            IpaasOauthService --> AccessKeyDao
+            IpaasOauthService --> OauthUserDao
+        }
+
+    }
+
+@enduml
+
+
+@startuml
+cloud "com.shuhuan.ipaas.gateway" as gateway{
+    package console{
+         class TemplateFolderParam {
+
+            private String appId;
+
+            private String groupId;
+
+            private String appKey;
+
+            private String folderId;
+
+
+        }
+
+        class TemplateFolderVO{
+
+            private String folderId;
+
+            /**
+             * template描述
+             */
+            private String templateDescription;
+
+            /**
+             * 模板关联的连接器名称
+             */
+            private List<String> templateConnectorNames;
+
+            /**
+             * 流程
+             */
+            private List<IpaasCaseTemplateVO> templateVOList;
+        }
+
+        class CaseTemplateController {
+
+            @Resource
+            IpaasCaseTemplateService ipaasCaseTemplateService;
+
+            public IpaasResult<List<TemplateFolderVO>> describeTemplateFolders(@SpringQueryMap TemplateFolderParam param);
+
+       }
+    }
+    CaseTemplateController *-- TemplateFolderVO
+    CaseTemplateController *-- TemplateFolderParam
+    CaseTemplateController *-- ipaasCaseTemplateService
+
+}
+@enduml

@@ -11,6 +11,18 @@ start
 stop
 @enduml
 
+@startuml
+|u| 用户
+start
+:使用数环通产品;
+|#green|s|数环
+:付费下单购买付费版商品;
+:创建企业实例;
+:初始化实例功能;
+|u|
+stop
+@enduml
+
 
 
 example2
@@ -133,4 +145,241 @@ start
 stop
 @enduml
 
+@startuml
+|u| 用户
+start
+|#green|o|数环通前端页面
+:选择商品;
+|#gold|b|数环通后端
+:查询商品信息列表;
+|#green|o|数环通前端页面
+:购买商品;
+|#gold|b|数环通后端
+:创建订单;
+|u| 用户
+:付费支付;
+|#green|o|数环通前端页面
+:支付回调成功;
+|#gold|b|数环通后端
+:更新订单状态;
+:初始化组织实例;
+if (续费?) is (true) then
+#pink:**实例延期**;
+else (false)
+#lightgray:**新增实例功能**;
+endif
+|#green|o|数环通前端页面
+:支付成功;
+|u| 用户
+:购买成功;
+stop
+@enduml
 
+@startuml
+|u| 控制台页面
+start
+|#green|o|引擎服务
+:校验功能;
+|#gold|b|实例服务
+:查询功能列表;
+:依次校验各项权益;
+|#green|o|引擎服务
+if (校验?) is (通过) then
+#pink:**执行流程**;
+else (不通过)
+#lightgray:**终止**;
+stop
+endif
+:发布流程执行事件;
+|#gold|b|实例服务
+:订阅流程执行事件;
+:记录权益消耗流水;
+:更新权益余额;
+stop
+@enduml
+
+@startuml
+|f|控制台页面
+start
+:选择商品;
+|#pink|u|商品服务
+:商品列表;
+|f|控制台页面
+:购买商品;
+|#green|o|订单服务
+:创建订单;
+:初始化订单;
+|f|控制台页面
+:付费支付;
+|#pink|u|商品服务
+group 无库存属性可跳过
+:校验库存;
+:锁定库存;
+end group
+|#green|o|订单服务
+:订单状态变更为支付中;
+|f|控制台页面
+:支付回调成功;
+|#green|o|订单服务
+:订单状态变更为已完成;
+:发送订单状态变更领域事件;
+:发送订单服务事件;
+fork
+|u|商品服务
+:订阅订单服务事件;
+group 无库存属性可跳过
+:扣减库存;
+end group
+stop
+|#gold|b|实例服务
+fork again
+:订阅订单服务事件;
+:初始化实例，更新实例生效时间和失效时间;
+:更新实例功能归属和余额;
+stop
+@enduml
+
+@startuml
+|f|控制台页面
+start
+:分配license;
+|#gold|b|实例服务
+:新建license和uid映射;
+:初始化实例，更新实例生效时间和失效时间;
+:更新实例功能归属和余额;
+stop
+@enduml
+
+@startuml
+|u| 用户
+start
+:使用连接器;
+|#green|s|数环
+:执行连接器流程;
+|#gold|o|三方开放平台
+:使用三方开放平台能力;
+|s|
+stop
+@enduml
+
+@startuml
+|u| 用户
+start
+:忘记密码;
+|#green|f|前端
+:获取公钥;
+|#gold|o|后端
+:生成秘钥对;
+:返回公钥;
+|f|前端
+:用公钥对密码进行加密;
+:修改密码;
+|o|后端
+:存储密码信息;
+|f|前端
+:保存成功;
+|u| 用户
+:保存成功;
+stop
+@enduml
+
+
+@startuml
+|u| 用户
+start
+:用户信息录入完成;
+|#green|f|前端
+:获取服务端公钥;
+|#gold|o|后端
+:生成秘钥对<PublicKey-back，PrivateKey-back>;
+:PublicKey-back;
+|f|前端
+:公钥获取成功;
+:生成秘钥对<PublicKey-front，PrivateKey-front>;
+:通过PublicKey-back(PublicKey-front)，获取AES秘钥;
+|#gold|o|后端
+:解密得到PublicKey-front;
+:生成并返回PublicKey-front(AES秘钥);
+|f|前端
+:解密得到AES秘钥;
+|u| 用户
+:注册;
+|f|前端
+:用AES秘钥对密码进行加密;
+|o|后端
+:存储AES秘钥和加密字段元信息;
+:存储密码信息;
+|f|前端
+:保存成功;
+|u| 用户
+:注册成功;
+stop
+@enduml
+
+
+@startuml
+|u| 用户
+start
+:使用三方平台;
+|#yellow|j|三方平台
+:使用数环通能力;
+:跳转到授权页面;
+|#green|s|授权页面
+:登录数环通帐号;
+:授权;
+|#yellow|j|三方平台
+:应用授权;
+|#green|s|授权页面
+:查询模板;
+:应用依次授权;
+|#gold|o|数环通
+:初始化流程;
+|j|
+:开放能力;
+|u| 用户
+:使用;
+stop
+@enduml
+
+@startuml
+|u| 用户
+start
+:使用三方平台;
+|#pale|j|三方平台
+:使用数环通能力;
+:查询能力列表（appkey）;
+:已拥有/未拥有;
+:用户选择父模板进行付费;
+if (是否进行过授权?（**是否有openId**）) is (是) then
+#pink:**可以使用数环通的能力**;
+:通过openId调用数环通的流程;
+stop
+else (否)
+#pink:**通过Appkey，用户唯一标识（手机号）注册数环通帐号**;
+endif
+|#DarkSlateGray|o|数环通
+:注册数环通帐号;
+|#pale|j|三方平台
+:返回accessToken,openId;
+#pink:**APP授权（开始使用）**;
+|#DarkSeaGreen|s|数环通授权页面
+:携带accessToken,openId;
+|#DarkSlateGray|o|数环通后端
+:accessToken免登;
+:查询父模板，返回待授权帐号 ;
+|#DarkSeaGreen|s|数环通授权页面
+#pink:**依次对父模板中需要进行授权的资产进行授权**;
+|#DarkSlateGray|o|数环通后端
+:依次授权,保存授权账号;
+|#DarkSeaGreen|s|数环通授权页面
+:所有资产授权成功;
+|#DarkSlateGray|o|数环通后端
+:通过模板初始化流程;
+|#DarkSeaGreen|s|数环通授权页面
+:流程初始化成功;
+|#pale|j|三方平台
+group 客户页面（回调地址2）
+:使用数环通能力;
+end group
+stop
+@enduml

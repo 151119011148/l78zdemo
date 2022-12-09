@@ -28,6 +28,7 @@ public class MyselfClassLoader extends ClassLoader {
 
     }
 
+    @Override
     protected  Class<?> findClass(String name) {
 
         String className = MyselfClassLoader.class.getPackage().getName() + "." + name;
