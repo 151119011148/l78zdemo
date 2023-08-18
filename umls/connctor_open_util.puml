@@ -104,7 +104,7 @@ gateway ..> admin: rpc调用
 admin ..> api: rpc调用
 connector ..> api: rpc调用
 
-@enduml 
+@enduml
 
 @startuml
 participant gateway as gateway
@@ -553,7 +553,7 @@ entity ipaas_script {
 ipaas_open_connector_base  }|..|| ipaas_open_connector_operation : "connector_id + connector_version"
 ipaas_open_connector_base  }|..|| ipaas_script : "connector_id + connector_version"
 
-@enduml 
+@enduml
 
 
 
