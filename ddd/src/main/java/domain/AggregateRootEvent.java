@@ -5,7 +5,11 @@ package domain;
  * @Author gaofeng
  * @Date 3/20/22 5:46 PM
  **/
+
+import lombok.Getter;
+
 /** A base class for a domain event of an AggregateRoot */
+@Getter
 public abstract class AggregateRootEvent<ID> implements Event {
 
     private ID aggregateRootId;
@@ -20,14 +24,6 @@ public abstract class AggregateRootEvent<ID> implements Event {
     private AggregateRootEvent(ID aggregateRootId, int aggregateRootVersion) {
         this.aggregateRootId = aggregateRootId;
         this.aggregateRootVersion = aggregateRootVersion;
-    }
-
-    public ID getAggregateRootId() {
-        return aggregateRootId;
-    }
-
-    public int getAggregateRootVersion() {
-        return aggregateRootVersion;
     }
 
     void setAggregateRootId(ID aggregateRootId) {

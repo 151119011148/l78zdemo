@@ -22,7 +22,7 @@ public class MyselfWomanMatchmaker implements MyselfInvocationHandler {
         System.out.println("被代理的对象的class是：" + clazz);
         //代理对象
         return MyselfProxy.newProxyInstance(new MyselfClassLoader(),clazz.getInterfaces(),this);
-    };
+    }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

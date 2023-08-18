@@ -2,6 +2,7 @@ package com.scofen.util.tree;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import lombok.Getter;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.io.Serializable;
@@ -273,6 +274,7 @@ public class TreeUtils {
     }
 
 
+    @Getter
     public static class TestTreeNode implements TreeNode<TestTreeNode, Long>, Serializable {
 
         private static final long serialVersionUID = -9153069020164026942L;
@@ -287,40 +289,20 @@ public class TreeUtils {
 
         private List<TestTreeNode> children;
 
-        public Long getId() {
-            return id;
-        }
-
         public void setId(Long id) {
             this.id = id;
-        }
-
-        public String getName() {
-            return name;
         }
 
         public void setName(String name) {
             this.name = name;
         }
 
-        public Long getParentId() {
-            return parentId;
-        }
-
         public void setParentId(Long parentId) {
             this.parentId = parentId;
         }
 
-        public Integer getIndex() {
-            return index;
-        }
-
         public void setIndex(Integer index) {
             this.index = index;
-        }
-
-        public List<TestTreeNode> getChildren() {
-            return children;
         }
 
         public void setChildren(List<TestTreeNode> children) {

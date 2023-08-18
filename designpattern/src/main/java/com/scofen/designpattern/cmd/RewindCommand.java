@@ -7,7 +7,7 @@ package com.scofen.designpattern.cmd;
  **/
 public class RewindCommand implements Command {
 
-    private AudioPlayer myAudio;
+    private final AudioPlayer myAudio;
 
     public RewindCommand(AudioPlayer audioPlayer){
         myAudio = audioPlayer;

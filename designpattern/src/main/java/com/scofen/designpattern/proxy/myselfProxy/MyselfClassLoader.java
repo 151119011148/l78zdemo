@@ -19,7 +19,7 @@ import java.io.IOException;
  */
 public class MyselfClassLoader extends ClassLoader {
 
-    private File directory;
+    private final File directory;
 
     public MyselfClassLoader(){
 
