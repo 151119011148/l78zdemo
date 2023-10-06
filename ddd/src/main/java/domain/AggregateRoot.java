@@ -1,5 +1,7 @@
 package domain;
 
+import lombok.Getter;
+
 import javax.management.ReflectionException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -15,7 +17,9 @@ import java.util.stream.Stream;
  **/
 public abstract class AggregateRoot<ID> {
 
+    @Getter
     private ID id;
+    @Getter
     private int version;
     private final HashSet<Entity<ID>> entities;
     private final List<Event> pendingChanges;
@@ -26,16 +30,8 @@ public abstract class AggregateRoot<ID> {
         this.version = 0;
     }
 
-    public ID getId() {
-        return id;
-    }
-
     protected void setId(ID id) {
         this.id = id;
-    }
-
-    public int getVersion() {
-        return version;
     }
 
     public Stream<Event> getPendingChanges() {

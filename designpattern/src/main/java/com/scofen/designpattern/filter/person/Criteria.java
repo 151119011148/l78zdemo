@@ -9,5 +9,5 @@ import java.util.List;
  * Modified  By:
  */
 public interface Criteria {
-    public List<Person> meetCriteria(List<Person> persons);
+    List<Person> meetCriteria(List<Person> persons);
 }

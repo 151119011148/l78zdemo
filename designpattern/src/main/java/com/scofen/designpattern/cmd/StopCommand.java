@@ -6,7 +6,7 @@ package com.scofen.designpattern.cmd;
  * @Date 7/11/22 9:45 AM
  **/
 public class StopCommand implements Command {
-    private AudioPlayer myAudio;
+    private final AudioPlayer myAudio;
 
     public StopCommand(AudioPlayer audioPlayer){
         myAudio = audioPlayer;

@@ -3,6 +3,7 @@ package com.scofen.designpattern.delegate.mvc;
 
 
 import com.scofen.designpattern.delegate.mvc.controller.MemberAction;
+import lombok.Getter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
  */
 public class DispatcherServlet {
 
-    private static List<Handler> handlerMapping = Collections.emptyList();
+    private static final List<Handler> handlerMapping = Collections.emptyList();
 
     public DispatcherServlet(){
         Class<?> memberActionClass = MemberAction.class;
@@ -73,22 +74,11 @@ public class DispatcherServlet {
 
 
 
+    @Getter
     static class Handler{
-        private Object controller;
-        private Method method;
-        private String url;
-
-        public Object getController() {
-            return controller;
-        }
-
-        public Method getMethod() {
-            return method;
-        }
-
-        public String getUrl() {
-            return url;
-        }
+        private final Object controller;
+        private final Method method;
+        private final String url;
 
         public  Handler(Object controller, Method method, String url){
             this.controller = controller;

@@ -1,10 +1,13 @@
 package domain.base;
 
+import lombok.Getter;
+
 /**
  * @Description: TODO
  * @Author gaofeng
  * @Date 3/20/22 5:48 PM
  **/
+@Getter
 public class EntityDomainEvent<ID> extends AggregateRootDomainEvent<ID> {
 
 
@@ -13,10 +16,6 @@ public class EntityDomainEvent<ID> extends AggregateRootDomainEvent<ID> {
     public EntityDomainEvent(ID entityId) {
         super(entityId);
         this.entityId = entityId;
-    }
-
-    public ID getEntityId() {
-        return entityId;
     }
 
     @Override

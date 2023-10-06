@@ -7,7 +7,9 @@ package com.scofen.designpattern.bridge.shape;
  * Modified  By:
  */
 public class Circle extends Shape {
-    private int x, y, radius;
+    private final int x;
+    private final int y;
+    private final int radius;
 
     public Circle(int x, int y, int radius, DrawAPI drawAPI) {
         super(drawAPI);
