@@ -195,3 +195,37 @@ rectangle 数环产品用例 {
 }
 @enduml
 
+
+
+@startuml
+left to right direction
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+
+actor 用户
+
+rectangle 数环产品用例 {
+    用户 --> (下载浏览器插件)
+    用户 --> (安装浏览器插件)
+    用户 --> (插件注册和登录)
+    用户 --> (使用浏览器插件)
+
+
+    (使用浏览器插件) --> (浏览器操作)  #red;text:red : include
+    (使用浏览器插件) --> (网页操作) #red;text:red : include
+
+    (浏览器操作) --> (打开新的窗口/标签) : include
+    (浏览器操作) --> (切换标签) : include
+    (浏览器操作) --> (关闭窗口/标签) : include
+    (浏览器操作) --> (网页前进) : include
+    (浏览器操作) --> (网页后退) : include
+    (浏览器操作) --> (刷新页面) : include
+    (网页操作) --> (点击网页元素) : include
+    (网页操作) --> (获取元素文本) : include
+    (网页操作) --> (模拟按键输入) : include
+    (网页操作) --> (滚动网页) : include
+    (网页操作) --> (模拟翻页) : include
+
+
+}
+@enduml

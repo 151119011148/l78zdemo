@@ -4,6 +4,7 @@ package com.scofen.jdk.threads;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
+import java.util.concurrent.locks.LockSupport;
 
 /**
  * Create by  GF  in  15:33 2019/1/16
@@ -14,11 +15,14 @@ public class MyAQS {
 
     //静态内部类，继承AQS
     private static class SyncLock extends AbstractQueuedSynchronizer {
+
         //是否处于占用状态
+        @Override
         protected boolean isHeldExclusively() {
             return getState() == 1;
         }
         //当状态为0的时候获取锁，CAS操作成功，则state状态为1，
+        @Override
         public boolean tryAcquire(int acquires) {
             if (compareAndSetState(0, 1)) {
                 setExclusiveOwnerThread(Thread.currentThread());
@@ -27,8 +31,11 @@ public class MyAQS {
             return false;
         }
         //释放锁，将同步状态置为0
+        @Override
         protected boolean tryRelease(int releases) {
-            if (getState() == 0) throw new IllegalMonitorStateException();
+            if (getState() == 0) {
+                throw new IllegalMonitorStateException();
+            }
             setExclusiveOwnerThread(null);
             setState(0);
             return true;

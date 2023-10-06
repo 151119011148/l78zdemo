@@ -111,3 +111,61 @@ stop
 @enduml
 
 
+@startuml
+|u| 用户
+start
+:使用连接器开放工具;
+|#palegreen|j|数环通开放平台
+:新增连接器（拷贝连接器版本）;
+:编辑连接器;
+|#DarkSlateGray|j|数环通开放平台
+:连接器上调试;
+:校验连接器有效性;
+if (是否校验通过?) is (否) then
+:报错提示;
+stop
+else (是)
+:**生成线上连接器**;
+|#DarkSeaGreen|o|数环通控制台页面
+:跳转到数环通控制台;
+:**授权**;
+:**单步测试**;
+:**发布上架**;
+stop
+@enduml
+
+
+@startuml
+|u| 用户
+start
+:使用连接器开放工具;
+|#palegreen|j|数环通开放平台
+:新增连接器（拷贝连接器版本）;
+|#DarkSlateGray|o|数环通控制台页面
+:初始化连接器（拷贝连接器版本）;
+|#palegreen|j|数环通开放平台
+:编辑连接器;
+|#DarkSlateGray|o|数环通控制台页面
+:编辑连接器;
+|#DarkSlateGray|j|数环通开放平台
+:连接器上调试;
+:调试授权;
+|#DarkSeaGreen|o|数环通控制台页面
+:**保存授权**;
+|#DarkSlateGray|j|数环通开放平台
+:调试触发器;
+:调试执行器;
+|#DarkSeaGreen|o|数环通控制台页面
+:**单步测试**;
+|#DarkSlateGray|j|数环通开放平台
+:发布上架;
+if (是否校验通过?) is (否) then
+:报错提示;
+stop
+else (是)
+|#DarkSeaGreen|o|数环通控制台页面
+:**覆盖线上连接器**;
+stop
+@enduml
+
+

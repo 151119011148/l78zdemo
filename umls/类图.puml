@@ -246,3 +246,79 @@ folder "com.shuhuan.ipaas.gateway" {
 
 
 @enduml
+
+
+@startuml
+
+folder "com.shuhuan.ipaas.connector.spi.browserplugin" {
+
+    interface ConnectorOperation {
+
+        void execute(ConnectorRequest request, Consumer<ConnectorResponse> callback) throws IpaasException;
+
+        default ConnectorRequest createRequest();
+    }
+
+    interface ConnectorProvider {
+            public ConnectorOperation createConnectorOperation(String operation, Map<String, Object> asset, Map<String, Object> settings);
+    }
+
+    class BrowserOperationConnectorProvider implements ConnectorProvider{
+
+    }
+
+    interface ClientRobot extends ConnectorOperation{
+        private ConcurrentHashMap<String, Thread> tasks;
+        park();
+        unPark(Thread waitThread);
+    }
+
+    interface BrowserOperationConnectorOperation extends ClientRobot{
+
+    }
+
+    interface WebPageOperationConnectorOperation extends ClientRobot{
+
+    }
+
+
+    class WakeUpFlowConsumer{}
+    WakeUpFlowConsumer *-- ClientRobot
+
+
+    class OpenNewWindowOperation implements BrowserOperationConnectorOperation {
+
+        private ExecutionResultProducer executionResultProducer;
+
+        public void execute(ConnectorRequest request, Consumer<ConnectorResponse> callback);
+
+    }
+    class executionResultProducer{}
+    OpenNewWindowOperation *-- executionResultProducer
+
+
+    class OpenNewTabOperation implements BrowserOperationConnectorOperation {
+    }
+
+    class ChangeTabOperation implements BrowserOperationConnectorOperation {
+    }
+
+    class CloseWindowOperation implements BrowserOperationConnectorOperation {
+    }
+
+    class CloseTabOperation implements BrowserOperationConnectorOperation {
+    }
+
+    class ForwardOperation implements BrowserOperationConnectorOperation {
+    }
+
+    class BackOperation implements BrowserOperationConnectorOperation {
+    }
+
+    class RefreshOperation implements BrowserOperationConnectorOperation {
+    }
+
+}
+
+
+@enduml

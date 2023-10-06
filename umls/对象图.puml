@@ -255,4 +255,34 @@ ipaas_user_template_auth }|--|| meta : "id"
 @enduml
 
 
+@startuml
+entity ipaas_flow {
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `gmt_create` datetime NOT NULL COMMENT '创建时间',
+  `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+  `creator` varchar(50) NOT NULL COMMENT '创建者uuid',
+  `modifier` varchar(50) NOT NULL COMMENT '修改者uuid',
+  `last_modified_timestamp` bigint NOT NULL COMMENT '最后更新时间',
+  `is_removed` bigint NOT NULL COMMENT '是否被删除',
+  `tenant_id` varchar(40) DEFAULT NULL COMMENT '租户uuid',
+  `group_id` varchar(40) DEFAULT NULL COMMENT '组织uuid',
+  `app_id` varchar(50) DEFAULT NULL COMMENT 'flow所属应用id',
+  `template_id` varchar(50) DEFAULT NULL COMMENT '模板Id',
+  `flow_id` varchar(50) NOT NULL COMMENT 'id，系统自动生成, 8855ecda66ee456d2f391471ae',
+  `flow_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '展示名称，用户可以修改',
+  `trigger_id` varchar(50) DEFAULT NULL COMMENT '触发器id',
+  `description` varchar(1024) DEFAULT NULL COMMENT '文本描述',
+  `owner_id` varchar(50) NOT NULL COMMENT '归属用户Uid',
+  `status` varchar(20) DEFAULT NULL COMMENT '状态，激活/取消',
+  `env` varchar(20) NOT NULL COMMENT '系统环境',
+  `meta` mediumtext NOT NULL COMMENT '元数据',
+  `view_meta` mediumtext NOT NULL COMMENT '前端展示配置',
+  `extensions` text COMMENT '扩展字段, 与流程无关的',
+  `owner_type` varchar(20) DEFAULT NULL COMMENT '归属者类型 individuals-个人 organization-企业组织',
+  `flow_biz_uk` varchar(512) GENERATED ALWAYS AS (json_unquote(json_extract(`extensions`,_utf8mb4'$.flowBizUk'))) VIRTUAL,
+  `project_id` varchar(50) DEFAULT NULL COMMENT '项目Id',
 
+  **`connector_ids` text DEFAULT NULL COMMENT '包含的连接器id列表'**
+
+}
+@enduml

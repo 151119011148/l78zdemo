@@ -57,3 +57,54 @@ group checkBehaviorCaptchaData
 end
 
 @enduml
+
+
+@startuml
+participant 前端 as 前端
+participant gateway as gateway
+participant engine as engine
+
+
+group 创建websocket连接
+    前端 -> gateway ++: openConnect
+    gateway -> gateway: saveWebSocketInfo
+    return 返回
+end group
+
+group 销毁websocket连接
+    前端 -> gateway ++: destroyConnect
+    gateway -> gateway: updateWebSocketInfo
+    return 返回
+end group
+
+group 启动监听
+    gateway -> gateway ++: initiateListener
+    deactivate
+end group
+
+group 启动推送
+    gateway -> gateway ++: initiatePush
+    deactivate
+end group
+
+group 启动WakeUpFlowProducer
+    gateway -> gateway ++: 唤醒engine被挂起的线程
+    deactivate
+end group
+
+group 启动ExecutionResultConsumer
+    gateway -> gateway ++: 消费engine执行结果，再通过websocket通知到前端
+    deactivate
+end group
+
+group 启动ExecutionResultProducer
+    engine -> engine ++: push执行结果，再通过websocket通知到前端
+    deactivate
+end group
+
+group 启动WakeUpFlowConsumer
+    engine -> engine ++: 消费来自gateway的消息，唤醒被挂起的线程
+    deactivate
+end group
+
+@enduml

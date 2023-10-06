@@ -395,3 +395,175 @@ IpaasOauthService --> OpenOauthController
 deactivate IpaasOauthService
 return
 @enduml
+
+
+
+@startuml
+participant 前端 as 前端
+queue websocket as websocket
+
+
+entity OpenNewWindowOperation as OpenNewWindowOperation
+queue ExecutionResultProducer as ExecutionResultProducer
+control ExecutionResultConsumer as ExecutionResultConsumer
+queue WakeUpFlowProducer as WakeUpFlowProducer
+control WakeUpFlowConsumer as WakeUpFlowConsumer
+
+control ExecuteMachine as ExecuteMachine
+
+group 执行【打开新的窗口】action
+OpenNewWindowOperation -> OpenNewWindowOperation ++: execute
+OpenNewWindowOperation -> OpenNewWindowOperation : 存储当前线程信息
+OpenNewWindowOperation --> ExecutionResultProducer ++: 【publish执行结果和线程信息】sendMessage()
+OpenNewWindowOperation -> OpenNewWindowOperation : park()
+
+ExecutionResultProducer --> ExecutionResultConsumer ++: 消费消息
+ExecutionResultConsumer -> websocket ++ : 推送【打开新的窗口】事件
+websocket -> 前端 ++: 打开新的窗口
+前端 -> websocket: 打开新的窗口执行完毕
+websocket -> WakeUpFlowProducer ++: publish前端执行结果和数据
+WakeUpFlowProducer --> WakeUpFlowConsumer ++: 消费来自gateway的消息，唤醒被挂起的线程
+WakeUpFlowConsumer --> ExecuteMachine ++: unPark()
+ExecuteMachine --> ExecuteMachine:run()
+end
+
+
+@enduml
+
+
+@startuml
+participant gateway as gateway
+participant openplatform as openplatform
+participant scriptApi as scriptApi
+participant redisManager as redisManager
+
+group 编辑开放连接器
+    group 编辑Trigger
+        gateway -> openplatform ++: saveTrigger
+        openplatform -> openplatform: editTrigger(OpenConnector openConnector)
+        return 返回
+    end group
+    group 编辑脚本
+        gateway -> openplatform ++: editScript
+        openplatform -> scriptApi ++: editScript(OpenConnector openConnector)
+        return 返回
+        return 返回
+    end group
+end group
+
+group 创建连接器版本
+    gateway -> openplatform ++: createVersion
+    openplatform -> openplatform : createVersion(OpenConnector openConnector)
+    openplatform -> redisManager ++: publishScript(IpaasScript script)
+    return
+    return
+end group
+
+@enduml
+
+
+@startuml
+participant OpenConnectorController as controller
+control OpenConnectorService as service
+control ConnectorApi as connectorApi
+entity OpenConnectorProvider as manager
+database repository as repository
+
+group 创建连接器
+    controller -> service ++: createOpenConnector
+    service -> manager ++: createOpenConnector(OpenConnector openConnector)
+    manager -> repository ++: saveOpenConnectorBase(OpenConnectorBaseDO openConnectorBase)
+    return 返回
+    manager --> repository ++: saveOpenConnectorOperation(List<OpenConnectorOperationDO> operations)
+    return 返回
+    return 返回
+    service -> connectorApi ++: saveConnector
+    note right of connectorApi: versionType设置为close_beta
+    return 返回
+    return 返回
+end group
+
+group 编辑连接器
+    group 编辑基本信息
+        controller -> service ++: editBase
+        service -> manager ++: editBase(OpenConnector openConnector)
+        manager -> repository ++: editBase(OpenConnectorBaseDO openConnectorBase)
+        return 返回
+        return 返回
+        service -> connectorApi ++: saveConnector
+        note right of connectorApi: 覆盖
+        return 返回
+        return 返回
+    end group
+    group 编辑授权
+        controller -> service ++: editAuth
+        service -> manager ++: editAuth(OpenConnector openConnector)
+        manager -> repository ++: editAuth(OpenConnectorBaseDO openConnectorBase)
+        return 返回
+        return 返回
+        service -> connectorApi ++: saveConnector
+        note right of connectorApi: 覆盖
+        return 返回
+        return 返回
+    end group
+    group 编辑operation
+        controller -> service ++: editOperation
+        service -> manager ++: editOperation(OpenConnector openConnector)
+        manager --> repository ++: editOperation(List<OpenConnectorOperationDO> operations)
+        return 返回
+        return 返回
+        service -> connectorApi ++: saveConnector
+        note right of connectorApi: 覆盖
+        return 返回
+        return 返回
+    end group
+    group 编辑脚本
+        controller -> service ++: editScript
+        service -> manager ++: editScript(OpenConnector openConnector)
+        manager --> repository ++: editScript(List<OpenConnectorOperationDO> operations)
+        return 返回
+        return 返回
+        return 返回
+    end group
+end group
+
+@enduml
+
+@startuml
+
+group 连接器调试
+    group 调试授权
+    controller -> service ++: testOpenConnector
+    service -> connectorApi ++: checkAuth&&saveAuth
+    note right of connectorApi: projectorId设置为close_beta
+    return 返回
+    return 返回
+    end group
+
+    group 调试触发器/执行器
+    controller -> service ++: testOpenConnector
+    service -> connectorApi ++: testStep
+    return 返回
+    return 返回
+    end group
+
+end group
+
+group 连接器上架审核
+controller -> service ++: publishOpenConnector
+service -> manager ++: getOpenConnector(ConnectorId id)
+manager -> repository ++: getOpenConnector(ConnectorId id)
+return 返回OpenConnector
+manager -> manager: **validateOpenConnector(OpenConnector openConnector)**
+manager -> manager: updateStatus(OpenConnector openConnector)
+manager -> repository ++: editOpenConnectorBase(OpenConnector openConnector)
+return 返回OpenConnector
+return 返回
+service -> connectorApi ++: saveConnector
+note right of connectorApi: versionType设置为current
+return 返回
+return 返回
+end group
+
+@enduml
+

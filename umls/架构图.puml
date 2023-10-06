@@ -200,3 +200,29 @@ clientImpl ..> api: rpc调用
 repositoryImpl --|> database
 publisherImpl --|> queue
 @enduml
+
+
+
+@startuml
+component "ipaas-shuhuan-event-center" as eventcenter{
+}
+artifact "ipaas-shuhuan-gateway" as gateway{
+}
+
+artifact "ipaas-shuhuan-open-platform" as openplatform{
+}
+
+
+artifact "module:ipaas-script-factory" as scriptFactory{
+    folder 脚本引擎 as 脚本引擎
+}
+
+artifact "redisCacheManager" as redisCacheManager{
+}
+
+gateway ..> openplatform: rpc调用
+eventcenter -> scriptFactory: 依赖
+gateway ..> redisCacheManager: 调用
+scriptFactory ..> redisCacheManager: 调用
+
+@enduml 
