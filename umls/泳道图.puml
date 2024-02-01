@@ -383,3 +383,83 @@ group 客户页面（回调地址2）
 end group
 stop
 @enduml
+
+@startuml
+|u| 用户
+start
+|#green|s|rhapsody
+fork
+:rhapsody导出;
+:生成xmi文件;
+fork again
+:保存项目;
+:生成工程信息文件;
+end fork
+|#gold|o|design
+:提供xmi文件和工程文件导入功能;
+:导入并渲染;
+stop
+@enduml
+
+@startuml
+|u| 用户
+start
+|#green|s|rhapsody
+:保存项目;
+:生成工程信息文件;
+|#gold|o|design
+:提供工程文件导入功能;
+:导入并渲染;
+stop
+@enduml
+
+@startuml
+|#green|s|用户
+start
+:保存项目;
+:生成工程信息文件;
+|#gold|o|生态
+:调用Rhapsody的API;
+|#green|s|rhapsody
+:获取模型信息和图形信息;
+|#gold|o|生态
+:转换;
+|#lightblue|a|arch
+:创建项目;
+:导入;
+stop
+@enduml
+
+@startuml
+|#green|s|用户
+start
+fork
+:rhapsody导出;
+:生成xmi文件;
+fork again
+:保存项目;
+:生成工程信息文件;
+end fork
+|#gold|o|生态
+:解析xmi文件获取模型信息;
+:解析工程文件获取图形以及连线信息;
+:转换;
+|#lightblue|a|arch
+:创建项目;
+:导入;
+stop
+@enduml
+
+@startuml
+|#green|s|用户
+start
+:保存项目;
+:生成工程信息文件;
+|#gold|o|华望
+:解析工程文件获取图形信息;
+:解析工程文件获取连线信息;
+:转换;
+|#lightblue|a|天舟
+:渲染;
+stop
+@enduml

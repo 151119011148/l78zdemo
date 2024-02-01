@@ -246,3 +246,301 @@ folder "com.shuhuan.ipaas.gateway" {
 
 
 @enduml
+
+
+@startuml
+
+folder "com.shuhuan.ipaas.gateway" {
+
+    abstract class ExecutionHandler{
+
+        private String name;
+
+        private String targetRef;
+
+        private FlowInstance flow;
+
+        private ExecutionHandler nextHandler;
+
+        private String exceptionRef;
+
+        public abstract boolean isAsync();
+
+        public abstract FlowElementType getElementType();
+
+        public abstract void execute(Execution ec, Consumer<Execution> callback) throws Exception;
+
+        public void cascade();
+    }
+
+    abstract class AbstractForkGateway{
+
+        private String joinAt;
+
+        private Map<String, Semaphore> forkedSems;
+
+        protected void processFork(Execution ec, ExecutionForkContext context, Consumer<Execution> callback);
+
+    }
+
+    class CatchErrorGateway{
+
+        public CatchErrorGateway(FlowInstance flow, ForkGatewayPO po);
+
+        public void execute(Execution ec, Consumer<Execution> callback);
+
+    }
+
+    class OnErrorGateway{
+
+        public CatchErrorGateway(FlowInstance flow, ForkGatewayPO po);
+
+        public void execute(Execution ec, Consumer<Execution> callback);
+
+
+    }
+
+    class JoinGateway{
+
+        private Consumer<Execution> callback;
+
+        private StatementList statements;
+
+        private Execution ec;
+
+    }
+
+    class Execution{
+
+        private String requestId;
+        private Execution parent;
+        private FlowInstance flow;
+        private Map<String, Object> contextObjects;
+        private Map<String, Object> globalContextObjects;
+
+        private ExecutionRuntime runtime;
+        private ExecutionStepContext currentStep;
+        private ExecutionTriggerContext triggerContext;
+        private ExecutionLogContext logContext;
+        private AtomicBoolean finish;
+
+        private Exception error;
+        private boolean isFork = false;
+
+        List<ExecutionForkContext> contexts;
+
+        private ExpressionContext expressionContext;
+
+    }
+
+
+    enum FlowElementType{
+
+        FOR_COUNT_GATEWAY("ForCountGateway"),
+
+        JOIN_GATEWAY("JoinGateway"),
+
+        CATCH_ERROR_GATEWAY("CatchErrorGateway"),
+
+        ON_ERROR_GATEWAY("OnErrorGateway"),
+    }
+
+
+    ExecutionHandler <|-- AbstractForkGateway
+    AbstractForkGateway <|-- CatchErrorGateway
+    AbstractForkGateway <|-- OnErrorGateway
+    AbstractForkGateway <|-- JoinGateway
+    CatchErrorGateway *-- Execution
+    OnErrorGateway *-- Execution
+    JoinGateway *-- Execution
+    ExecutionHandler *-- FlowElementType
+
+
+}
+
+
+@enduml
+
+@startuml
+
+folder "model"  {
+
+    class Rhp2DesignNode {
+
+        private String projectId;
+
+        private String parentId;
+
+        private Integer level;
+
+        private String id;
+
+        private String xmiId;
+
+        private List<String> applyStereotypes;
+
+        private Integer type;
+
+        private String xmiType;
+
+        private String source;
+
+        private String target;
+
+        private String rhpMetaClass;
+
+        private Class<?> rhpClass;
+
+        private String designMetaClass;
+
+        private String defaultName;
+
+        private List<Rhp2DesignNode> children;
+
+        private List<DesignGraphNode> designGraphNodes;
+
+        private List<DesignGraphEdge> designGraphEdges;
+
+        public Rhp2DesignNode copy()
+
+        public Rhp2DesignNode copy2ChildNode()
+
+        public void createModels(Map<String, String> idMap)
+
+        private static void doCreateModel(Rhp2DesignNode node, Map<String, String> idMap)
+
+        private void doCreateDiagram(Rhp2DesignNode node, Map<String, String> idMap)
+
+        public void fillGraphInfo(Map<String, String> idMap)
+    }
+
+    class DesignGraphNode {
+
+        private String id;
+
+        private String xmiId;
+
+        private String rhpMetaClass;
+
+        private List<String> applyStereotypes;
+
+        private String defaultName;
+
+        private Point point;
+
+        private String width;
+
+        private String height;
+
+        private String modelObjectId;
+
+
+        public static DesignGraphNode convert2CreateShapeInputParam(RPGraphNodeDecorator decorator)
+
+        public JSONObject convert2CreateShapeInputParam(String projectId, String diagramId)
+
+        public JSONObject convert2ShapeTreeDrop(String projectId, String modelId, String diagramId, @Nullable String shapeId)
+
+        public JSONObject convert2ResizeShapeInputParam(String projectId, String diagramId)
+
+        public JSONObject convert2TreeDropParam(String projectId, String diagramId, String modelId)
+    }
+
+    class DesignGraphEdge {
+
+        private String sourceShapeId;
+
+        private String targetShapeId;
+
+        private String edgeKey;
+
+        private List<Point> waypoint;
+
+        public static DesignGraphEdge convert(RPGraphEdgeDecorator decorator)
+
+        public JSONObject convert(String projectId, String diagramId)
+
+    }
+
+    Rhp2DesignNode *-- DesignGraphNode
+    Rhp2DesignNode *-- DesignGraphEdge
+
+}
+
+@enduml
+
+@startuml
+
+folder "model"  {
+
+    class GraphNode {
+
+        private String id;
+
+        private String xmiId;
+
+        private String rhpMetaClass;
+
+        private List<String> applyStereotypes;
+
+        private String defaultName;
+
+        public  Bounds bounds;
+
+        private String width;
+
+        private String height;
+
+        private String modelObjectId;
+
+    }
+     class Bounds  {
+
+        private float x;
+
+        private float y;
+
+        private float width;
+
+        private float height;
+
+        private float absX;
+
+        private float absY;
+
+    }
+    GraphNode *-- Bounds
+}
+
+@enduml
+@startuml
+folder "model"  {
+
+    class GraphEdge {
+        private String id;
+
+        private String elementId;
+
+        private String name;
+
+        private String sourceShapeId;
+
+        private String targetShapeId;
+
+        private String edgeKey;
+
+        private List<Point> waypoint;
+
+    }
+     class Point {
+
+        protected Integer x = 0;
+
+        protected Integer y = 0;
+
+    }
+    GraphEdge *-- Point
+
+}
+
+@enduml

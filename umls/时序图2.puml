@@ -395,3 +395,187 @@ IpaasOauthService --> OpenOauthController
 deactivate IpaasOauthService
 return
 @enduml
+
+
+@startuml
+actor 业务入口 as busi
+participant RhapsodyController as controller
+participant RhapsodyService as service
+participant IRhapsodyFacade as rhapsodyFacade
+participant NodeService as nodeService
+
+
+busi -> controller ++: 导入
+controller -> service ++: 获取树形节点
+service -> rhapsodyFacade ++: 打开项目工程文件
+return 项目工程文件查询入口
+
+loop
+service -> rhapsodyFacade ++: 递归查询文件每一层rhapsody模型信息
+return 该层rhapsody模型信息
+    loop rhapsody模型信息
+    service -> service: 转换为design模型
+       alt rhapsody模型信息 是 包模型
+            service -> service: 递归
+       else rhapsody模型信息 是 模型
+            service -> service: 转换为design模型
+       else rhapsody模型信息 是 图模型
+            service -> rhapsodyFacade ++: 转换为design图形模型
+            return
+    end
+end
+
+service -> service: 构建树形节点
+return 树形节点
+
+controller -> nodeService ++: 修改项目名称
+return 成功
+
+loop design模型信息
+controller -> nodeService ++: 创建模型
+return 成功
+end
+
+loop design图形模型信息
+controller -> nodeService ++: 将模型拖拽到画布上，生成图形
+return 成功
+controller -> nodeService ++: 改变图形大小
+return 成功
+controller -> nodeService ++: 连接图形，创建连线
+return 成功
+controller -> nodeService ++: 修改连线名称
+return 成功
+end
+
+return 成功
+@enduml
+
+
+@startuml
+actor 业务入口 as busi
+participant RhapsodyController as controller
+participant RhapsodyService as service
+participant IRhapsodyFacade as rhapsodyFacade
+participant NodeService as nodeService
+participant ModelService as modelService
+
+
+busi -> controller ++: 导入
+controller -> service ++: import
+service -> rhapsodyFacade ++: 读取xmi和工程文件信息
+return Project
+
+loop
+service -> rhapsodyFacade ++: listModelElement
+return List<IRPModelElement>
+    service -> service: transform
+end
+
+note right: 将转换后的节点插入到sourceNodes中
+service -> service: buildTree
+return Rhp2DesignNode
+
+controller -> nodeService ++: 修改项目名称
+return 成功
+
+controller -> service ++: 生成models.json和shape.json，压缩生成zip文件
+service -> nodeService ++: 导入
+nodeService -> modelService ++: 创建模型，创建图形
+return 成功
+return 成功
+return 成功
+return 成功
+@enduml
+
+@startuml
+participant RhapsodyService as service
+participant RPMetaClassFactory as metaClassFactory
+
+
+note right: 将转换后的节点插入到sourceNodes中
+service -> rhapsodyFacade ++: openRPProject
+return root
+service -> metaClassFactory ++: createMeta
+metaClassFactory -> metaClassFactory : buildRoot
+return RPMetaClass<RPModelElement>
+service -> service : buildTree
+@enduml
+
+
+@startuml
+participant RhapsodyService as service
+participant NodeService as nodeService
+participant ModelService as modelService
+
+
+note right: 将转换后的节点插入到sourceNodes中
+service -> service: buildTree
+service -> service: exportZipFile
+service -> nodeService ++: importZip
+nodeService -> modelService ++: 创建模型，创建图形
+return 成功
+return 成功
+@enduml
+
+
+@startuml
+actor 业务入口 as busi
+participant WorkspaceController as controller
+participant RhapsodyFactory as factory
+participant RHPStore as store
+participant UMLFactory as umlFactory
+
+
+busi -> controller ++: import
+controller -> factory ++: getGroupTreeModelsReverb
+factory -> store ++: createStore
+return store
+factory -> store : initMapping
+factory -> store ++: getDocument
+return doc
+loop
+    factory -> umlFactory ++: getUMLClass
+    return modelElement
+    factory -> factory:doCreateRHPNodeElement
+    loop
+        factory -> store ++:get
+        return store
+        factory -> factory :createDiagram
+    end
+end
+return List<RhapsodyTreeNode>
+
+return success
+@enduml
+
+
+@startuml
+actor 业务入口 as busi
+participant M_Link as M_Link
+participant Node_Server as Node_Server
+participant Model_Service as Model_Service
+
+group rhapsody项目转换
+    busi -> M_Link ++: 项目导入（import_rhpProject）
+    M_Link -> Model_Service ++: 创建项目（project_create）
+    return
+    M_Link -> M_Link : 解析rhapsody模型数据和图形数据
+    M_Link -> M_Link : 转换
+    M_Link -> Model_Service ++: 批量导入（model_import_zip）
+    return 导入成功
+    return success
+end
+
+group rhapsody项目转换进度查询
+    busi -> M_Link ++: 进度查询（get_import_progress）
+    M_Link -> M_Link : 解析进度查询
+    M_Link -> busi : 解析进度
+    M_Link -> M_Link : 转换进度查询
+    M_Link -> busi : 转换进度
+    M_Link -> Node_Server ++: 渲染进度查询（get_model_import_progress）
+    return 渲染进度
+    return 导入进度
+end
+
+@enduml
+
