@@ -1,4 +1,4 @@
-package com.scofen.l78z.xiaochuan.tree;
+package com.scofen.l78z.xiaochuan.util;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
@@ -6,11 +6,7 @@ import lombok.Getter;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -310,7 +306,6 @@ public class TreeUtils {
         }
 
         @Override
-        
         public Long id() {
             return this.id;
         }
