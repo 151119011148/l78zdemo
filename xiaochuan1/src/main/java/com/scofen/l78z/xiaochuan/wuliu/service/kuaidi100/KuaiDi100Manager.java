@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.scofen.l78z.xiaochuan.dianshang.manager.Manager;
 import com.scofen.l78z.xiaochuan.util.Md5Util;
+import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
