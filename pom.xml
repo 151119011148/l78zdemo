@@ -9,8 +9,9 @@
     <modules>
 <!--        <module>algorithms</module>-->
 <!--        <module>ddd</module>-->
-        <module>designpattern</module>
-<!--        <module>distributedlock</module>-->
+<!--        <module>designpattern</module>-->
+        <module>xiaochuan1</module>
+        <!--        <module>distributedlock</module>-->
 <!--        <module>dubbo-consumer</module>-->
 <!--        <module>dubbo-provider</module>-->
 <!--        <module>util</module>-->
@@ -169,8 +170,13 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<plugins>

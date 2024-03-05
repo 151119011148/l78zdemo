@@ -526,3 +526,21 @@ cloud "com.shuhuan.ipaas.gateway" as gateway{
 
 }
 @enduml
+
+
+@startsalt
+{
+    {T
+    + 包结构                 | 描述
+    + com.huawang.ecolink.apps  | 生态app层
+    ++ controllers                 | 接口控制层
+    +++ rhapsody                | rhapsody控制层
+    +++++ RhapsodyController         | Rhapsody转换控制类
+    ++ service              | 服务层
+    +++ rhapsody                | rhapsody服务层
+    ++++ RhapsodyService         | Rhapsody转换服务类
+    ++ common              | 公共组件层
+    +++ MofAPI                | 服务调用类
+    }
+}
+@endsalt
