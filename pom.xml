@@ -7,15 +7,15 @@
 	<artifactId>l78z</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
     <modules>
-<!--        <module>algorithms</module>-->
-<!--        <module>ddd</module>-->
-<!--        <module>designpattern</module>-->
-        <module>xiaochuan</module>
-        <!--        <module>distributedlock</module>-->
-<!--        <module>dubbo-consumer</module>-->
-<!--        <module>dubbo-provider</module>-->
-<!--        <module>util</module>-->
-    </modules>
+        <module>algorithms</module>
+        <module>ddd</module>
+        <module>designpattern</module>
+		<module>distributedlock</module>
+		<module>dubbo-consumer</module>
+		<module>dubbo-provider</module>
+		<module>util</module>
+		<module>xiaochuan</module>
+	</modules>
     <packaging>pom</packaging>
 
 	<name>l78z</name>
