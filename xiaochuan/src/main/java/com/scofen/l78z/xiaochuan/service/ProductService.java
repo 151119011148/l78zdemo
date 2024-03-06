@@ -2,11 +2,9 @@ package com.scofen.l78z.xiaochuan.service;
 
 import com.scofen.l78z.xiaochuan.common.exception.ResultCode;
 import com.scofen.l78z.xiaochuan.common.exception.ServiceException;
-import com.scofen.l78z.xiaochuan.controller.request.CategoryParam;
-import com.scofen.l78z.xiaochuan.controller.request.ProductParam;
 import com.scofen.l78z.xiaochuan.controller.request.ProductQueryParam;
+import com.scofen.l78z.xiaochuan.controller.response.ProductVO;
 import com.scofen.l78z.xiaochuan.dao.ProductDao;
-import com.scofen.l78z.xiaochuan.dao.dataObject.CategoryDO;
 import com.scofen.l78z.xiaochuan.dao.dataObject.ProductDO;
 import org.dozer.Mapper;
 import org.springframework.data.domain.Example;
@@ -26,33 +24,33 @@ public class ProductService {
     @Resource
     Mapper beanMapper;
 
-    public ProductDO addOne(ProductParam param) {
+    public ProductDO addOne(ProductVO param) {
         ProductDO record = beanMapper.map(param, ProductDO.class);
         record.setCategoryId("Product_Id_" + UUID.randomUUID().toString().replace("-", ""));
         return productDao.save(record);
     }
 
     public Boolean removeOne(String productId) {
-        ProductDO record = this.getOne(productId);
+        ProductDO record = this.get(productId);
         record.setIsRemoved(1);
         productDao.save(record);
         return Boolean.TRUE;
     }
 
-    public Boolean editOne(ProductParam param) {
+    public Boolean editOne(ProductVO param) {
         ProductDO record = beanMapper.map(param, ProductDO.class);
         productDao.save(record);
         return Boolean.TRUE;
     }
 
-    public ProductDO getOne(ProductParam param) {
+    public ProductDO getOne(ProductVO param) {
         Example<ProductDO> example = Example.of(beanMapper.map(param, ProductDO.class));
         example.getProbe().setIsRemoved(0);
         return productDao.findOne(example).orElseThrow(() -> new ServiceException(ResultCode.USER_NOT_EXIST.getCode(), "current product is invalid！"));
     }
 
-    public ProductDO getOne(String productId) {
-        ProductParam param = new ProductParam();
+    public ProductDO get(String productId) {
+        ProductVO param = new ProductVO();
         param.setProductId(productId);
         Example<ProductDO> example = Example.of(beanMapper.map(param, ProductDO.class));
         example.getProbe().setIsRemoved(0);

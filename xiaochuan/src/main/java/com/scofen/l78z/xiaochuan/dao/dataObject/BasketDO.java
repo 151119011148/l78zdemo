@@ -2,9 +2,14 @@ package com.scofen.l78z.xiaochuan.dao.dataObject;
 
 
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Date;
+
+import static javax.persistence.TemporalType.TIMESTAMP;
 
 
 /**
@@ -15,6 +20,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "basket")
+@EntityListeners(AuditingEntityListener.class)
 public class BasketDO {
 
     @Id
@@ -28,10 +34,14 @@ public class BasketDO {
     @Column(name = "product_ids")
     private String productIds;
 
-    @Column(name = "gmt_create")
+    @CreatedDate
+    @Column(name = "gmt_create", nullable = false, updatable = false)
+    @Temporal(TIMESTAMP)
     private Date createdTime;
 
-    @Column(name = "gmt_modified")
+    @LastModifiedDate
+    @Column(name = "gmt_modified", nullable = false)
+    @Temporal(TIMESTAMP)
     private Date modifiedTime;
 
     @Column(name = "is_removed")

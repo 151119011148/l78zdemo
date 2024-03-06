@@ -1,19 +1,21 @@
 package com.scofen.l78z.xiaochuan.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.scofen.l78z.xiaochuan.common.exception.ResultCode;
 import com.scofen.l78z.xiaochuan.controller.request.BasketParam;
-import com.scofen.l78z.xiaochuan.controller.request.UserParam;
+import com.scofen.l78z.xiaochuan.controller.response.BasketVO;
 import com.scofen.l78z.xiaochuan.controller.response.CategoryVO;
+import com.scofen.l78z.xiaochuan.controller.response.ProductVO;
 import com.scofen.l78z.xiaochuan.controller.response.Response;
 import com.scofen.l78z.xiaochuan.dao.dataObject.BasketDO;
+import com.scofen.l78z.xiaochuan.dao.dataObject.ProductDO;
 import com.scofen.l78z.xiaochuan.service.BasketService;
-import com.scofen.l78z.xiaochuan.service.UserService;
-import org.apache.commons.lang3.StringUtils;
+import com.scofen.l78z.xiaochuan.service.ProductService;
+import org.dozer.Mapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Description: TODO
@@ -27,6 +29,11 @@ public class BasketController extends BaseController {
     @Resource
     BasketService basketService;
 
+    @Resource
+    ProductService productService;
+
+    @Resource
+    Mapper beanMapper;
 
     /**
      * 加入购物车
@@ -35,14 +42,18 @@ public class BasketController extends BaseController {
      * @return
      */
     @PostMapping("/add")
-    public Response<Boolean> add(@RequestParam List<String> productIds) {
+    public Response<BasketVO> add(@RequestBody List<String> productIds) {
         String ip = getIp();
-        BasketParam data = new BasketParam();
-        data.setVisitId(ip);
-        data.setProductIds(productIds);
-        Boolean Response = basketService.add(data);
-        return new Response<>().withData(Response);
+        BasketParam param = new BasketParam();
+        param.setVisitId(ip);
+        param.setProductIds(productIds);
+        BasketDO data = basketService.add(param);
+        BasketVO result = buildBasketVO(ip, JSON.parseObject(data.getProductIds(), List.class));
+        return new Response<>()
+                .withData(result)
+                .withErrorMsg("加入购物车成功");
     }
+
 
     /**
      * 从购物车 移除
@@ -51,13 +62,31 @@ public class BasketController extends BaseController {
      * @return
      */
     @PostMapping("/remove")
-    public Response<Boolean> remove(@RequestParam List<String> productIds) {
+    public Response<BasketVO> remove(@RequestBody List<String> productIds) {
         String ip = getIp();
-        BasketParam data = new BasketParam();
-        data.setVisitId(ip);
-        data.setProductIds(productIds);
-        Boolean Response = basketService.remove(data);
-        return new Response<>().withData(Response);
+        BasketParam param = new BasketParam();
+        param.setVisitId(ip);
+        param.setProductIds(productIds);
+        BasketDO data = basketService.remove(param);
+        BasketVO result = buildBasketVO(ip, JSON.parseObject(data.getProductIds(), List.class));
+        return new Response<>()
+                .withData(result)
+                .withErrorMsg("商品移除成功");
+    }
+
+    private BasketVO buildBasketVO(String ip, List<String> productIds) {
+        List<ProductDO> productData = productIds
+                .parallelStream()
+                .map(productId -> productService.get((String) productId))
+                .collect(Collectors.toList());
+
+        BasketVO result = new BasketVO();
+        result.setVisitId(ip);
+        result.setProducts(productData
+                .parallelStream()
+                .map(ProductVO::read4)
+                .collect(Collectors.toList()));
+        return result;
     }
 
 

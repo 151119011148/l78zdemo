@@ -2,6 +2,7 @@ package com.scofen.l78z.xiaochuan.dao.dataObject;
 
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.AbstractAuditable;
@@ -27,7 +28,7 @@ public class CategoryDO {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "category_id")
     private String categoryId;
@@ -41,8 +42,8 @@ public class CategoryDO {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "desc")
-    private String desc;
+    @Column(name = "category_desc")
+    private String categoryDesc;
 
     @CreatedDate
     @Column(name = "gmt_create", nullable = false, updatable = false)
@@ -56,5 +57,17 @@ public class CategoryDO {
 
     @Column(name = "is_removed")
     private Integer isRemoved;
+
+    public void update(CategoryDO update){
+        if (StringUtils.isNotBlank(update.getCategoryDesc())){
+            this.categoryDesc = update.getCategoryDesc();
+        }
+        if (StringUtils.isNotBlank(update.getName())){
+            this.name = update.getName();
+        }
+        if (StringUtils.isNotBlank(update.getCategoryDesc())){
+            this.categoryDesc = update.getCategoryDesc();
+        }
+    }
 
 }

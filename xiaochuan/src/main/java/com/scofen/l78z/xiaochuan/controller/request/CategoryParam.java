@@ -30,6 +30,6 @@ public class CategoryParam implements Serializable {
     /**
      *
      */
-    private String desc;
+    private String categoryDesc;
 
 }

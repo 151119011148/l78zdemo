@@ -25,21 +25,24 @@ public class BasketService {
     @Resource
     Mapper beanMapper;
 
-    public Boolean add(BasketParam param) {
+    public BasketDO add(BasketParam param) {
         BasketDO record = this.get(param.getVisitId());
         if (Objects.isNull(record)) {
-            basketDao.save(beanMapper.map(param, BasketDO.class));
+            record = beanMapper.map(param, BasketDO.class);
+            record.setProductIds(JSON.toJSONString(param.getProductIds()));
+            record.setIsRemoved(0);
+            basketDao.save(record);
         } else {
-            Set<String> productIds = new HashSet<>((List<String>) JSON.parse(record.getProductIds()));
+            Set<String> productIds = new HashSet<>((List<String>) JSON.parseObject(record.getProductIds(), List.class));
             productIds.addAll(param.getProductIds());
             record.setProductIds(JSON.toJSONString(productIds));
             basketDao.save(record);
         }
-        return true;
+        return record;
     }
 
 
-    public Boolean remove(BasketParam param) {
+    public BasketDO remove(BasketParam param) {
         BasketDO record = this.get(param.getVisitId());
         if (Objects.isNull(record)) {
             throw new ServiceException(ResultCode.DATA_NOT_EXIST.getCode(), "current basket is invalid！");
@@ -48,14 +51,14 @@ public class BasketService {
             productIds.removeAll(param.getProductIds());
             record.setProductIds(JSON.toJSONString(productIds));
             basketDao.save(record);
-            
         }
-        return true;
+        return record;
     }
 
     public BasketDO get(String visitId) {
         BasketDO query = new BasketDO();
         query.setVisitId(visitId);
+        query.setIsRemoved(0);
         Example<BasketDO> example = Example.of(query);
         return basketDao.findOne(example).orElse(null);
     }

@@ -1,8 +1,6 @@
 package com.scofen.l78z.xiaochuan.controller;
 
-import com.scofen.l78z.xiaochuan.controller.request.ProductParam;
 import com.scofen.l78z.xiaochuan.controller.request.ProductQueryParam;
-import com.scofen.l78z.xiaochuan.controller.response.CategoryVO;
 import com.scofen.l78z.xiaochuan.controller.response.ProductVO;
 import com.scofen.l78z.xiaochuan.controller.response.Response;
 import com.scofen.l78z.xiaochuan.dao.dataObject.ProductDO;
@@ -37,9 +35,9 @@ public class ProductController extends BaseController {
      * @return
      */
     @PostMapping("/product")
-    public Response<ProductVO> add(@RequestParam ProductParam param) {
+    public Response<ProductVO> add(@RequestParam ProductVO param) {
         ProductDO data = productService.addOne(param);
-        return new Response<>().withData(beanMapper.map(data, CategoryVO.class));
+        return new Response<>().withData(ProductVO.read4(data));
     }
 
     /**
@@ -68,7 +66,7 @@ public class ProductController extends BaseController {
         List<ProductDO> data = productService.search(productId, searchKey);
         return new Response<>().withData(data
                 .parallelStream()
-                .map(this::convert)
+                .map(ProductVO::read4)
                 .collect(Collectors.toList()));
     }
 
@@ -81,11 +79,11 @@ public class ProductController extends BaseController {
     @GetMapping("/products")
     public Response<List<ProductVO>> page(@RequestParam ProductQueryParam param) {
         List<ProductDO> data = productService.page(param);
-        return new Response<>().withData(beanMapper.map(data, CategoryVO.class));
+        return new Response<>().withData(data
+                .parallelStream()
+                .map(ProductVO::read4)
+                .collect(Collectors.toList()));
     }
 
-    private ProductVO convert(ProductDO productDO) {
-        return null;
-    }
 
 }

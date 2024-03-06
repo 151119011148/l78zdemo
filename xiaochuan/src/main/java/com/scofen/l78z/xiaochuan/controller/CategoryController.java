@@ -36,7 +36,7 @@ public class CategoryController extends BaseController {
      * @return
      */
     @PostMapping("")
-    public Response<CategoryVO> add(@RequestParam CategoryParam categoryParam) {
+    public Response<CategoryVO> add(@RequestBody CategoryParam categoryParam) {
         CategoryVO data = beanMapper.map(categoryService.addOne(categoryParam), CategoryVO.class);
         return new Response<>().withData(data);
     }
@@ -48,9 +48,11 @@ public class CategoryController extends BaseController {
      * @return
      */
     @DeleteMapping("/{categoryId}")
-    public Response<Boolean> add(@PathVariable String categoryId) {
+    public Response<Boolean> removeOne(@PathVariable String categoryId) {
         categoryService.removeOne(categoryId);
-        return new Response<>().withData(Boolean.TRUE);
+        return new Response<>()
+                .withData(Boolean.TRUE)
+                .withErrorMsg("删除信息成功");
     }
 
 
@@ -87,10 +89,12 @@ public class CategoryController extends BaseController {
      * @return
      */
     @PutMapping("/{categoryId}")
-    public Response<List<CategoryVO>> edit(@PathVariable String categoryId, @RequestParam CategoryParam categoryParam) {
+    public Response<List<CategoryVO>> edit(@PathVariable String categoryId, @RequestBody CategoryParam categoryParam) {
         categoryParam.setCategoryId(categoryId);
         categoryService.editOne(categoryParam);
-        return new Response<>().withData(Boolean.TRUE);
+        return new Response<>()
+                .withData(Boolean.TRUE)
+                .withErrorMsg("修改信息成功");
     }
 
 
