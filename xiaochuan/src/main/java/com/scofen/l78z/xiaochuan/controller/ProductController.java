@@ -1,19 +1,19 @@
 package com.scofen.l78z.xiaochuan.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.scofen.l78z.xiaochuan.common.model.Result;
-import com.scofen.l78z.xiaochuan.wuliu.controller.WuLiuParam;
-import com.scofen.l78z.xiaochuan.wuliu.service.WuliuService;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.scofen.l78z.xiaochuan.controller.request.ProductParam;
+import com.scofen.l78z.xiaochuan.controller.request.ProductQueryParam;
+import com.scofen.l78z.xiaochuan.controller.response.CategoryVO;
+import com.scofen.l78z.xiaochuan.controller.response.ProductVO;
+import com.scofen.l78z.xiaochuan.controller.response.Response;
+import com.scofen.l78z.xiaochuan.dao.dataObject.ProductDO;
+import com.scofen.l78z.xiaochuan.service.ProductService;
+import org.dozer.Mapper;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static com.scofen.l78z.xiaochuan.common.constant.ConnectorServiceEnum.KUAI_DI_100;
 
 /**
  * @Description: TODO
@@ -21,29 +21,71 @@ import static com.scofen.l78z.xiaochuan.common.constant.ConnectorServiceEnum.KUA
  * @Date 2023/9/3 9:54 AM
  **/
 @RestController
-@RequestMapping("/wuliu")
-public class ProductController {
+@RequestMapping("")
+public class ProductController extends BaseController {
 
     @Resource
-    WuliuService wuliuService;
+    ProductService productService;
+
+    @Resource
+    Mapper beanMapper;
 
     /**
-     * 通过物流信息查询物流轨迹
+     * 新增 商品
      *
-     * @param
+     * @param param
      * @return
      */
-    @GetMapping("/trace/get")
-    public Result<List<?>> get(@RequestParam WuLiuParam param) {
-        if (StringUtils.isEmpty(param.getConnectorKey())){
-            param.setConnectorKey(KUAI_DI_100.getConnectorId());
-            // TODO: 2023/9/4
-            param.setAccessKey("");
-        }
-        List<JSONObject> guijis = wuliuService.trace(param);
-        return new Result<>().withData(guijis);
+    @PostMapping("/product")
+    public Response<ProductVO> add(@RequestParam ProductParam param) {
+        ProductDO data = productService.addOne(param);
+        return new Response<>().withData(beanMapper.map(data, CategoryVO.class));
+    }
+
+    /**
+     * 通过 productService 删除商品
+     *
+     * @param productId
+     * @return
+     */
+    @DeleteMapping("/product/{productId}")
+    public Response<Boolean> removeOne(@PathVariable String productId) {
+        productService.removeOne(productId);
+        return new Response<>().withData(Boolean.TRUE);
     }
 
 
+    /**
+     * 通过 productId和searchKey 模糊查询商品列表
+     *
+     * @param productId
+     * @param searchKey
+     * @return
+     */
+    @GetMapping("/product")
+    public Response<List<ProductVO>> search(@RequestParam(value = "", required = false) String productId,
+                                   @RequestParam(value = "", required = false) String searchKey) {
+        List<ProductDO> data = productService.search(productId, searchKey);
+        return new Response<>().withData(data
+                .parallelStream()
+                .map(this::convert)
+                .collect(Collectors.toList()));
+    }
+
+    /**
+     * 通过 ProductQueryParam 查询商品列表
+     *
+     * @param param
+     * @return
+     */
+    @GetMapping("/products")
+    public Response<List<ProductVO>> page(@RequestParam ProductQueryParam param) {
+        List<ProductDO> data = productService.page(param);
+        return new Response<>().withData(beanMapper.map(data, CategoryVO.class));
+    }
+
+    private ProductVO convert(ProductDO productDO) {
+        return null;
+    }
 
 }

@@ -1,7 +1,7 @@
 package com.scofen.l78z.xiaochuan.common.exception;
 
 
-import com.scofen.l78z.xiaochuan.common.model.Result;
+import com.scofen.l78z.xiaochuan.controller.response.Response;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -443,10 +443,10 @@ public enum ResultCode {
         this.format = format;
     }
 
-    public Result toIpaasResult() {
-        Result response = new Result();
-        response.setCode(this.code);
-        response.setMessage(this.msgCode.getMsg());
+    public Response toIpaasResult() {
+        Response response = new Response();
+        response.setErrorCode(this.code);
+        response.setErrorMsg(this.msgCode.getMsg());
         if (ResultCode.SUCCESS.code.equals(this.code)) {
             response.setSuccess(true);
         } else {
@@ -465,10 +465,10 @@ public enum ResultCode {
         return null;
     }
 
-    public Result toIpaasResult(Object... args) {
-        Result response = new Result();
-        response.setCode(this.code);
-        response.setMessage(formatMessage(args));
+    public Response toIpaasResult(Object... args) {
+        Response response = new Response();
+        response.setErrorCode(this.code);
+        response.setErrorMsg(formatMessage(args));
         if (ResultCode.SUCCESS.code.equals(this.code)) {
             response.setSuccess(true);
         } else {

@@ -1,7 +1,6 @@
-package com.scofen.l78z.xiaochuan.response;
+package com.scofen.l78z.xiaochuan.controller.response;
 
 import com.scofen.l78z.xiaochuan.common.exception.ResultCode;
-import com.scofen.l78z.xiaochuan.common.model.Pager;
 import lombok.Data;
 
 

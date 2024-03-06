@@ -1,15 +1,14 @@
-package com.scofen.l78z.xiaochuan.response;
+package com.scofen.l78z.xiaochuan.controller.response;
 
 import com.scofen.l78z.xiaochuan.util.TreeNode;
 import lombok.Data;
 
-import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Data
-public class CategoryResponse implements TreeNode<CategoryResponse, String>, Serializable {
+public class CategoryVO implements TreeNode<CategoryVO, String>, Serializable {
 
     /**
      *
@@ -36,7 +35,7 @@ public class CategoryResponse implements TreeNode<CategoryResponse, String>, Ser
      */
     private String desc;
 
-    private List<CategoryResponse> children;
+    private List<CategoryVO> children;
 
     private Date createdTime;
 
@@ -53,7 +52,7 @@ public class CategoryResponse implements TreeNode<CategoryResponse, String>, Ser
     }
 
     @Override
-    public List<CategoryResponse> children() {
+    public List<CategoryVO> children() {
         return children;
     }
 }

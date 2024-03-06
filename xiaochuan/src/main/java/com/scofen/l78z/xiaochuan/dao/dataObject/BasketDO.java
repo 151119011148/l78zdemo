@@ -1,4 +1,4 @@
-package com.scofen.l78z.xiaochuan.common.datasource.dataObject;
+package com.scofen.l78z.xiaochuan.dao.dataObject;
 
 
 import lombok.Data;
@@ -14,25 +14,19 @@ import java.util.Date;
  **/
 @Data
 @Entity
-@Table(name = "access")
-public class AccessDO {
+@Table(name = "basket")
+public class BasketDO {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "access_id")
-    private String accessId;
+    @Column(name = "visit_id")
+    private String visitId;
 
-    @Column(name = "connector_key")
-    private String connectorKey;
-
-    @Column(name = "access_key")
-    private String accessKey;
-
-    @Column(name = "access_info")
-    private String accessInfo;
+    @Column(name = "product_ids")
+    private String productIds;
 
     @Column(name = "gmt_create")
     private Date createdTime;
@@ -40,6 +34,7 @@ public class AccessDO {
     @Column(name = "gmt_modified")
     private Date modifiedTime;
 
+    @Column(name = "is_removed")
     private Integer isRemoved;
 
 }

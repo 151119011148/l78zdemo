@@ -1,4 +1,4 @@
-package com.scofen.l78z.xiaochuan.request;
+package com.scofen.l78z.xiaochuan.controller.request;
 
 import lombok.Data;
 
