@@ -2,16 +2,16 @@ package com.scofen.l78z.xiaochuan.service;
 
 import com.scofen.l78z.xiaochuan.common.exception.ResultCode;
 import com.scofen.l78z.xiaochuan.common.exception.ServiceException;
+import com.scofen.l78z.xiaochuan.controller.response.CategoryVO;
 import com.scofen.l78z.xiaochuan.dao.CategoryDao;
 import com.scofen.l78z.xiaochuan.dao.dataObject.CategoryDO;
-import com.scofen.l78z.xiaochuan.request.CategoryParam;
+import com.scofen.l78z.xiaochuan.controller.request.CategoryParam;
 import org.apache.commons.lang3.StringUtils;
 import org.dozer.Mapper;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +24,7 @@ public class CategoryService {
     @Resource
     Mapper beanMapper;
 
-    public Boolean addOne(CategoryParam param) {
+    public CategoryDO addOne(CategoryParam param) {
         String parentId = param.getParentId();
         int level = 0;
         if (StringUtils.isNotBlank(parentId)){
@@ -34,8 +34,7 @@ public class CategoryService {
         CategoryDO record = beanMapper.map(param, CategoryDO.class);
         record.setLevel(level);
         record.setCategoryId("Category_Id_" + UUID.randomUUID().toString().replace("-", ""));
-        categoryDao.save(record);
-        return Boolean.TRUE;
+        return categoryDao.save(record);
     }
 
     public Boolean removeOne(String categoryId) {

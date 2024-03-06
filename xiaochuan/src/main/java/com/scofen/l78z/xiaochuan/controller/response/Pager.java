@@ -1,4 +1,4 @@
-package com.scofen.l78z.xiaochuan.common.model;
+package com.scofen.l78z.xiaochuan.controller.response;
 
 import lombok.Data;
 
