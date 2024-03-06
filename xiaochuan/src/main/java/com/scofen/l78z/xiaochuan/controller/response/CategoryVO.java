@@ -1,6 +1,7 @@
 package com.scofen.l78z.xiaochuan.controller.response;
 
 import com.scofen.l78z.xiaochuan.util.TreeNode;
+import com.scofen.l78z.xiaochuan.util.TreeUtils;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -33,7 +34,7 @@ public class CategoryVO implements TreeNode<CategoryVO, String>, Serializable {
     /**
      *
      */
-    private String desc;
+    private String categoryDesc;
 
     private List<CategoryVO> children;
 
@@ -54,5 +55,10 @@ public class CategoryVO implements TreeNode<CategoryVO, String>, Serializable {
     @Override
     public List<CategoryVO> children() {
         return children;
+    }
+
+    @Override
+    public void children(List<CategoryVO> children) {
+        this.children = children;
     }
 }
