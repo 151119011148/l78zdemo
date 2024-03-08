@@ -3,7 +3,6 @@ package com.scofen.l78z.xiaochuan.controller;
 import com.alibaba.fastjson.JSON;
 import com.scofen.l78z.xiaochuan.controller.request.BasketParam;
 import com.scofen.l78z.xiaochuan.controller.response.BasketVO;
-import com.scofen.l78z.xiaochuan.controller.response.CategoryVO;
 import com.scofen.l78z.xiaochuan.controller.response.ProductVO;
 import com.scofen.l78z.xiaochuan.controller.response.Response;
 import com.scofen.l78z.xiaochuan.dao.dataObject.BasketDO;
@@ -77,7 +76,7 @@ public class BasketController extends BaseController {
     private BasketVO buildBasketVO(String ip, List<String> productIds) {
         List<ProductDO> productData = productIds
                 .parallelStream()
-                .map(productId -> productService.get((String) productId))
+                .map(productId -> productService.getById(productId))
                 .collect(Collectors.toList());
 
         BasketVO result = new BasketVO();
