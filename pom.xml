@@ -7,14 +7,15 @@
 	<artifactId>l78z</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
     <modules>
-<!--        <module>algorithms</module>-->
-<!--        <module>ddd</module>-->
+        <module>algorithms</module>
+        <module>ddd</module>
         <module>designpattern</module>
-<!--        <module>distributedlock</module>-->
-<!--        <module>dubbo-consumer</module>-->
-<!--        <module>dubbo-provider</module>-->
-<!--        <module>util</module>-->
-    </modules>
+		<module>distributedlock</module>
+		<module>dubbo-consumer</module>
+		<module>dubbo-provider</module>
+		<module>util</module>
+		<module>xiaochuan</module>
+	</modules>
     <packaging>pom</packaging>
 
 	<name>l78z</name>
@@ -169,8 +170,13 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<plugins>
@@ -184,6 +190,14 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>8</source>
+					<target>8</target>
 				</configuration>
 			</plugin>
 		</plugins>

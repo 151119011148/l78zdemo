@@ -1,4 +1,4 @@
-package com.scofen.study.designpattern.singleton;
+package com.scofen.l78z.designpattern.singleton;
 
 import com.scofen.designpattern.singleton.LazySix;
 import org.junit.Test;

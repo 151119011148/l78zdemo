@@ -8,7 +8,7 @@
 		<version>2.1.2.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.scofen.study</groupId>
+	<groupId>com.scofen.l78z</groupId>
 	<artifactId>designpattern</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>designpattern</name>
