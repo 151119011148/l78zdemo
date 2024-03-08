@@ -67,3 +67,23 @@ CREATE TABLE `xiaochuan`.`basket`  (
                                      PRIMARY KEY (`id`)
 );
 
+CREATE TABLE
+    IF
+    NOT EXISTS `xiaochuan`.`mail` (
+    `id` INT ( 0 ) NOT NULL AUTO_INCREMENT,
+    `email` VARCHAR ( 32 ) COMMENT '邮箱',
+    `telephone` VARCHAR ( 32 ) COMMENT '联系电话',
+    `country` VARCHAR ( 32 ) COMMENT '国家',
+    `company_name` VARCHAR ( 64 ) COMMENT '公司名',
+    `subject` VARCHAR ( 64 ) COMMENT '邮件主题',
+    `message` TEXT COMMENT '邮件正文',
+    `product_id` VARCHAR ( 512 ),
+    `full_name` VARCHAR ( 32 ) COMMENT '全名',
+    `verification_code` VARCHAR ( 255 ) COMMENT '验证码',
+    `gmt_create` datetime NOT NULL COMMENT '创建时间',
+    `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+    `is_removed` TINYINT ( 4 ) NOT NULL COMMENT '是否被删除',
+    PRIMARY KEY ( `id` )
+    );
+
+
