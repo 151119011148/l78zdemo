@@ -5,6 +5,8 @@ import com.scofen.l78z.xiaochuan.dao.dataObject.ProductDO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +28,9 @@ public interface ProductDao extends JpaRepository<ProductDO, Long> {
         }
         return Optional.of(result.get(0));
     }
+
+    @Query("select product from ProductDO product where product.title like %:fuzzy% or product.model like %:fuzzy%")
+    <S extends ProductDO> List<S> findTitleByFuzzy(@Param("fuzzy") String fuzzy);
 
 
 

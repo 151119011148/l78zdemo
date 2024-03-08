@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.scofen.l78z.xiaochuan.dao.dataObject.ProductDO;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,8 +13,6 @@ import java.util.Objects;
 
 @Data
 public class ProductVO {
-
-    private int id;
 
     private String productId;
 
@@ -69,13 +68,13 @@ public class ProductVO {
     @Data
     public static class ImgList {
 
-        @JSONField(name = "production_capacity")
+        @JSONField(name = "big_pic")
         private List<String> bigPic;
 
-        @JSONField(name = "production_capacity")
+        @JSONField(name = "small_pic")
         private List<String> smallPic;
 
-        @JSONField(name = "production_capacity")
+        @JSONField(name = "product_photos")
         private List<String> productPhotos;
     }
 
@@ -132,15 +131,15 @@ public class ProductVO {
         result.setAvailableSize(param.getAvailableSize());
         result.setAvailableSizeDetail(param.getAvailableSizeDetail());
         result.setAvailableFinish(param.getAvailableFinish());
-        result.setImgList(JSON.parseObject(param.getImgList(), ImgList.class));
-        result.setProductDescription(JSON.parseObject(param.getProductDescription(), ProductDescription.class));
-        result.setSupplyCapacity(JSON.parseObject(param.getSupplyCapacity(), SupplyCapacity.class));
+        result.setImgList(StringUtils.isEmpty(param.getImgList()) ? null : JSON.parseObject(param.getImgList(), ImgList.class));
+        result.setProductDescription(StringUtils.isEmpty(param.getProductDescription()) ? null :JSON.parseObject(param.getProductDescription(), ProductDescription.class));
+        result.setSupplyCapacity(StringUtils.isEmpty(param.getSupplyCapacity()) ? null :JSON.parseObject(param.getSupplyCapacity(), SupplyCapacity.class));
         result.setOffsetRange(param.getOffsetRange());
         result.setPcd(param.getPcd());
         result.setCenterBore(param.getCenterBore());
         result.setSpecifications(param.getSpecifications());
         result.setCategoryId(param.getCategoryId());
-        result.setRelatedCategoryId(JSON.parseObject(param.getRelatedCategoryId(), List.class));
+        result.setRelatedCategoryId(StringUtils.isEmpty(param.getRelatedCategoryId()) ? null :JSON.parseObject(param.getRelatedCategoryId(), List.class));
         result.setCreatedTime(param.getCreatedTime());
         result.setModifiedTime(param.getModifiedTime());
         return result;
@@ -162,17 +161,18 @@ public class ProductVO {
         result.setAvailableSize(param.getAvailableSize());
         result.setAvailableSizeDetail(param.getAvailableSizeDetail());
         result.setAvailableFinish(param.getAvailableFinish());
-        result.setImgList(Objects.isNull(param.getImgList()) ? JSON.toJSONString(new ImgList()) : JSON.toJSONString(param.getImgList()));
-        result.setProductDescription(Objects.isNull(param.getImgList()) ? JSON.toJSONString(new ProductDescription()) :JSON.toJSONString(param.getProductDescription()));
-        result.setSupplyCapacity(Objects.isNull(param.getImgList()) ? JSON.toJSONString(new SupplyCapacity()) : JSON.toJSONString(param.getSupplyCapacity()));
+        result.setImgList(Objects.isNull(param.getImgList()) ? StringUtils.EMPTY : JSON.toJSONString(param.getImgList()));
+        result.setProductDescription(Objects.isNull(param.getImgList()) ? StringUtils.EMPTY :JSON.toJSONString(param.getProductDescription()));
+        result.setSupplyCapacity(Objects.isNull(param.getImgList()) ? StringUtils.EMPTY : JSON.toJSONString(param.getSupplyCapacity()));
         result.setOffsetRange(param.getOffsetRange());
         result.setPcd(param.getPcd());
         result.setCenterBore(param.getCenterBore());
         result.setSpecifications(param.getSpecifications());
         result.setCategoryId(param.getCategoryId());
-        result.setRelatedCategoryId(Objects.isNull(param.getImgList()) ? JSON.toJSONString(new ArrayList()) : JSON.toJSONString(param.getRelatedCategoryId()));
+        result.setRelatedCategoryId(Objects.isNull(param.getImgList()) ? StringUtils.EMPTY : JSON.toJSONString(param.getRelatedCategoryId()));
         result.setCreatedTime(param.getCreatedTime());
         result.setModifiedTime(param.getModifiedTime());
+        result.setIsRemoved(0);
         return result;
     }
 
