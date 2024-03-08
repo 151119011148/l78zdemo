@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<bookstore>
+
+    <book1>
+        <title lang="eng">Harry Potter</title>
+        <price>29.99</price>
+        <aggregate>
+            <value>1</value>
+            <value>2</value>
+            <value>3</value>
+        </aggregate>
+    </book1>
+
+    <book2>
+        <title lang="eng">Learning XML</title>
+        <price>39.95</price>
+        <aggregate>
+            <value>1</value>
+            <value>2</value>
+            <value>3</value>
+        </aggregate>
+    </book2>
+
+    <book3>
+        <title lang="eng">Learning XML</title>
+        <price>39.95</price>
+        <aggregate>
+            <value>1</value>
+            <value>2</value>
+            <value>3</value>
+        </aggregate>
+    </book3>
+
+</bookstore>
