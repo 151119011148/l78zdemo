@@ -1,4 +1,4 @@
-CREATE TABLE `xiaochuan`.`user`  (
+CREATE TABLE `wheel`.`user`  (
                                          `id` int(0) NOT NULL AUTO_INCREMENT,
                                          `user_id` varchar(64),
                                          `name` varchar(64),
@@ -12,7 +12,7 @@ INSERT INTO `user` VALUES (1, 'UserID_123456', 'admin', 'admin', '2024-03-06 10:
 
 
 
-CREATE TABLE `xiaochuan`.`category`  (
+CREATE TABLE `wheel`.`category`  (
                                          `id` int(0) NOT NULL AUTO_INCREMENT,
                                          `category_id` varchar(64),
                                          `parent_id` varchar(64),
@@ -26,7 +26,7 @@ CREATE TABLE `xiaochuan`.`category`  (
 );
 
 
-CREATE TABLE `xiaochuan`.`product` (
+CREATE TABLE `wheel`.`product` (
                                        `id` INT ( 0 ) NOT NULL AUTO_INCREMENT,
                                        `product_id` VARCHAR ( 64 ),
                                        `model` VARCHAR ( 16 ),
@@ -57,7 +57,7 @@ CREATE TABLE `xiaochuan`.`product` (
                                        PRIMARY KEY ( `id` )
 );
 
-CREATE TABLE `xiaochuan`.`basket`  (
+CREATE TABLE `wheel`.`basket`  (
                                      `id` int(0) NOT NULL AUTO_INCREMENT,
                                      `visit_id` varchar(64),
                                      `product_ids` varchar(512),
@@ -69,7 +69,7 @@ CREATE TABLE `xiaochuan`.`basket`  (
 
 CREATE TABLE
     IF
-    NOT EXISTS `xiaochuan`.`mail` (
+    NOT EXISTS `wheel`.`mail` (
     `id` INT ( 0 ) NOT NULL AUTO_INCREMENT,
     `email` VARCHAR ( 32 ) COMMENT '邮箱',
     `telephone` VARCHAR ( 32 ) COMMENT '联系电话',
