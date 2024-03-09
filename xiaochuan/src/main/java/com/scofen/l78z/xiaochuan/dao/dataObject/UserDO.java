@@ -52,10 +52,10 @@ public class UserDO {
     private Integer isRemoved;
 
     public void update(UserDO update) {
-        if (StringUtils.isNotBlank(update.getName())){
+        if (StringUtils.isNotBlank(update.getName())) {
             this.name = update.getName();
         }
-        if (StringUtils.isNotBlank(update.getPassword())){
+        if (StringUtils.isNotBlank(update.getPassword())) {
             this.password = update.getPassword();
         }
     }
