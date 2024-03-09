@@ -40,7 +40,7 @@ public class FileController extends BaseController {
         if (file.isEmpty()) {
             return new Response<>(ResultCode.LOGIN_PASSWORD_IS_NULL.getCode(), "file is null!");
         }
-        String url = "http://" + getIp() + fileService.upload(file);
+        String url = fileService.upload(file);
         return new Response<>()
                 .withData(url)
                 .withErrorMsg("上传成功");
