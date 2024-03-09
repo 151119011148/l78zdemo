@@ -63,8 +63,8 @@ public class FileService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        return absolutePath;
+        String separator = "/";
+        return separator + fileDir + separator + fileName;
     }
 
     public static String timeFormat(Long time) {
