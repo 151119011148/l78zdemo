@@ -24,7 +24,7 @@ public class FileService {
     public String pathPattern = "files";
 
     //自己设置的目录
-    private static final String fileDir = "fileStorage";
+    public static final String fileDir = "fileStorage";
 
     //上传文件存放目录  =  工作目录绝对路径 + 自己设置的目录，也可以直接自己指定服务器目录
     //windows本地测试
