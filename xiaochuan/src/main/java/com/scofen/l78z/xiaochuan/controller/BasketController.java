@@ -6,7 +6,6 @@ import com.scofen.l78z.xiaochuan.controller.response.BasketVO;
 import com.scofen.l78z.xiaochuan.controller.response.ProductVO;
 import com.scofen.l78z.xiaochuan.controller.response.Response;
 import com.scofen.l78z.xiaochuan.dao.dataObject.BasketDO;
-import com.scofen.l78z.xiaochuan.dao.dataObject.ProductDO;
 import com.scofen.l78z.xiaochuan.service.BasketService;
 import com.scofen.l78z.xiaochuan.service.ProductService;
 import org.dozer.Mapper;
@@ -74,17 +73,14 @@ public class BasketController extends BaseController {
     }
 
     private BasketVO buildBasketVO(String ip, List<String> productIds) {
-        List<ProductDO> productData = productIds
+        List<ProductVO> productData = productIds
                 .parallelStream()
-                .map(productId -> productService.getById(productId))
+                .map(productId -> productService.findOneById(productId))
                 .collect(Collectors.toList());
 
         BasketVO result = new BasketVO();
         result.setVisitId(ip);
-        result.setProducts(productData
-                .parallelStream()
-                .map(ProductVO::read4)
-                .collect(Collectors.toList()));
+        result.setProducts(productData);
         return result;
     }
 

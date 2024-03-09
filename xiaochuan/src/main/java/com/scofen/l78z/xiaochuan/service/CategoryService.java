@@ -93,6 +93,11 @@ public class CategoryService {
         return categoryDao.findOne(example).orElseThrow(() -> new ServiceException(ResultCode.USER_NOT_EXIST.getCode(), "current category is invalid！"));
     }
 
+    public List<CategoryDO> findByCategoryIdIn(List<String> categoryIds) {
+        return categoryDao.findByCategoryIdIn(categoryIds);
+    }
+
+
     public CategoryDO getParent(String parentId) {
         return this.getOne(parentId);
     }

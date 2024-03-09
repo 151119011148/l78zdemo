@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Data
 public class ProductVO {
@@ -56,9 +57,9 @@ public class ProductVO {
 
     private String specifications;
 
-    private String categoryId;
+    private CategoryVO category;
 
-    private List<String> relatedCategoryId;
+    private List<CategoryVO> relatedCategory;
 
     private Date createdTime;
 
@@ -132,14 +133,12 @@ public class ProductVO {
         result.setAvailableSizeDetail(param.getAvailableSizeDetail());
         result.setAvailableFinish(param.getAvailableFinish());
         result.setImgList(StringUtils.isEmpty(param.getImgList()) ? null : JSON.parseObject(param.getImgList(), ImgList.class));
-        result.setProductDescription(StringUtils.isEmpty(param.getProductDescription()) ? null :JSON.parseObject(param.getProductDescription(), ProductDescription.class));
-        result.setSupplyCapacity(StringUtils.isEmpty(param.getSupplyCapacity()) ? null :JSON.parseObject(param.getSupplyCapacity(), SupplyCapacity.class));
+        result.setProductDescription(StringUtils.isEmpty(param.getProductDescription()) ? null : JSON.parseObject(param.getProductDescription(), ProductDescription.class));
+        result.setSupplyCapacity(StringUtils.isEmpty(param.getSupplyCapacity()) ? null : JSON.parseObject(param.getSupplyCapacity(), SupplyCapacity.class));
         result.setOffsetRange(param.getOffsetRange());
         result.setPcd(param.getPcd());
         result.setCenterBore(param.getCenterBore());
         result.setSpecifications(param.getSpecifications());
-        result.setCategoryId(param.getCategoryId());
-        result.setRelatedCategoryId(StringUtils.isEmpty(param.getRelatedCategoryId()) ? null :JSON.parseObject(param.getRelatedCategoryId(), List.class));
         result.setCreatedTime(param.getCreatedTime());
         result.setModifiedTime(param.getModifiedTime());
         return result;
@@ -162,14 +161,19 @@ public class ProductVO {
         result.setAvailableSizeDetail(param.getAvailableSizeDetail());
         result.setAvailableFinish(param.getAvailableFinish());
         result.setImgList(Objects.isNull(param.getImgList()) ? StringUtils.EMPTY : JSON.toJSONString(param.getImgList()));
-        result.setProductDescription(Objects.isNull(param.getImgList()) ? StringUtils.EMPTY :JSON.toJSONString(param.getProductDescription()));
-        result.setSupplyCapacity(Objects.isNull(param.getImgList()) ? StringUtils.EMPTY : JSON.toJSONString(param.getSupplyCapacity()));
+        result.setProductDescription(Objects.isNull(param.getProductDescription()) ? StringUtils.EMPTY : JSON.toJSONString(param.getProductDescription()));
+        result.setSupplyCapacity(Objects.isNull(param.getSupplyCapacity()) ? StringUtils.EMPTY : JSON.toJSONString(param.getSupplyCapacity()));
         result.setOffsetRange(param.getOffsetRange());
         result.setPcd(param.getPcd());
         result.setCenterBore(param.getCenterBore());
         result.setSpecifications(param.getSpecifications());
-        result.setCategoryId(param.getCategoryId());
-        result.setRelatedCategoryId(Objects.isNull(param.getImgList()) ? StringUtils.EMPTY : JSON.toJSONString(param.getRelatedCategoryId()));
+        result.setCategoryId(param.getCategory() == null ? StringUtils.EMPTY : param.getCategory().getCategoryId());
+        result.setRelatedCategoryId(Objects.isNull(param.getRelatedCategory())
+                ? StringUtils.EMPTY
+                : JSON.toJSONString(param.getRelatedCategory()
+                    .stream()
+                    .map(CategoryVO::getCategoryId)
+                    .collect(Collectors.toList())));
         result.setCreatedTime(param.getCreatedTime());
         result.setModifiedTime(param.getModifiedTime());
         result.setIsRemoved(0);
