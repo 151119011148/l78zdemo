@@ -76,11 +76,8 @@ public class ProductController extends BaseController {
         if (StringUtils.isAllEmpty(productId, searchKey)) {
             return new Response<>(ResultCode.PARAM_ERROR.getCode(), "productId and searchKey is null!");
         }
-        List<ProductDO> data = productService.search(productId, searchKey);
-        return new Response<>().withData(data
-                .parallelStream()
-                .map(ProductVO::read4)
-                .collect(Collectors.toList()));
+        List<ProductVO> data = productService.search(productId, searchKey);
+        return new Response<>().withData(data);
     }
 
     /**
@@ -99,15 +96,14 @@ public class ProductController extends BaseController {
         }
         Integer pageIndex = param.getPageIndex();
         param.setPageIndex(pageIndex - 1);
-        Page<ProductDO> pageResult = productService.page(param);
+        if (StringUtils.equals(param.getQueryKey(), "in_basket")){
+            param.setQueryValue(getIp());
+        }
+        Page<ProductVO> pageResult = productService.page(param);
         Pager pager = new Pager(pageIndex, param.getPageSize(), pageResult.getTotalElements());
         return new Response<>()
                 .withPager(pager)
-                .withData(
-                        pageResult.getContent()
-                                .parallelStream()
-                                .map(ProductVO::read4)
-                                .collect(Collectors.toList()));
+                .withData(pageResult.getContent());
     }
 
 

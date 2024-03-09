@@ -27,6 +27,8 @@ public interface CategoryDao extends JpaRepository<CategoryDO, Long> {
         return Optional.of(result.get(0));
     }
 
+    List<CategoryDO> findByCategoryIdIn(List<String> categoryIds);
+
 
 
 
