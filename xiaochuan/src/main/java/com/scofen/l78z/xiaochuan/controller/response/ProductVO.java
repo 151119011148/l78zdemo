@@ -47,8 +47,6 @@ public class ProductVO {
 
     private ProductDescription productDescription;
 
-    private SupplyCapacity supplyCapacity;
-
     private String offsetRange;
 
     private String pcd;
@@ -72,16 +70,16 @@ public class ProductVO {
         @JSONField(name = "big_pic")
         private List<String> bigPic;
 
-        @JSONField(name = "small_pic")
-        private List<String> smallPic;
-
         @JSONField(name = "product_photos")
         private List<String> productPhotos;
     }
 
     @Data
     public static class ProductDescription {
-        private ProductDescription.PaymentAndShippingTerms paymentAndShippingTerms;
+
+        private PaymentAndShippingTerms paymentAndShippingTerms;
+
+        private SupplyCapacity supplyCapacity;
 
         @Data
         public static class PaymentAndShippingTerms {
@@ -101,19 +99,22 @@ public class ProductVO {
             @JSONField(name = "means_of_transport")
             private String meansOfTransport;
         }
+
+        @Data
+        public static class SupplyCapacity {
+
+            @JSONField(name = "production_capacity")
+            private String productionCapacity;
+
+            private String packing;
+
+            @JSONField(name = "delivery_date")
+            private String deliveryDate;
+        }
+
     }
 
-    @Data
-    public static class SupplyCapacity {
 
-        @JSONField(name = "production_capacity")
-        private String productionCapacity;
-
-        private String packing;
-
-        @JSONField(name = "delivery_date")
-        private String deliveryDate;
-    }
 
 
     public static ProductVO read4(ProductDO param) {
@@ -134,7 +135,6 @@ public class ProductVO {
         result.setAvailableFinish(param.getAvailableFinish());
         result.setImgList(StringUtils.isEmpty(param.getImgList()) ? null : JSON.parseObject(param.getImgList(), ImgList.class));
         result.setProductDescription(StringUtils.isEmpty(param.getProductDescription()) ? null : JSON.parseObject(param.getProductDescription(), ProductDescription.class));
-        result.setSupplyCapacity(StringUtils.isEmpty(param.getSupplyCapacity()) ? null : JSON.parseObject(param.getSupplyCapacity(), SupplyCapacity.class));
         result.setOffsetRange(param.getOffsetRange());
         result.setPcd(param.getPcd());
         result.setCenterBore(param.getCenterBore());
@@ -162,7 +162,6 @@ public class ProductVO {
         result.setAvailableFinish(param.getAvailableFinish());
         result.setImgList(Objects.isNull(param.getImgList()) ? StringUtils.EMPTY : JSON.toJSONString(param.getImgList()));
         result.setProductDescription(Objects.isNull(param.getProductDescription()) ? StringUtils.EMPTY : JSON.toJSONString(param.getProductDescription()));
-        result.setSupplyCapacity(Objects.isNull(param.getSupplyCapacity()) ? StringUtils.EMPTY : JSON.toJSONString(param.getSupplyCapacity()));
         result.setOffsetRange(param.getOffsetRange());
         result.setPcd(param.getPcd());
         result.setCenterBore(param.getCenterBore());

@@ -20,20 +20,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 public class FileService {
 
-    //拦截的url，虚拟路径
-    public String pathPattern = "files";
+    @Value("${file.upload.resource.location:/Users/gaoying/Desktop/work/l78zdemo/xiaochuan/src/main/resources/fileStorage/}")
+    private String resourceLocation;
 
     //自己设置的目录
     public static final String fileDir = "fileStorage";
-
-    //上传文件存放目录  =  工作目录绝对路径 + 自己设置的目录，也可以直接自己指定服务器目录
-    //windows本地测试
-    //绝对路径: D:\develop\work\project\myblog\myblog-file-upload\fileStorage\202302021010345680.jpg
-    //System.getProperty("user.dir")   D:\develop\work\project\myblog\myblog-file-upload
-    //fileDir                          fileStorage
-    //fileName                         202302021010345680.jpg
-    public String filePath = System.getProperty("user.dir") + File.separator + fileDir + File.separator;
-
     private static final AtomicInteger SUFFIX = new AtomicInteger(0);
 
     @Value(value = "${file.upload.suffix:jpg,jpeg,png,bmp,xls,xlsx,pdf}")
@@ -50,13 +41,13 @@ public class FileService {
         }
 
         //首次需生成目录
-        File folder = new File(filePath);
+        File folder = new File(resourceLocation);
         if (!folder.exists()) {
             folder.mkdirs();
         }
 
         String fileName = timeFormat(System.currentTimeMillis()) + SUFFIX.getAndIncrement() + "." + suffix;
-        String absolutePath = filePath + fileName;
+        String absolutePath = resourceLocation + fileName;
         log.info("absolutePath is {}", absolutePath);
         try {
             file.transferTo(new File(absolutePath));
