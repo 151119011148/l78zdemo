@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.scofen.l78z</groupId>
-	<artifactId>xiaochuan</artifactId>
+	<artifactId>wheel</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>xiaochuan</name>
 	<description>study by util</description>
