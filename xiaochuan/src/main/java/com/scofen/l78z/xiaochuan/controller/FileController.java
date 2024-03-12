@@ -1,19 +1,14 @@
 package com.scofen.l78z.xiaochuan.controller;
 
 import com.scofen.l78z.xiaochuan.common.exception.ResultCode;
-import com.scofen.l78z.xiaochuan.common.exception.ServiceException;
-import com.scofen.l78z.xiaochuan.controller.request.UserParam;
 import com.scofen.l78z.xiaochuan.controller.response.Response;
-import com.scofen.l78z.xiaochuan.controller.response.UserVO;
-import com.scofen.l78z.xiaochuan.dao.dataObject.UserDO;
 import com.scofen.l78z.xiaochuan.service.FileService;
-import com.scofen.l78z.xiaochuan.service.UserService;
-import org.apache.commons.lang3.StringUtils;
-import org.dozer.Mapper;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Description: TODO
@@ -40,9 +35,26 @@ public class FileController extends BaseController {
         if (file.isEmpty()) {
             return new Response<>(ResultCode.LOGIN_PASSWORD_IS_NULL.getCode(), "file is null!");
         }
-        String url = fileService.upload(file);
+        String url = fileService.uploadImage(file);
         return new Response<>()
                 .withData(url)
+                .withErrorMsg("上传成功");
+    }
+
+    /**
+     * 批量上传
+     *
+     * @param
+     * @return
+     */
+    @PostMapping("/uploadFiles")
+    public Response<List<String>> uploadFiles(@RequestParam("files") List<MultipartFile> files) {
+        if (CollectionUtils.isEmpty(files)) {
+            return new Response<>(ResultCode.LOGIN_PASSWORD_IS_NULL.getCode(), "file is null!");
+        }
+        List<String> urls = fileService.uploadImages(files);
+        return new Response<>()
+                .withData(urls)
                 .withErrorMsg("上传成功");
     }
 
