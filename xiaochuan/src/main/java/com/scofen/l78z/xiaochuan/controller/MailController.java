@@ -6,10 +6,8 @@ import com.scofen.l78z.xiaochuan.controller.response.Response;
 import com.scofen.l78z.xiaochuan.service.MailService;
 import org.apache.commons.lang3.StringUtils;
 import org.dozer.Mapper;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 
@@ -36,7 +34,7 @@ public class MailController extends BaseController {
      * @return
      */
     @PostMapping("/send")
-    public Response<Boolean> send(@RequestBody MailParam param) {
+    public Response<Boolean> send(MailParam param) {
 
         if (StringUtils.isEmpty(param.getEmail())){
             return new Response<>(ResultCode.PARAM_ERROR.getCode(), "Email is not null!");

@@ -47,7 +47,7 @@ public class MailDO {
     private String message;
 
     @Column(name = "product_id")
-    private String productIds;
+    private String products;
 
     @Column(name = "full_name")
     private String fullName;

@@ -1,17 +1,10 @@
 package com.scofen.l78z.xiaochuan.controller.request;
 
 
-import com.scofen.l78z.xiaochuan.controller.response.ProductVO;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
-
-import static javax.persistence.TemporalType.TIMESTAMP;
 
 
 /**
@@ -34,12 +27,12 @@ public class MailParam {
 
     private String message;
 
-    private List<ProductVO> products;
+    private String products;
 
     private String fullName;
 
     private String verificationCode;
 
-
+    private List<MultipartFile> files;
 
 }
