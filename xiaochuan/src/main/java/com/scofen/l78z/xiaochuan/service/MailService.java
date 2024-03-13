@@ -4,6 +4,7 @@ import com.scofen.l78z.xiaochuan.controller.request.MailParam;
 import com.scofen.l78z.xiaochuan.dao.MailDao;
 import com.scofen.l78z.xiaochuan.dao.dataObject.MailDO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -54,13 +55,17 @@ public class MailService {
 
     public void send(MailParam param) {
         this.add(param);
-        List<File> files = fileService.upload(param.getFiles(), true);
-        try {
-            sendAttachFileMail(param, files);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        } finally {
-            files.forEach(File::delete);
+        if (CollectionUtils.isEmpty(param.getFiles())) {
+            sendSimpleMail(param);
+        } else {
+            List<File> files = fileService.upload(param.getFiles(), true);
+            try {
+                sendAttachFileMail(param, files);
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            } finally {
+                files.forEach(File::delete);
+            }
         }
 
     }
