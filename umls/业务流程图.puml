@@ -115,10 +115,10 @@ stop
 |u| 用户
 start
 :使用连接器开放工具;
-|#palegreen|j|数环通开放平台
+|#palegreen|j|csmImport
 :新增连接器（拷贝连接器版本）;
 :编辑连接器;
-|#DarkSlateGray|j|数环通开放平台
+|#DarkSlateGray|j|csmImport
 :连接器上调试;
 :校验连接器有效性;
 if (是否校验通过?) is (否) then
@@ -139,25 +139,25 @@ stop
 |u| 用户
 start
 :使用连接器开放工具;
-|#palegreen|j|数环通开放平台
+|#palegreen|j|csmImport
 :新增连接器（拷贝连接器版本）;
 |#DarkSlateGray|o|数环通控制台页面
 :初始化连接器（拷贝连接器版本）;
-|#palegreen|j|数环通开放平台
+|#palegreen|j|csmImport
 :编辑连接器;
 |#DarkSlateGray|o|数环通控制台页面
 :编辑连接器;
-|#DarkSlateGray|j|数环通开放平台
+|#DarkSlateGray|j|csmImport
 :连接器上调试;
 :调试授权;
 |#DarkSeaGreen|o|数环通控制台页面
 :**保存授权**;
-|#DarkSlateGray|j|数环通开放平台
+|#DarkSlateGray|j|csmImport
 :调试触发器;
 :调试执行器;
 |#DarkSeaGreen|o|数环通控制台页面
 :**单步测试**;
-|#DarkSlateGray|j|数环通开放平台
+|#DarkSlateGray|j|csmImport
 :发布上架;
 if (是否校验通过?) is (否) then
 :报错提示;
@@ -167,5 +167,72 @@ else (是)
 :**覆盖线上连接器**;
 stop
 @enduml
+
+
+@startuml
+|u| 用户
+start
+:CSM转换;
+|nodeServer|nodeServer
+:csm导入;
+|modelService|modelService
+:csmImport;
+|#palegreen|j|csmImport
+:解析XML;
+:转换收集到ParseContext;
+:转换成Command;
+|#DarkSeaGreen|o|mof
+:执行command;
+|#palegreen|j|csmImport
+:构建模型信息和图形信息;
+:生成md3文件;
+stop
+@enduml
+
+@startuml
+|u| 用户
+start
+:导出;
+|nodeServer|nodeServer
+:导出XML;
+|modelService|modelService
+:exportXmi;
+|#palegreen|j|csmImport
+:export;
+|nodeServer|nodeServer
+:查询图形信息;
+|#palegreen|j|csmImport
+:生成图形XML;
+|#DarkSeaGreen|mbsp|mbsp
+:查询模型信息;
+|#palegreen|j|csmImport
+:生成模型信息XML;
+:合并图形XML和模型XML;
+stop
+@enduml
+
+
+@startuml
+|u| 入口
+start
+:导出;
+|nodeServer|nodeServer
+:导出XML;
+|modelService|modelService
+:exportXmi;
+|#palegreen|j|csmImport
+:export;
+|nodeServer|nodeServer
+:查询图形信息;
+|#palegreen|j|csmImport
+:生成图形XML;
+|#DarkSeaGreen|mbsp|mbsp
+:查询模型信息;
+|#palegreen|j|csmImport
+:生成模型信息XML;
+:合并图形XML和模型XML;
+stop
+@enduml
+
 
 

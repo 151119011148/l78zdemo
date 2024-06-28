@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="逻辑模型">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="工程Id" type="xs:long"/>
+                <xs:element name="硬件Id" type="xs:long"/>
+                <xs:element name="节点数据集合">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="编码" type="xs:string"/>
+                            <xs:element name="名称" type="xs:string"/>
+                            <xs:element name="描述" type="xs:string"/>
+                            <xs:element name="左侧端点集合">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="逻辑模型端口信息" type="xs:long"/>
+                                        <xs:element name="逻辑模型ID">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="逻辑模型元模型" type="xs:long"/>
+                                                    <xs:element name="硬件Id">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="硬件树" type="xs:long"/>
+                                                                <xs:element name="编码" type="xs:string"/>
+                                                                <xs:element name="名称" type="xs:string"/>
+                                                                <xs:element name="图号" type="xs:string"/>
+                                                                <xs:element name="型号" type="xs:string"/>
+                                                                <xs:element name="版本" type="xs:string"/>
+                                                                <xs:element name="备注" type="xs:string"/>
+                                                                <xs:element name="层次">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+                                                                            <xs:element name="产品层次" type="xs:long"/>
+                                                                            <xs:element name="编码" type="xs:string"/>
+                                                                            <xs:element name="名称" type="xs:string"/>
+                                                                            <xs:element name="层次" type="xs:integer"/>
+                                                                            <xs:element name="顺序" type="xs:int"/>
+                                                                            <xs:element name="备注" type="xs:string"/>
+                                                                            <xs:element name="主标识" type="xs:integer"/>
+                                                                            <xs:element name="审核时间" type="xs:dateTime"/>
+                                                                            <xs:element name="提交时间" type="xs:dateTime"/>
+                                                                            <xs:element name="审核意见" type="xs:string"/>
+                                                                            <xs:element name="工程" type="xs:long"/>
+                                                                            <xs:element name="创建时间" type="xs:dateTime"/>
+                                                                            <xs:element name="更新时间" type="xs:dateTime"/>
+                                                                        </xs:sequence>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                                <xs:element name="父节点路径" type="xs:string"/>
+                                                                <xs:element name="父节点" type="xs:long"/>
+                                                                <xs:element name="顺序" type="xs:integer"/>
+                                                                <xs:element name="数量" type="xs:integer"/>
+                                                                <xs:element name="ci类型" type="xs:integer"/>
+                                                                <xs:element name="特殊件类型" type="xs:integer"/>
+                                                                <xs:element name="重要度" type="xs:integer"/>
+                                                                <xs:element name="单价" type="xs:decimal"/>
+                                                                <xs:element name="占空比" type="xs:decimal"/>
+                                                                <xs:element name="工作时间" type="xs:decimal"/>
+                                                                <xs:element name="功能" type="xs:string"/>
+                                                                <xs:element name="安装位置" type="xs:string"/>
+                                                                <xs:element name="安装坐标" type="xs:string"/>
+                                                                <xs:element name="节点来源" type="xs:integer"/>
+                                                                <xs:element name="来源主键" type="xs:string"/>
+                                                                <xs:element name="功能层次关系" type="xs:integer"/>
+                                                                <xs:element name="lcn码" type="xs:string"/>
+                                                                <xs:element name="工作通道" type="xs:string"/>
+                                                                <xs:element name="分类名称" type="xs:string"/>
+                                                                <xs:element name="生产厂家" type="xs:string"/>
+                                                                <xs:element name="进口件" type="xs:integer"/>
+                                                                <xs:element name="安全等级" type="xs:integer"/>
+                                                                <xs:element name="位号" type="xs:string"/>
+                                                                <xs:element name="机械件节点" type="xs:int"/>
+                                                                <xs:element name="是否机械件" type="xs:int"/>
+                                                                <xs:element name="rms主管" type="xs:long"/>
+                                                                <xs:element name="特性分类原因" type="xs:string"/>
+                                                                <xs:element name="是否包含软件" type="xs:int"/>
+                                                                <xs:element name="数据来源" type="xs:string"/>
+                                                                <xs:element name="成品" type="xs:long"/>
+                                                                <xs:element name="要求" type="xs:string"/>
+                                                                <xs:element name="设计主管" type="xs:long"/>
+                                                                <xs:element name="替换件" type="xs:long"/>
+                                                                <xs:element name="故障判据描述" type="xs:string"/>
+                                                                <xs:element name="审核时间" type="xs:dateTime"/>
+                                                                <xs:element name="提交时间" type="xs:dateTime"/>
+                                                                <xs:element name="审核意见" type="xs:string"/>
+                                                                <xs:element name="工程" type="xs:long"/>
+                                                                <xs:element name="创建时间" type="xs:dateTime"/>
+                                                                <xs:element name="更新时间" type="xs:dateTime"/>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="元模型位置" type="xs:string"/>
+                                                    <xs:element name="审核时间" type="xs:dateTime"/>
+                                                    <xs:element name="提交时间" type="xs:dateTime"/>
+                                                    <xs:element name="审核意见" type="xs:string"/>
+                                                    <xs:element name="工程" type="xs:long"/>
+                                                    <xs:element name="创建时间" type="xs:dateTime"/>
+                                                    <xs:element name="更新时间" type="xs:dateTime"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="名称" type="xs:string"/>
+                                        <xs:element name="端口序号" type="xs:integer"/>
+                                        <xs:element name="初始值" type="xs:decimal"/>
+                                        <xs:element name="门限值" type="xs:decimal"/>
+                                        <xs:element name="dfDt" type="xs:string"/>
+                                        <xs:element name="描述信息" type="xs:string"/>
+                                        <xs:element name="变量类型ID">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="变量类型ID" type="xs:long"/>
+                                                    <xs:element name="变量类型名称" type="xs:string"/>
+                                                    <xs:element name="变量类型颜色" type="xs:string"/>
+                                                    <xs:element name="顺序" type="xs:integer"/>
+                                                    <xs:element name="审核时间" type="xs:dateTime"/>
+                                                    <xs:element name="审核状态" type="xs:string"/>
+                                                    <xs:element name="提交时间" type="xs:dateTime"/>
+                                                    <xs:element name="审核意见" type="xs:string"/>
+                                                    <xs:element name="工程" type="xs:long"/>
+                                                    <xs:element name="创建时间" type="xs:dateTime"/>
+                                                    <xs:element name="更新时间" type="xs:dateTime"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="位置" type="xs:string"/>
+                                        <xs:element name="审核时间" type="xs:dateTime"/>
+                                        <xs:element name="提交时间" type="xs:dateTime"/>
+                                        <xs:element name="审核意见" type="xs:string"/>
+                                        <xs:element name="工程" type="xs:long"/>
+                                        <xs:element name="创建时间" type="xs:dateTime"/>
+                                        <xs:element name="更新时间" type="xs:dateTime"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="右侧端点集合">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="逻辑模型端口信息" type="xs:long"/>
+                                        <xs:element name="逻辑模型ID">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="逻辑模型元模型" type="xs:long"/>
+                                                    <xs:element name="硬件Id">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="硬件树" type="xs:long"/>
+                                                                <xs:element name="编码" type="xs:string"/>
+                                                                <xs:element name="名称" type="xs:string"/>
+                                                                <xs:element name="图号" type="xs:string"/>
+                                                                <xs:element name="型号" type="xs:string"/>
+                                                                <xs:element name="版本" type="xs:string"/>
+                                                                <xs:element name="备注" type="xs:string"/>
+                                                                <xs:element name="层次">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+                                                                            <xs:element name="产品层次" type="xs:long"/>
+                                                                            <xs:element name="编码" type="xs:string"/>
+                                                                            <xs:element name="名称" type="xs:string"/>
+                                                                            <xs:element name="层次" type="xs:integer"/>
+                                                                            <xs:element name="顺序" type="xs:int"/>
+                                                                            <xs:element name="备注" type="xs:string"/>
+                                                                            <xs:element name="主标识" type="xs:integer"/>
+                                                                            <xs:element name="审核时间" type="xs:dateTime"/>
+                                                                            <xs:element name="提交时间" type="xs:dateTime"/>
+                                                                            <xs:element name="审核意见" type="xs:string"/>
+                                                                            <xs:element name="工程" type="xs:long"/>
+                                                                            <xs:element name="创建时间" type="xs:dateTime"/>
+                                                                            <xs:element name="更新时间" type="xs:dateTime"/>
+                                                                        </xs:sequence>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                                <xs:element name="父节点路径" type="xs:string"/>
+                                                                <xs:element name="父节点" type="xs:long"/>
+                                                                <xs:element name="顺序" type="xs:integer"/>
+                                                                <xs:element name="数量" type="xs:integer"/>
+                                                                <xs:element name="ci类型" type="xs:integer"/>
+                                                                <xs:element name="特殊件类型" type="xs:integer"/>
+                                                                <xs:element name="重要度" type="xs:integer"/>
+                                                                <xs:element name="单价" type="xs:decimal"/>
+                                                                <xs:element name="占空比" type="xs:decimal"/>
+                                                                <xs:element name="工作时间" type="xs:decimal"/>
+                                                                <xs:element name="功能" type="xs:string"/>
+                                                                <xs:element name="安装位置" type="xs:string"/>
+                                                                <xs:element name="安装坐标" type="xs:string"/>
+                                                                <xs:element name="节点来源" type="xs:integer"/>
+                                                                <xs:element name="来源主键" type="xs:string"/>
+                                                                <xs:element name="功能层次关系" type="xs:integer"/>
+                                                                <xs:element name="lcn码" type="xs:string"/>
+                                                                <xs:element name="工作通道" type="xs:string"/>
+                                                                <xs:element name="分类名称" type="xs:string"/>
+                                                                <xs:element name="生产厂家" type="xs:string"/>
+                                                                <xs:element name="进口件" type="xs:integer"/>
+                                                                <xs:element name="安全等级" type="xs:integer"/>
+                                                                <xs:element name="位号" type="xs:string"/>
+                                                                <xs:element name="机械件节点" type="xs:int"/>
+                                                                <xs:element name="是否机械件" type="xs:int"/>
+                                                                <xs:element name="rms主管" type="xs:long"/>
+                                                                <xs:element name="特性分类原因" type="xs:string"/>
+                                                                <xs:element name="是否包含软件" type="xs:int"/>
+                                                                <xs:element name="数据来源" type="xs:string"/>
+                                                                <xs:element name="成品" type="xs:long"/>
+                                                                <xs:element name="要求" type="xs:string"/>
+                                                                <xs:element name="设计主管" type="xs:long"/>
+                                                                <xs:element name="替换件" type="xs:long"/>
+                                                                <xs:element name="故障判据描述" type="xs:string"/>
+                                                                <xs:element name="审核时间" type="xs:dateTime"/>
+                                                                <xs:element name="提交时间" type="xs:dateTime"/>
+                                                                <xs:element name="审核意见" type="xs:string"/>
+                                                                <xs:element name="工程" type="xs:long"/>
+                                                                <xs:element name="创建时间" type="xs:dateTime"/>
+                                                                <xs:element name="更新时间" type="xs:dateTime"/>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="元模型位置" type="xs:string"/>
+                                                    <xs:element name="审核时间" type="xs:dateTime"/>
+                                                    <xs:element name="提交时间" type="xs:dateTime"/>
+                                                    <xs:element name="审核意见" type="xs:string"/>
+                                                    <xs:element name="工程" type="xs:long"/>
+                                                    <xs:element name="创建时间" type="xs:dateTime"/>
+                                                    <xs:element name="更新时间" type="xs:dateTime"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="名称" type="xs:string"/>
+                                        <xs:element name="端口序号" type="xs:integer"/>
+                                        <xs:element name="初始值" type="xs:decimal"/>
+                                        <xs:element name="门限值" type="xs:decimal"/>
+                                        <xs:element name="dfDt" type="xs:string"/>
+                                        <xs:element name="描述信息" type="xs:string"/>
+                                        <xs:element name="变量类型ID">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="变量类型ID" type="xs:long"/>
+                                                    <xs:element name="变量类型名称" type="xs:string"/>
+                                                    <xs:element name="变量类型颜色" type="xs:string"/>
+                                                    <xs:element name="顺序" type="xs:integer"/>
+                                                    <xs:element name="审核时间" type="xs:dateTime"/>
+                                                    <xs:element name="审核状态" type="xs:string"/>
+                                                    <xs:element name="提交时间" type="xs:dateTime"/>
+                                                    <xs:element name="审核意见" type="xs:string"/>
+                                                    <xs:element name="工程" type="xs:long"/>
+                                                    <xs:element name="创建时间" type="xs:dateTime"/>
+                                                    <xs:element name="更新时间" type="xs:dateTime"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="位置" type="xs:string"/>
+                                        <xs:element name="审核时间" type="xs:dateTime"/>
+                                        <xs:element name="提交时间" type="xs:dateTime"/>
+                                        <xs:element name="审核意见" type="xs:string"/>
+                                        <xs:element name="工程" type="xs:long"/>
+                                        <xs:element name="创建时间" type="xs:dateTime"/>
+                                        <xs:element name="更新时间" type="xs:dateTime"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="种类" type="xs:string"/>
+                            <xs:element name="是否组合" type="xs:boolean"/>
+                            <xs:element name="所属组合" type="xs:string"/>
+                            <xs:element name="表决门参数" type="xs:integer"/>
+                            <xs:element name="是否可编辑" type="xs:boolean"/>
+                            <xs:element name="相关功能模型">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="功能树" type="xs:long"/>
+                                        <xs:element name="功能码" type="xs:string"/>
+                                        <xs:element name="功能名称" type="xs:string"/>
+                                        <xs:element name="备注" type="xs:string"/>
+                                        <xs:element name="父节点" type="xs:long"/>
+                                        <xs:element name="父节点路径" type="xs:string"/>
+                                        <xs:element name="来源主键" type="xs:string"/>
+                                        <xs:element name="顺序" type="xs:integer"/>
+                                        <xs:element name="位置" type="xs:string"/>
+                                        <xs:element name="审核时间" type="xs:dateTime"/>
+                                        <xs:element name="提交时间" type="xs:dateTime"/>
+                                        <xs:element name="审核意见" type="xs:string"/>
+                                        <xs:element name="工程" type="xs:long"/>
+                                        <xs:element name="创建时间" type="xs:dateTime"/>
+                                        <xs:element name="更新时间" type="xs:dateTime"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="关联功能名称" type="xs:string"/>
+                            <xs:element name="逻辑模型元模型" type="xs:long"/>
+                            <xs:element name="硬件Id">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="硬件树" type="xs:long"/>
+                                        <xs:element name="编码" type="xs:string"/>
+                                        <xs:element name="名称" type="xs:string"/>
+                                        <xs:element name="图号" type="xs:string"/>
+                                        <xs:element name="型号" type="xs:string"/>
+                                        <xs:element name="版本" type="xs:string"/>
+                                        <xs:element name="备注" type="xs:string"/>
+                                        <xs:element name="层次">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="产品层次" type="xs:long"/>
+                                                    <xs:element name="编码" type="xs:string"/>
+                                                    <xs:element name="名称" type="xs:string"/>
+                                                    <xs:element name="层次" type="xs:integer"/>
+                                                    <xs:element name="顺序" type="xs:int"/>
+                                                    <xs:element name="备注" type="xs:string"/>
+                                                    <xs:element name="主标识" type="xs:integer"/>
+                                                    <xs:element name="审核时间" type="xs:dateTime"/>
+                                                    <xs:element name="提交时间" type="xs:dateTime"/>
+                                                    <xs:element name="审核意见" type="xs:string"/>
+                                                    <xs:element name="工程" type="xs:long"/>
+                                                    <xs:element name="创建时间" type="xs:dateTime"/>
+                                                    <xs:element name="更新时间" type="xs:dateTime"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="父节点路径" type="xs:string"/>
+                                        <xs:element name="父节点" type="xs:long"/>
+                                        <xs:element name="顺序" type="xs:integer"/>
+                                        <xs:element name="数量" type="xs:integer"/>
+                                        <xs:element name="ci类型" type="xs:integer"/>
+                                        <xs:element name="特殊件类型" type="xs:integer"/>
+                                        <xs:element name="重要度" type="xs:integer"/>
+                                        <xs:element name="单价" type="xs:decimal"/>
+                                        <xs:element name="占空比" type="xs:decimal"/>
+                                        <xs:element name="工作时间" type="xs:decimal"/>
+                                        <xs:element name="功能" type="xs:string"/>
+                                        <xs:element name="安装位置" type="xs:string"/>
+                                        <xs:element name="安装坐标" type="xs:string"/>
+                                        <xs:element name="节点来源" type="xs:integer"/>
+                                        <xs:element name="来源主键" type="xs:string"/>
+                                        <xs:element name="功能层次关系" type="xs:integer"/>
+                                        <xs:element name="lcn码" type="xs:string"/>
+                                        <xs:element name="工作通道" type="xs:string"/>
+                                        <xs:element name="分类名称" type="xs:string"/>
+                                        <xs:element name="生产厂家" type="xs:string"/>
+                                        <xs:element name="进口件" type="xs:integer"/>
+                                        <xs:element name="安全等级" type="xs:integer"/>
+                                        <xs:element name="位号" type="xs:string"/>
+                                        <xs:element name="机械件节点" type="xs:int"/>
+                                        <xs:element name="是否机械件" type="xs:int"/>
+                                        <xs:element name="rms主管" type="xs:long"/>
+                                        <xs:element name="特性分类原因" type="xs:string"/>
+                                        <xs:element name="是否包含软件" type="xs:int"/>
+                                        <xs:element name="数据来源" type="xs:string"/>
+                                        <xs:element name="成品" type="xs:long"/>
+                                        <xs:element name="要求" type="xs:string"/>
+                                        <xs:element name="设计主管" type="xs:long"/>
+                                        <xs:element name="替换件" type="xs:long"/>
+                                        <xs:element name="故障判据描述" type="xs:string"/>
+                                        <xs:element name="审核时间" type="xs:dateTime"/>
+                                        <xs:element name="提交时间" type="xs:dateTime"/>
+                                        <xs:element name="审核意见" type="xs:string"/>
+                                        <xs:element name="工程" type="xs:long"/>
+                                        <xs:element name="创建时间" type="xs:dateTime"/>
+                                        <xs:element name="更新时间" type="xs:dateTime"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="元模型位置" type="xs:string"/>
+                            <xs:element name="审核时间" type="xs:dateTime"/>
+                            <xs:element name="提交时间" type="xs:dateTime"/>
+                            <xs:element name="审核意见" type="xs:string"/>
+                            <xs:element name="工程" type="xs:long"/>
+                            <xs:element name="创建时间" type="xs:dateTime"/>
+                            <xs:element name="更新时间" type="xs:dateTime"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="连线数据集合">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="连线颜色" type="xs:string"/>
+                            <xs:element name="工作模式集合">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="工作模式" type="xs:long"/>
+                                        <xs:element name="名称" type="xs:string"/>
+                                        <xs:element name="描述" type="xs:string"/>
+                                        <xs:element name="顺序" type="xs:integer"/>
+                                        <xs:element name="审核时间" type="xs:dateTime"/>
+                                        <xs:element name="提交时间" type="xs:dateTime"/>
+                                        <xs:element name="审核意见" type="xs:string"/>
+                                        <xs:element name="工程" type="xs:long"/>
+                                        <xs:element name="创建时间" type="xs:dateTime"/>
+                                        <xs:element name="更新时间" type="xs:dateTime"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="工作模式名称" type="xs:string"/>
+                            <xs:element name="逻辑模型连线信息" type="xs:long"/>
+                            <xs:element name="逻辑模型ID">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="硬件树" type="xs:long"/>
+                                        <xs:element name="编码" type="xs:string"/>
+                                        <xs:element name="名称" type="xs:string"/>
+                                        <xs:element name="图号" type="xs:string"/>
+                                        <xs:element name="型号" type="xs:string"/>
+                                        <xs:element name="版本" type="xs:string"/>
+                                        <xs:element name="备注" type="xs:string"/>
+                                        <xs:element name="层次">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="产品层次" type="xs:long"/>
+                                                    <xs:element name="编码" type="xs:string"/>
+                                                    <xs:element name="名称" type="xs:string"/>
+                                                    <xs:element name="层次" type="xs:integer"/>
+                                                    <xs:element name="顺序" type="xs:int"/>
+                                                    <xs:element name="备注" type="xs:string"/>
+                                                    <xs:element name="主标识" type="xs:integer"/>
+                                                    <xs:element name="审核时间" type="xs:dateTime"/>
+                                                    <xs:element name="提交时间" type="xs:dateTime"/>
+                                                    <xs:element name="审核意见" type="xs:string"/>
+                                                    <xs:element name="工程" type="xs:long"/>
+                                                    <xs:element name="创建时间" type="xs:dateTime"/>
+                                                    <xs:element name="更新时间" type="xs:dateTime"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="父节点路径" type="xs:string"/>
+                                        <xs:element name="父节点" type="xs:long"/>
+                                        <xs:element name="顺序" type="xs:integer"/>
+                                        <xs:element name="数量" type="xs:integer"/>
+                                        <xs:element name="ci类型" type="xs:integer"/>
+                                        <xs:element name="特殊件类型" type="xs:integer"/>
+                                        <xs:element name="重要度" type="xs:integer"/>
+                                        <xs:element name="单价" type="xs:decimal"/>
+                                        <xs:element name="占空比" type="xs:decimal"/>
+                                        <xs:element name="工作时间" type="xs:decimal"/>
+                                        <xs:element name="功能" type="xs:string"/>
+                                        <xs:element name="安装位置" type="xs:string"/>
+                                        <xs:element name="安装坐标" type="xs:string"/>
+                                        <xs:element name="节点来源" type="xs:integer"/>
+                                        <xs:element name="来源主键" type="xs:string"/>
+                                        <xs:element name="功能层次关系" type="xs:integer"/>
+                                        <xs:element name="lcn码" type="xs:string"/>
+                                        <xs:element name="工作通道" type="xs:string"/>
+                                        <xs:element name="分类名称" type="xs:string"/>
+                                        <xs:element name="生产厂家" type="xs:string"/>
+                                        <xs:element name="进口件" type="xs:integer"/>
+                                        <xs:element name="安全等级" type="xs:integer"/>
+                                        <xs:element name="位号" type="xs:string"/>
+                                        <xs:element name="机械件节点" type="xs:int"/>
+                                        <xs:element name="是否机械件" type="xs:int"/>
+                                        <xs:element name="rms主管" type="xs:long"/>
+                                        <xs:element name="特性分类原因" type="xs:string"/>
+                                        <xs:element name="是否包含软件" type="xs:int"/>
+                                        <xs:element name="数据来源" type="xs:string"/>
+                                        <xs:element name="成品" type="xs:long"/>
+                                        <xs:element name="要求" type="xs:string"/>
+                                        <xs:element name="设计主管" type="xs:long"/>
+                                        <xs:element name="替换件" type="xs:long"/>
+                                        <xs:element name="故障判据描述" type="xs:string"/>
+                                        <xs:element name="审核时间" type="xs:dateTime"/>
+                                        <xs:element name="提交时间" type="xs:dateTime"/>
+                                        <xs:element name="审核意见" type="xs:string"/>
+                                        <xs:element name="工程" type="xs:long"/>
+                                        <xs:element name="创建时间" type="xs:dateTime"/>
+                                        <xs:element name="更新时间" type="xs:dateTime"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="连线类型" type="xs:int"/>
+                            <xs:element name="输出节点" type="xs:long"/>
+                            <xs:element name="输入节点" type="xs:long"/>
+                            <xs:element name="输出节点端口" type="xs:long"/>
+                            <xs:element name="输入节点端口" type="xs:long"/>
+                            <xs:element name="线的位置" type="xs:string"/>
+                            <xs:element name="连接线形式" type="xs:string"/>
+                            <xs:element name="线相交形式" type="xs:string"/>
+                            <xs:element name="调整后的线位置" type="xs:string"/>
+                            <xs:element name="线上描述的位置" type="xs:string"/>
+                            <xs:element name="描述" type="xs:string"/>
+                            <xs:element name="审核时间" type="xs:dateTime"/>
+                            <xs:element name="提交时间" type="xs:dateTime"/>
+                            <xs:element name="审核意见" type="xs:string"/>
+                            <xs:element name="工程" type="xs:long"/>
+                            <xs:element name="创建时间" type="xs:dateTime"/>
+                            <xs:element name="更新时间" type="xs:dateTime"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="端口变量集合">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="端口值id" type="xs:long"/>
+                            <xs:element name="端口id">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="逻辑模型端口信息" type="xs:long"/>
+                                        <xs:element name="逻辑模型ID">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="逻辑模型元模型" type="xs:long"/>
+                                                    <xs:element name="硬件Id">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="硬件树" type="xs:long"/>
+                                                                <xs:element name="编码" type="xs:string"/>
+                                                                <xs:element name="名称" type="xs:string"/>
+                                                                <xs:element name="图号" type="xs:string"/>
+                                                                <xs:element name="型号" type="xs:string"/>
+                                                                <xs:element name="版本" type="xs:string"/>
+                                                                <xs:element name="备注" type="xs:string"/>
+                                                                <xs:element name="层次">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+                                                                            <xs:element name="产品层次" type="xs:long"/>
+                                                                            <xs:element name="编码" type="xs:string"/>
+                                                                            <xs:element name="名称" type="xs:string"/>
+                                                                            <xs:element name="层次" type="xs:integer"/>
+                                                                            <xs:element name="顺序" type="xs:int"/>
+                                                                            <xs:element name="备注" type="xs:string"/>
+                                                                            <xs:element name="主标识" type="xs:integer"/>
+                                                                            <xs:element name="审核时间" type="xs:dateTime"/>
+                                                                            <xs:element name="提交时间" type="xs:dateTime"/>
+                                                                            <xs:element name="审核意见" type="xs:string"/>
+                                                                            <xs:element name="工程" type="xs:long"/>
+                                                                            <xs:element name="创建时间" type="xs:dateTime"/>
+                                                                            <xs:element name="更新时间" type="xs:dateTime"/>
+                                                                        </xs:sequence>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                                <xs:element name="父节点路径" type="xs:string"/>
+                                                                <xs:element name="父节点" type="xs:long"/>
+                                                                <xs:element name="顺序" type="xs:integer"/>
+                                                                <xs:element name="数量" type="xs:integer"/>
+                                                                <xs:element name="ci类型" type="xs:integer"/>
+                                                                <xs:element name="特殊件类型" type="xs:integer"/>
+                                                                <xs:element name="重要度" type="xs:integer"/>
+                                                                <xs:element name="单价" type="xs:decimal"/>
+                                                                <xs:element name="占空比" type="xs:decimal"/>
+                                                                <xs:element name="工作时间" type="xs:decimal"/>
+                                                                <xs:element name="功能" type="xs:string"/>
+                                                                <xs:element name="安装位置" type="xs:string"/>
+                                                                <xs:element name="安装坐标" type="xs:string"/>
+                                                                <xs:element name="节点来源" type="xs:integer"/>
+                                                                <xs:element name="来源主键" type="xs:string"/>
+                                                                <xs:element name="功能层次关系" type="xs:integer"/>
+                                                                <xs:element name="lcn码" type="xs:string"/>
+                                                                <xs:element name="工作通道" type="xs:string"/>
+                                                                <xs:element name="分类名称" type="xs:string"/>
+                                                                <xs:element name="生产厂家" type="xs:string"/>
+                                                                <xs:element name="进口件" type="xs:integer"/>
+                                                                <xs:element name="安全等级" type="xs:integer"/>
+                                                                <xs:element name="位号" type="xs:string"/>
+                                                                <xs:element name="机械件节点" type="xs:int"/>
+                                                                <xs:element name="是否机械件" type="xs:int"/>
+                                                                <xs:element name="rms主管" type="xs:long"/>
+                                                                <xs:element name="特性分类原因" type="xs:string"/>
+                                                                <xs:element name="是否包含软件" type="xs:int"/>
+                                                                <xs:element name="数据来源" type="xs:string"/>
+                                                                <xs:element name="成品" type="xs:long"/>
+                                                                <xs:element name="要求" type="xs:string"/>
+                                                                <xs:element name="设计主管" type="xs:long"/>
+                                                                <xs:element name="替换件" type="xs:long"/>
+                                                                <xs:element name="故障判据描述" type="xs:string"/>
+                                                                <xs:element name="审核时间" type="xs:dateTime"/>
+                                                                <xs:element name="提交时间" type="xs:dateTime"/>
+                                                                <xs:element name="审核意见" type="xs:string"/>
+                                                                <xs:element name="工程" type="xs:long"/>
+                                                                <xs:element name="创建时间" type="xs:dateTime"/>
+                                                                <xs:element name="更新时间" type="xs:dateTime"/>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="元模型位置" type="xs:string"/>
+                                                    <xs:element name="审核时间" type="xs:dateTime"/>
+                                                    <xs:element name="提交时间" type="xs:dateTime"/>
+                                                    <xs:element name="审核意见" type="xs:string"/>
+                                                    <xs:element name="工程" type="xs:long"/>
+                                                    <xs:element name="创建时间" type="xs:dateTime"/>
+                                                    <xs:element name="更新时间" type="xs:dateTime"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="名称" type="xs:string"/>
+                                        <xs:element name="端口序号" type="xs:integer"/>
+                                        <xs:element name="初始值" type="xs:decimal"/>
+                                        <xs:element name="门限值" type="xs:decimal"/>
+                                        <xs:element name="dfDt" type="xs:string"/>
+                                        <xs:element name="描述信息" type="xs:string"/>
+                                        <xs:element name="变量类型ID">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="变量类型ID" type="xs:long"/>
+                                                    <xs:element name="变量类型名称" type="xs:string"/>
+                                                    <xs:element name="变量类型颜色" type="xs:string"/>
+                                                    <xs:element name="顺序" type="xs:integer"/>
+                                                    <xs:element name="审核时间" type="xs:dateTime"/>
+                                                    <xs:element name="审核状态" type="xs:string"/>
+                                                    <xs:element name="提交时间" type="xs:dateTime"/>
+                                                    <xs:element name="审核意见" type="xs:string"/>
+                                                    <xs:element name="工程" type="xs:long"/>
+                                                    <xs:element name="创建时间" type="xs:dateTime"/>
+                                                    <xs:element name="更新时间" type="xs:dateTime"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="位置" type="xs:string"/>
+                                        <xs:element name="审核时间" type="xs:dateTime"/>
+                                        <xs:element name="提交时间" type="xs:dateTime"/>
+                                        <xs:element name="审核意见" type="xs:string"/>
+                                        <xs:element name="工程" type="xs:long"/>
+                                        <xs:element name="创建时间" type="xs:dateTime"/>
+                                        <xs:element name="更新时间" type="xs:dateTime"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="变量类型值id">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="变量类型值ID" type="xs:long"/>
+                                        <xs:element name="变量类型值名称" type="xs:string"/>
+                                        <xs:element name="变量类型值状态1正常2失效3退化" type="xs:int"/>
+                                        <xs:element name="变量类型ID">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="变量类型ID" type="xs:long"/>
+                                                    <xs:element name="变量类型名称" type="xs:string"/>
+                                                    <xs:element name="变量类型颜色" type="xs:string"/>
+                                                    <xs:element name="顺序" type="xs:integer"/>
+                                                    <xs:element name="审核时间" type="xs:dateTime"/>
+                                                    <xs:element name="审核状态" type="xs:string"/>
+                                                    <xs:element name="提交时间" type="xs:dateTime"/>
+                                                    <xs:element name="审核意见" type="xs:string"/>
+                                                    <xs:element name="工程" type="xs:long"/>
+                                                    <xs:element name="创建时间" type="xs:dateTime"/>
+                                                    <xs:element name="更新时间" type="xs:dateTime"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="顺序" type="xs:integer"/>
+                                        <xs:element name="审核时间" type="xs:dateTime"/>
+                                        <xs:element name="审核状态" type="xs:string"/>
+                                        <xs:element name="提交时间" type="xs:dateTime"/>
+                                        <xs:element name="审核意见" type="xs:string"/>
+                                        <xs:element name="工程" type="xs:long"/>
+                                        <xs:element name="创建时间" type="xs:dateTime"/>
+                                        <xs:element name="更新时间" type="xs:dateTime"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="变量类型id">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="变量类型ID" type="xs:long"/>
+                                        <xs:element name="变量类型名称" type="xs:string"/>
+                                        <xs:element name="变量类型颜色" type="xs:string"/>
+                                        <xs:element name="顺序" type="xs:integer"/>
+                                        <xs:element name="审核时间" type="xs:dateTime"/>
+                                        <xs:element name="审核状态" type="xs:string"/>
+                                        <xs:element name="提交时间" type="xs:dateTime"/>
+                                        <xs:element name="审核意见" type="xs:string"/>
+                                        <xs:element name="工程" type="xs:long"/>
+                                        <xs:element name="创建时间" type="xs:dateTime"/>
+                                        <xs:element name="更新时间" type="xs:dateTime"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="严酷度类别id">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="严酷度类别" type="xs:long"/>
+                                        <xs:element name="严重程度定义" type="xs:string"/>
+                                        <xs:element name="审核时间" type="xs:dateTime"/>
+                                        <xs:element name="审核状态" type="xs:string"/>
+                                        <xs:element name="提交时间" type="xs:dateTime"/>
+                                        <xs:element name="审核意见" type="xs:string"/>
+                                        <xs:element name="工程" type="xs:long"/>
+                                        <xs:element name="创建时间" type="xs:dateTime"/>
+                                        <xs:element name="更新时间" type="xs:dateTime"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="审核时间" type="xs:dateTime"/>
+                            <xs:element name="审核状态" type="xs:string"/>
+                            <xs:element name="提交时间" type="xs:dateTime"/>
+                            <xs:element name="审核意见" type="xs:string"/>
+                            <xs:element name="工程" type="xs:long"/>
+                            <xs:element name="创建时间" type="xs:dateTime"/>
+                            <xs:element name="更新时间" type="xs:dateTime"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

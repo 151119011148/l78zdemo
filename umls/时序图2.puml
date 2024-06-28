@@ -579,3 +579,213 @@ end
 
 @enduml
 
+
+@startuml
+participant ProjectController as ProjectController
+participant CsmParseService as CsmParseService
+participant CSMParseActionNew as CSMParseActionNew
+participant MofUtils as umlFacility
+participant InternalUmlService as internalUmlService
+participant InternalProjectService as internalProjectService
+participant TransitionService as transitionService
+participant ShapeService as ShapeService
+participant ReadMd3Utils as ReadMd3Utils
+
+    ProjectController -> CsmParseService ++: csmImport
+    CsmParseService -[#red]> CSMParseActionNew ++: parseXML（解析XML）
+    note right: 60%
+    return
+    CsmParseService -> internalUmlService ++: fetchInstance（获取根节点信息）
+    return
+    CsmParseService -> internalProjectService ++: setProfileOwner（设置profile）
+    return
+    CsmParseService -[#red]> transitionService ++: queryMd3VoByIds（批量查询模型信息）
+    note right: 30%
+    return
+    CsmParseService -> CsmParseService : createModelJsonFile
+    CsmParseService -> ShapeService ++: csmParseDiagram
+    return
+    CsmParseService -> ReadMd3Utils ++: toZipFile
+    return
+    return projectId
+@enduml
+
+@startuml
+participant CsmParseService as CsmParseService
+participant CSMParseActionNew as CSMParseActionNew
+participant MofUtils as umlFacility
+
+    CsmParseService -> CSMParseActionNew ++: parseXML
+    CSMParseActionNew -> CSMParseActionNew : readXML
+    CSMParseActionNew -[#red]> CSMParseActionNew ++ : fillElementNodes
+    note right: 6%
+    loop
+    CSMParseActionNew -> CSMParseActionNew : parseExtensionNode(处理Extension及其子节点)
+    end
+    CSMParseActionNew -> CSMParseActionNew : createBuildInXmlId2mofIdMap(生成buildInXmlId2mofId)
+    CSMParseActionNew -> umlFacility : queryAllInstanceIdsBySystemCreate
+    CSMParseActionNew -> CSMParseActionNew : parseNode
+    loop
+    CSMParseActionNew -> CSMParseActionNew : setTopNodeOwner(处理Extension及其子节点)
+    end
+    CSMParseActionNew -> CSMParseActionNew : getStereotypesHREFSNodeMap
+    loop
+    CSMParseActionNew -> CSMParseActionNew : parseStereotypesNode()
+    end
+    CSMParseActionNew -> CSMParseActionNew : findMultipleValue
+    CSMParseActionNew -> CSMParseActionNew : setIsMofElement
+    CSMParseActionNew -> CSMParseActionNew : reflectionPropertyName
+    CSMParseActionNew -> CSMParseActionNew --: setCustomStereotypesType
+    CSMParseActionNew -[#red]> CSMParseActionNew : executeCommandsForParse
+    note right: 91%
+    CSMParseActionNew -> CSMParseActionNew : loadMetaElement
+    CSMParseActionNew -> CSMParseActionNew : executeCommandsForParse
+    CSMParseActionNew -> CSMParseActionNew : executeItemFlow
+    CSMParseActionNew -> CSMParseActionNew : executeModelCreatorTypeCommands
+    CSMParseActionNew -> CSMParseActionNew : addRequirementSatisfiedAndRefined
+    return
+@enduml
+
+@startuml
+participant ProjectController as ProjectController
+participant CsmParseService as CsmParseService
+participant CSMParseActionNew as CSMParseActionNew
+participant MofUtils as umlFacility
+participant InternalUmlService as internalUmlService
+participant InternalProjectService as internalProjectService
+participant TransitionService as transitionService
+participant InitService as InitService
+participant ShapeService as ShapeService
+participant ReadMd3Utils as ReadMd3Utils
+
+    ProjectController -> CsmParseService ++: csmImport
+    CsmParseService -> CSMParseActionNew ++: parseXML
+    CSMParseActionNew -> CSMParseActionNew : readXML
+    CSMParseActionNew -> CSMParseActionNew ++ : fillElementNodes
+    loop
+    CSMParseActionNew -> CSMParseActionNew : parseExtensionNode(处理Extension及其子节点)
+    end
+    CSMParseActionNew -> CSMParseActionNew : createBuildInXmlId2mofIdMap(生成buildInXmlId2mofId)
+    CSMParseActionNew -> umlFacility : queryAllInstanceIdsBySystemCreate
+    CSMParseActionNew -> CSMParseActionNew : parseNode
+    loop
+    CSMParseActionNew -> CSMParseActionNew : setTopNodeOwner(处理Extension及其子节点)
+    end
+    CSMParseActionNew -> CSMParseActionNew : getStereotypesHREFSNodeMap
+    loop
+    CSMParseActionNew -> CSMParseActionNew : parseStereotypesNode()
+    end
+    CSMParseActionNew -> CSMParseActionNew : findMultipleValue
+    CSMParseActionNew -> CSMParseActionNew : setIsMofElement
+    CSMParseActionNew -> CSMParseActionNew : reflectionPropertyName
+    CSMParseActionNew -> CSMParseActionNew --: setCustomStereotypesType
+    CSMParseActionNew -> CSMParseActionNew : executeCommandsForParse
+    CSMParseActionNew -> CSMParseActionNew : loadMetaElement
+    CSMParseActionNew -> CSMParseActionNew : executeCommandsForParse
+    CSMParseActionNew -> CSMParseActionNew : executeItemFlow
+    CSMParseActionNew -> CSMParseActionNew : executeModelCreatorTypeCommands
+    CSMParseActionNew -> CSMParseActionNew : addRequirementSatisfiedAndRefined
+    return
+    CsmParseService -> internalUmlService ++: fetchInstance（获取根节点信息）
+    return
+    CsmParseService -> internalProjectService ++: setProfileOwner（设置profile）
+    return
+    CsmParseService -> transitionService ++: queryMd3VoByIds（批量查询模型信息）
+    return
+    CsmParseService -> CsmParseService : createModelJsonFile
+    CsmParseService -> ShapeService ++: csmParseDiagram
+    return
+    CsmParseService -> ReadMd3Utils ++: toZipFile
+    return
+    return projectId
+@enduml
+
+
+@startuml
+participant CsmParseService as CsmParseService
+participant TransitionService as transitionService
+participant InternalUmlService as internalUmlService
+participant ExecutorManager as executorManager
+
+    CsmParseService -> transitionService ++: queryMd3VoByIds
+    loop
+    transitionService -> internalUmlService ++: fetchInstanceByIds
+    return List<MetaClassInstance>
+    transitionService -[#red]> executorManager ++: executes
+    note right: 95%
+    return List<InstanceVo>
+    end
+    transitionService -> internalUmlService ++: fetchInstances
+    return List<InstanceVo>
+    transitionService -> internalUmlService ++: queryProperty
+    transitionService -> internalUmlService ++: getQueryPropertyForm
+    return MofResultContainer
+    loop
+    transitionService -> transitionService : convertMd3
+    end
+    return List<Md3Vo>
+    return List<Md3Vo>
+@enduml
+
+
+
+
+
+@startuml
+participant ProjectController as ProjectController
+participant ExportService as ExportService
+participant ProjectManager as ProjectManager
+participant MofUtils as MofUtils
+participant ExportXmlAction as ExportXmlAction
+participant ExportModelAction as ExportModelAction
+
+    ProjectController -> ExportService ++: exportXmi
+    ExportService -> ProjectManager ++: getProject
+    return Project
+    ExportService -> ExportXmlAction ++: export
+    ExportXmlAction -> ExportXmlAction : queryAllCanvasData
+    ExportXmlAction -> ExportXmlAction : exportCanvasData
+    ExportXmlAction -> ExportModelAction ++: dealModelData
+    return
+    ExportXmlAction -> ExportXmlAction : exportImages
+    ExportXmlAction -> ExportXmlAction : mergeXml
+    return
+    ExportService -> MofUtils ++: queryAllUseProjects
+    return useProjects
+    loop
+    ExportService -> ExportXmlAction ++: export
+    return
+    end
+    return
+
+@enduml
+
+@startuml
+participant Main as Main
+participant ParseSysMLXUtil as ParseSysMLXUtil
+participant XMLNodeUtil as XMLNodeUtil
+
+    Main -> ParseSysMLXUtil ++: parse
+    loop
+        ParseSysMLXUtil -> ParseSysMLXUtil ++: findFile
+            alt file 是 SysMLX结尾的文件
+                    ParseSysMLXUtil -> ParseSysMLXUtil: 收集
+               else
+                    ParseSysMLXUtil -> ParseSysMLXUtil: continue
+            return files
+            end
+    end
+
+    loop
+        ParseSysMLXUtil -> ParseSysMLXUtil ++: read
+        ParseSysMLXUtil -> XMLNodeUtil ++: getChildrenNodes
+        return List<Node>
+        return
+        ParseSysMLXUtil -> ParseSysMLXUtil ++: convert2ElementNode
+        return List<CSMElementNode>
+        ParseSysMLXUtil -> ParseSysMLXUtil ++: convert2Command
+        return List<Icommand>
+    end
+    return
+
+@enduml
