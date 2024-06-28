@@ -973,3 +973,10 @@
 ++[#lightgreen] 转换
 ++[#lightgreen] 渲染
 @endmindmap
+
+@startmindmap
++ SysML v2 解析
+++[#lightgreen] 读取.sysmlx文件
+++[#lightgreen] 解析.sysmlx文件
+++[#lightgreen] 转换为command命令
+@endmindmap
