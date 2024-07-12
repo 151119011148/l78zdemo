@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.scofen.util.file.WriteFileUtil;
 import com.scofen.util.mdesign.MDesignUtil;
+import com.scofen.util.mdesign.model.InstanceVo;
 import com.scofen.util.sql.strategy.ModelToSql;
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,13 +19,13 @@ import static com.scofen.util.file.ReadFileUtils.translate_mapping_path;
 
 public class XMLToSql implements ModelToSql {
 
-    public Map<String, String> convert2Sql(List models, Map<String, Object> translateMap) {
+    public Map<String, String> convert2Sql(String projectId, List<InstanceVo> models, Map<String, Object> translateMap) {
         Map<String, String> sqlMap = new ConcurrentHashMap<>();
 
-        ConcurrentLinkedQueue<JSONObject> treeModels = new ConcurrentLinkedQueue<>();
+        ConcurrentLinkedQueue<InstanceVo> treeModels = new ConcurrentLinkedQueue<>();
         models
                 .parallelStream()
-                .forEach(model -> collectTreeModel((JSONObject) model, treeModels));
+                .forEach(model -> collectTreeModel(model, treeModels));
 
         WriteFileUtil.writeFile(translate_mapping_path, JSON.toJSONString(translateMap).replace(" ", "_"));
 
@@ -37,7 +38,7 @@ public class XMLToSql implements ModelToSql {
 
     // 创建 Pattern 对象
     static Pattern pattern = Pattern.compile(englishRegex);
-    private static void collectTreeModel(JSONObject model, ConcurrentLinkedQueue<JSONObject> needs) {
+    private static void collectTreeModel(InstanceVo model, ConcurrentLinkedQueue<InstanceVo> needs) {
 //        String sourceText = model.getString("name");
 //        if ((StringUtils.equals(model.getString("metaclass"), "Class") || StringUtils.equals(model.getString("metaclass"), "uml:Property"))
 //                && StringUtils.isNotEmpty(sourceText)

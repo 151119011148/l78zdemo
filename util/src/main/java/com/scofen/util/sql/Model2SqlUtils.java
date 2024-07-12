@@ -1,15 +1,18 @@
 package com.scofen.util.sql;
 
-import com.alibaba.fastjson.JSONArray;
 import com.scofen.util.file.ReadFileUtils;
 import com.scofen.util.mdesign.MDesignUtil;
+import com.scofen.util.mdesign.model.InstanceVo;
 import com.scofen.util.sql.strategy.ModelToSqlFactory;
 import com.scofen.util.translation.youdao.TranslateUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.scofen.util.file.ReadFileUtils.translate_mapping_path;
 
@@ -31,11 +34,11 @@ public class Model2SqlUtils {
         });
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void convert(String projectId, String modelId) throws IOException {
+        List<InstanceVo> models = MDesignUtil.listChildren(projectId, modelId);
 
-        JSONArray models = MDesignUtil.listChildren("129qu38t-6w8-622", "76254024350487552");
         ModelToSqlFactory.build("DesignToSql")
-                .convert2Sql(models, translateMap);
+                .convert2Sql(projectId, models, translateMap);
 
 
 //        convert2Sql(ReadFileUtils.getJSONArray(model_path));

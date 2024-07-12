@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scofen.util.sql.strategy.xmltosql.GroupTreeModel;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,15 +14,20 @@ import java.util.Map;
 
 public class ReadFileUtils {
 
-    public static final String translate_mapping_path = "E:\\gaofeng\\disa\\translate.json";
-    public static final String xmi_model_path = "E:\\gaofeng\\disa\\华为标准_模型输出_xmi.json";
-    public static final String design_model_path = "E:\\gaofeng\\disa\\华为标准_模型输出_design.json";
+
+    public static final String translate_mapping_path = "E:\\gaofeng\\worker\\project_relation\\disa\\translate.json";
+    public static final String xmi_model_path = "E:\\gaofeng\\worker\\project_relation\\disa\\华为标准_模型输出_xmi.json";
+    public static final String design_model_path = "E:\\gaofeng\\worker\\project_relation\\disa\\华为标准_模型输出_design.json";
+    public static final String model_sql_path = "E:\\gaofeng\\worker\\project_relation\\disa\\model_sql_path.sql";
 
 
 
     public static String getString(String path){
-
         String content = "";
+        File sourceFile = new File(path);
+        if (!sourceFile.exists()){
+            return content;
+        }
         try {
             content = new String(Files.readAllBytes(Paths.get(path)));
         } catch (IOException e) {
@@ -40,19 +46,6 @@ public class ReadFileUtils {
         TypeReference<List<GroupTreeModel>> typeRef = new TypeReference<List<GroupTreeModel>>() {};
         return objectMapper.readValue(sourceString, typeRef);
     }
-
-
-    public static void main(String[] args) throws IOException {
-
-        System.out.println(getString(translate_mapping_path));
-        System.out.println(getString(xmi_model_path));
-        System.out.println(getJSONArray(xmi_model_path));
-
-
-    }
-
-
-
 
 
 }
