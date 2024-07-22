@@ -7,6 +7,6 @@ import java.util.Map;
 
 public interface ModelToSql {
 
-      Map<String, String> convert2Sql(String projectId, List<InstanceVo> models, Map<String, Object> translateMap);
+      Map<String, String> convert2Sql(String projectId, List<InstanceVo> models);
 
 }

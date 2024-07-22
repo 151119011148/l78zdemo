@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.scofen.util.file.WriteFileUtil;
 import com.scofen.util.mdesign.MDesignUtil;
 import com.scofen.util.mdesign.model.InstanceVo;
+import com.scofen.util.sql.Model2SqlUtils;
 import com.scofen.util.sql.strategy.ModelToSql;
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,7 +20,7 @@ import static com.scofen.util.file.ReadFileUtils.translate_mapping_path;
 
 public class XMLToSql implements ModelToSql {
 
-    public Map<String, String> convert2Sql(String projectId, List<InstanceVo> models, Map<String, Object> translateMap) {
+    public Map<String, String> convert2Sql(String projectId, List<InstanceVo> models) {
         Map<String, String> sqlMap = new ConcurrentHashMap<>();
 
         ConcurrentLinkedQueue<InstanceVo> treeModels = new ConcurrentLinkedQueue<>();
@@ -27,7 +28,7 @@ public class XMLToSql implements ModelToSql {
                 .parallelStream()
                 .forEach(model -> collectTreeModel(model, treeModels));
 
-        WriteFileUtil.writeFile(translate_mapping_path, JSON.toJSONString(translateMap).replace(" ", "_"));
+        WriteFileUtil.writeFile(translate_mapping_path, JSON.toJSONString(Model2SqlUtils.translateMap).replace(" ", "_"));
 
         return sqlMap;
 

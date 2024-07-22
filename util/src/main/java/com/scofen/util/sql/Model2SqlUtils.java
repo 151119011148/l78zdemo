@@ -18,8 +18,8 @@ import static com.scofen.util.file.ReadFileUtils.translate_mapping_path;
 
 public class Model2SqlUtils {
 
-    static Map<String, Object> translateMap = new HashMap<>();
-    static Map<String, Object> translate_null_Map = new HashMap<>();
+    public static Map<String, Object> translateMap = new HashMap<>();
+    public static Map<String, Object> translate_null_Map = new HashMap<>();
     static {
         Map<String, Object> sourceMap = ReadFileUtils.getJSONObject(translate_mapping_path);
         sourceMap.forEach((k,v) -> {
@@ -38,7 +38,7 @@ public class Model2SqlUtils {
         List<InstanceVo> models = MDesignUtil.listChildren(projectId, modelId);
 
         ModelToSqlFactory.build("DesignToSql")
-                .convert2Sql(projectId, models, translateMap);
+                .convert2Sql(projectId, models);
 
 
 //        convert2Sql(ReadFileUtils.getJSONArray(model_path));

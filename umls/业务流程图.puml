@@ -236,3 +236,24 @@ stop
 
 
 
+@startuml
+start;
+:更新项目引用场景下主项目中的use_project(updateProjectId);
+:将使用项目的元素变为代理元素(missing);
+:检查使用项目是否有效(check);
+:打开使用项目(openUsageProject);
+:查询已共享的包(list);
+:查询已导入的共享包(list);
+:更新项目引用场景下引用项目中的use_project(updateUsageProjectId);
+:查询共享包下的所有画布(queryAllShareDiagram);
+:重新加载使用项目(reload);
+:查询多个模型(queryByIds);
+:查询模型泛化的所有子模型(findSpecificsCascade);
+:查询当前项目所有的使用元素(queryUseElement);
+:批量查询模型属性值v2(queryMutliPropertyValue);
+:查询已共享的包(list);
+:查询已使用的项目树(tree);
+:统计项目中模型总量(countAllElementNumbers);
+:属性组-查询模型属性组(queryPropertyGroups);
+
+@enduml

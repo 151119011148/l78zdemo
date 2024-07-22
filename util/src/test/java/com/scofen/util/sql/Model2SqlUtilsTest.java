@@ -6,8 +6,8 @@ import java.io.IOException;
 
 public class Model2SqlUtilsTest extends TestCase {
 
-    public static final String projectId = "129qu38t-6w8-622";
-    public static final String rootModelId = "78180549862329920";
+    public static final String projectId = "13kvcvr5-3gi-qw";
+    public static final String rootModelId = "76278933501350976";
 
     public void testConvert() throws IOException {
         Model2SqlUtils.convert(projectId, rootModelId);
