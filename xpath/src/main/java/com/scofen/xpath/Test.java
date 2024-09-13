@@ -20,7 +20,7 @@ public class Test {
     public static void main(String[] args) {
         try {
             SAXReader reader = new SAXReader();
-            Document document = reader.read(new File("/Users/gaoying/Desktop/work/l78zdemo/xpath/src/main/resources/test.xml"));
+            Document document = reader.read(new File("E:\\gaofeng\\worker\\project_relation\\机载\\cheliang\\2-功能模型.xml"));
             Element root = document.getRootElement();
             Node book1 = root.selectSingleNode("//book1");
             Node aggregate = book1.selectSingleNode("//aggregate");
