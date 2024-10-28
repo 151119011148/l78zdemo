@@ -49,7 +49,7 @@ artifact "module:user-common" {
 b ----> a: 包依赖
 c ..> a: rpc调用
 d ..> a:rpc调用
-@enduml 
+@enduml
 
 
 @startuml
@@ -225,4 +225,48 @@ eventcenter -> scriptFactory: 依赖
 gateway ..> redisCacheManager: 调用
 scriptFactory ..> redisCacheManager: 调用
 
-@enduml 
+@enduml
+
+
+@startuml
+artifact "node-server" as nodeServer{
+}
+artifact "model-service" as modelService{
+}
+component "csm-import" as csmImport{
+}
+component "mbsp" as mbsp{
+}
+component "mof" as mof{
+}
+
+nodeServer -> modelService: 调用
+modelService ..> csmImport: 依赖
+modelService ..> mbsp: 依赖
+csmImport ..> mbsp: 依赖
+mbsp ..> mof: 依赖
+@enduml
+
+
+@startuml
+component "m-link-client" as client{
+}
+component "eco-link" as ecoLink{
+}
+artifact "node-server" as nodeServer{
+}
+artifact "model-service" as modelService{
+}
+
+component "mbsp" as mbsp{
+}
+component "mof" as mof{
+}
+
+client -> ecoLink: EA模型导入
+ecoLink -> modelService: 模型创建
+ecoLink -> nodeServer: 图形渲染
+nodeServer -> modelService: 调用
+modelService ..> mbsp: 依赖
+mbsp ..> mof: 依赖
+@enduml

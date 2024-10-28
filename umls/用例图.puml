@@ -229,3 +229,33 @@ rectangle 数环产品用例 {
 
 }
 @enduml
+
+
+@startuml
+left to right direction
+
+actor User as u
+rectangle  {
+    usecase "CSM导入" as import
+    usecase "导出" as export
+    usecase "整体导出" as export_all
+    usecase "部分导出" as export_part
+    export_all --> export: extend
+    export_part --> export: extend
+}
+
+
+u --> export
+u --> import
+@enduml
+
+@startuml
+left to right direction
+
+actor User as u
+rectangle  {
+    usecase "EA 模型数据导入到Design" as import
+}
+
+u --> import
+@enduml

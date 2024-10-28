@@ -322,3 +322,64 @@ folder "com.shuhuan.ipaas.connector.spi.browserplugin" {
 
 
 @enduml
+
+
+
+@startuml
+
+
+    class com.huawang.core.semantics.utils.ParseSysMLXUtil {
+
+        public static Map<String, File> findSysMLx(String folderPath, Map<String, File> sysMLx) ;
+
+        public static List<ElementNode> convert(File xmlFile) ;
+
+        public static void convert2ElementNode(Node parentNode, Node node, List<ElementNode> elementNodes);
+
+
+    }
+    static class ElementNode {
+
+        private String parentId;
+
+        private String xmlId;
+
+        private String classifierId;
+
+        private String name;
+
+        private List<Attribute> attributes;
+
+        private List<ElementNode> children;
+
+        private AddModelForm addModelForm;
+
+        private UpdateValueForm updateValueForm;
+
+
+
+        public static ElementNode createElementNode(String parentId, String xmlId, String classifierId, String name,
+                                                    List<Attribute> attributes);
+
+        private static UpdateValueForm buildUpdateValueForm(String xmlId, List<Attribute> attributes);
+
+        public static AddModelForm buildAddModelForm(String parentId, String xmlId, String classifierId, String name);
+
+    }
+
+    static class Attribute {
+
+        private String propertyName;
+
+        private TypeEnum classifierId;
+
+        private String value;
+    }
+
+    ElementNode *-- Attribute
+
+
+@enduml
+
+
+
